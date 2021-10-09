@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Monitoring-Biomassa</string>
+    <string name="home_page_name">Home</string>
+    <string name="add_bottomsheet_name">Add</string>
+    <string name="setting_page_name">Setting</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
