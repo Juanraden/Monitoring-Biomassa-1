@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">Monitoring-Biomassa</string>
-    <string name="home_page_name">Home</string>
+    <string name="home_page_name">Dashboard</string>
     <string name="add_bottomsheet_name">Add</string>
-    <string name="setting_page_name">Setting</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="setting_page_name">Pengaturan</string>
+    <string name="tambahkan">Tambahkan</string>
+
+    <!--Setting Page-->
+    <string name="lainnya">Lainnya</string>
+    <string name="tentang_kjabb">Tentang KJABB</string>
+    <string name="website_monitoring">Website Monitoring</string>
+    <string name="sosial_media">Sosial Media</string>
+    <string name="umpan_balik">Umpan Balik</string>
 </resources>
