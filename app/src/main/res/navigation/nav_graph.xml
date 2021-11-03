@@ -17,5 +17,5 @@
     <fragment
         android:id="@+id/addFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.AddFragment"
-        android:label="AddFragment" />
+        android:label="@string/tambahkan" />
 </navigation>
