@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/loginFragment">
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.kedaireka.monitoring_biomassa.ui.HomeFragment"
-        android:label="@string/home_page_name"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/loginFragment"
+        android:name="com.kedaireka.monitoring_biomassa.ui.login.LoginFragment"
+        android:label="Login" >
+        <action
+            android:id="@+id/action_loginFragment_to_navBarFragment"
+            app:destination="@id/navBarFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.kedaireka.monitoring_biomassa.ui.SettingsFragment"
-        android:label="@string/setting_page_name"
-        tools:layout="@layout/fragment_settings" />
-    <fragment
-        android:id="@+id/addFragment"
-        android:name="com.kedaireka.monitoring_biomassa.ui.AddFragment"
-        android:label="@string/tambahkan" />
+        android:id="@+id/navBarFragment"
+        android:name="com.kedaireka.monitoring_biomassa.ui.NavBarFragment"
+        android:label="NavBarFragment" />
 </navigation>
