@@ -5,7 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.SettingsFragment">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,7 +17,7 @@
                 android:layout_marginBottom="24dp"
                 android:text="@string/lainnya"
                 android:textColor="#7E78CA"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/about_tv"
@@ -51,8 +50,13 @@
                 android:text="@string/umpan_balik"
                 android:layout_marginBottom="24dp"
                 android:textSize="@dimen/default_text_size" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/logout_button"
+                android:layout_marginTop="10dp"
+                android:text="@string/logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
-
-
     </ScrollView>
 </layout>
