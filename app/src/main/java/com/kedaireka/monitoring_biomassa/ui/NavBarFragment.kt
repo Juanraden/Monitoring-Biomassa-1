@@ -38,18 +38,14 @@ class NavBarFragment : Fragment() {
         val nestedNavHostFragment =
             childFragmentManager.findFragmentById(R.id.nested_nav_host_fragment) as NavHostFragment
 
-        val navController = nestedNavHostFragment?.findNavController()
+        val navController = nestedNavHostFragment.findNavController()
 
-        if (navController != null) {
-            binding.bottomNavView.setupWithNavController(navController)
+        binding.bottomNavView.setupWithNavController(navController)
 
-            binding.toolbarFragment.setupWithNavController(navController, appBarConfiguration)
+        binding.toolbarFragment.setupWithNavController(navController, appBarConfiguration)
 
-            binding.toolbarFragment.setNavigationOnClickListener {
-                navController.navigateUp(appBarConfiguration)
-            }
-        } else {
-            throw RuntimeException("Controller not found")
+        binding.toolbarFragment.setNavigationOnClickListener {
+            navController.navigateUp(appBarConfiguration)
         }
     }
 }
