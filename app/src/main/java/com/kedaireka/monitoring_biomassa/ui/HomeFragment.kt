@@ -5,15 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.kedaireka.monitoring_biomassa.adapter.KerambaListAdapter
+import com.kedaireka.monitoring_biomassa.adapter.OnClickListener
 import com.kedaireka.monitoring_biomassa.databinding.FragmentHomeBinding
+import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
     private lateinit var navController: NavController
+
+    private val kerambaViewModel by viewModels<KerambaViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,9 +40,18 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.testButton.setOnClickListener {
-            navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment())
-        }
-    }
+        val kerambaListAdapter = KerambaListAdapter(
+            OnClickListener {
+                navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment())
+            }
+        )
 
+        binding.kerambaList.adapter = kerambaListAdapter
+
+        kerambaViewModel.allKeramba.observe(viewLifecycleOwner, {
+            kerambaListAdapter.submitList(it)
+
+            binding.loadingSpinner.visibility = View.GONE
+        })
+    }
 }
