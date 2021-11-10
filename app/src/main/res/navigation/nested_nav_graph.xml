@@ -4,11 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nested_nav_graph"
     app:startDestination="@id/homeFragment">
-    <include app:graph="@navigation/nav_graph"/>
     <fragment
         android:id="@+id/addFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.AddFragment"
-        android:label="Tambahkan" />
+        android:label="Tambahkan" >
+        <action
+            android:id="@+id/action_addFragment_to_addKerambaFragment"
+            app:destination="@id/addKerambaFragment"
+            app:popUpTo="@id/addFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.HomeFragment"
@@ -20,16 +25,14 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.SettingsFragment"
-        android:label="Pengaturan">
-        <action
-            android:id="@+id/action_settingsFragment_to_loginFragment"
-            app:destination="@id/nav_graph"/>
-    </fragment>
+        android:label="Pengaturan"/>
     <fragment
         android:id="@+id/summaryFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.summary.SummaryFragment"
         android:label="Summary"
         tools:layout="@layout/fragment_summary" />
-
-
+    <fragment
+        android:id="@+id/addKerambaFragment"
+        android:name="com.kedaireka.monitoring_biomassa.ui.add.AddKerambaFragment"
+        android:label="Tambah Keramba" />
 </navigation>

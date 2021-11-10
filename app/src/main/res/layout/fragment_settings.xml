@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="settingsFragment"
+            type="com.kedaireka.monitoring_biomassa.ui.SettingsFragment" />
+    </data>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,7 +23,7 @@
                 android:layout_marginBottom="24dp"
                 android:text="@string/lainnya"
                 android:textColor="#7E78CA"
-                android:textSize="14sp" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
             <TextView
                 android:id="@+id/about_tv"
@@ -25,7 +31,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:text="@string/tentang_kjabb"
-                android:textSize="@dimen/default_text_size" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1"
+                android:onClick="@{(view) -> settingsFragment.launchUri(view)}"/>
 
             <TextView
                 android:id="@+id/web_tv"
@@ -33,7 +40,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/website_monitoring"
                 android:layout_marginBottom="24dp"
-                android:textSize="@dimen/default_text_size" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1"
+                android:onClick="@{(view) -> settingsFragment.launchUri(view)}"/>
 
             <TextView
                 android:id="@+id/sosmed_tv"
@@ -41,7 +49,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sosial_media"
                 android:layout_marginBottom="24dp"
-                android:textSize="@dimen/default_text_size" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1"
+                android:onClick="@{(view) -> settingsFragment.launchUri(view)}"/>
 
             <TextView
                 android:id="@+id/feedback_tv"
@@ -49,14 +58,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/umpan_balik"
                 android:layout_marginBottom="24dp"
-                android:textSize="@dimen/default_text_size" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1"
+                android:onClick="@{(view) -> settingsFragment.launchUri(view)}"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/logout_button"
                 android:layout_marginTop="10dp"
                 android:text="@string/logout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:onClick="@{(view) -> settingsFragment.launchUri(view)}"/>
         </LinearLayout>
     </ScrollView>
 </layout>

@@ -28,4 +28,17 @@ class AddFragment : Fragment() {
 
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            addFragment = this@AddFragment
+        }
+    }
+
+    fun navigateToFragment(){
+        navController.navigate(AddFragmentDirections.actionAddFragmentToAddKerambaFragment())
+    }
 }
