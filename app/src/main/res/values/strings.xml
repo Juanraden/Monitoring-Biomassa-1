@@ -23,9 +23,15 @@
 
     <!--    Strings related to Summary Fragment-->
     <string name="info">Info</string>
-    <string name="pakan">Pakan</string>
     <string name="panen">Panen</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="logout">Logout</string>
+    <string name="keramba">Keramba</string>
+    <string name="pakan">Pakan</string>
+    <string name="biota">Biota</string>
+    <string name="nama_keramba">Nama Keramba</string>
+    <string name="ukuran_meter_kubik">Ukuran (meter kubik)</string>
+    <string name="simpan">Simpan</string>
+    <string name="tanggal_instalasi">Tanggal Instalasi</string>
 </resources>

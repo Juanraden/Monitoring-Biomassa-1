@@ -23,7 +23,7 @@
                 android:layout_marginBottom="24dp"
                 android:text="@string/lainnya"
                 android:textColor="#7E78CA"
-                android:textSize="14sp" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
             <TextView
                 android:id="@+id/about_tv"
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:text="@string/tentang_kjabb"
-                android:textSize="@dimen/default_text_size"
+                android:textAppearance="@android:style/TextAppearance.Material.Body1"
                 android:onClick="@{(view) -> settingsFragment.launchUri(view)}"/>
 
             <TextView
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/website_monitoring"
                 android:layout_marginBottom="24dp"
-                android:textSize="@dimen/default_text_size"
+                android:textAppearance="@android:style/TextAppearance.Material.Body1"
                 android:onClick="@{(view) -> settingsFragment.launchUri(view)}"/>
 
             <TextView
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sosial_media"
                 android:layout_marginBottom="24dp"
-                android:textSize="@dimen/default_text_size"
+                android:textAppearance="@android:style/TextAppearance.Material.Body1"
                 android:onClick="@{(view) -> settingsFragment.launchUri(view)}"/>
 
             <TextView
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/umpan_balik"
                 android:layout_marginBottom="24dp"
-                android:textSize="@dimen/default_text_size"
+                android:textAppearance="@android:style/TextAppearance.Material.Body1"
                 android:onClick="@{(view) -> settingsFragment.launchUri(view)}"/>
 
             <com.google.android.material.button.MaterialButton
