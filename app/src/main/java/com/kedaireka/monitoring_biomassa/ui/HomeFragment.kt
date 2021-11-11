@@ -40,8 +40,6 @@ class HomeFragment : Fragment() {
 
         navController = findNavController()
 
-        setupNavigation()
-
         return binding.root
     }
 
@@ -52,6 +50,7 @@ class HomeFragment : Fragment() {
         kerambaListAdapter =KerambaListAdapter(
             OnClickListener { navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment()) }
         )
+        setupNavigation()
 
         setupKerambaList()
 
@@ -95,7 +94,7 @@ class HomeFragment : Fragment() {
 
     private fun setupNavigation(){
 
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.addFragment,R.id.settingsFragment))
 
         binding.toolbarFragment.setupWithNavController(navController, appBarConfiguration)
 
