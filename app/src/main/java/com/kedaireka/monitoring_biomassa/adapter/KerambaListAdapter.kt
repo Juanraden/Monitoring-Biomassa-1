@@ -19,6 +19,7 @@ class KerambaListAdapter(
     private var list = mutableListOf<KerambaDomain>()
 
     fun setData(list: List<KerambaDomain>?){
+        this.list.clear()
         this.list.addAll(list!!)
         submitList(list)
     }
