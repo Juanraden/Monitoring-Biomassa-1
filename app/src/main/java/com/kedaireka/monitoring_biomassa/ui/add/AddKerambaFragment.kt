@@ -13,6 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupWithNavController
+import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.databinding.FragmentAddKerambaBinding
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
@@ -56,6 +60,7 @@ class AddKerambaFragment : Fragment() {
                 navController.navigateUp()
             }
         }
+        setupNavigation()
 
         setupObserver()
     }
@@ -82,6 +87,16 @@ class AddKerambaFragment : Fragment() {
     private fun insertKeramba(nama: String, ukuran: String){
         if (isEntryValid(nama, ukuran)){
             kerambaViewModel.insertKeramba(nama, ukuran)
+        }
+    }
+
+    private fun setupNavigation(){
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.addFragment, R.id.settingsFragment))
+
+        binding.toolbarFragment.setupWithNavController(navController, appBarConfiguration)
+
+        binding.toolbarFragment.setNavigationOnClickListener {
+            navController.navigateUp(appBarConfiguration)
         }
     }
 }
