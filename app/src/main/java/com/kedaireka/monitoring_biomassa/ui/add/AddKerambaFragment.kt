@@ -3,6 +3,7 @@ package com.kedaireka.monitoring_biomassa.ui.add
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,17 +53,36 @@ class AddKerambaFragment : Fragment() {
             addKerambaFragment = this@AddKerambaFragment
 
             saveKerambaBtn.setOnClickListener {
-                insertKeramba(
-                    jenisKerambaEt.text.toString().trim(),
-                    ukuranKerambaEt.text.toString()
-                )
-                kerambaViewModel.onSelectDateTime(0)
-                navController.navigateUp()
+                if (isEntryValid(namaKerambaEt.text.toString().trim(), ukuranKerambaEt.text.toString())){
+                    insertKeramba(
+                        namaKerambaEt.text.toString().trim(),
+                        ukuranKerambaEt.text.toString()
+                    )
+                    navController.navigateUp()
+                } else {
+                    if (TextUtils.isEmpty(namaKerambaEt.text)){
+                        namaKerambaEt.error = "Nama keramba harus diisi!"
+                    }
+
+                    if (TextUtils.isEmpty(ukuranKerambaEt.text)){
+                        ukuranKerambaEt.error ="Ukuran keramba harus diisi!"
+                    }
+
+                    if (TextUtils.isEmpty(tanggalInstallEt.text)){
+                        tanggalInstallEt.error = "Tanggal install harus diketahui!"
+                    }
+                }
+
             }
         }
         setupNavigation()
 
         setupObserver()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        kerambaViewModel.onSelectDateTime(0)
     }
 
     private fun setupObserver() {
@@ -72,6 +92,8 @@ class AddKerambaFragment : Fragment() {
                     convertLongToDateString(it),
                     TextView.BufferType.EDITABLE
                 )
+
+                binding.tanggalInstallEt.error = null
             } else binding.tanggalInstallEt.setText("")
         })
     }
@@ -85,9 +107,7 @@ class AddKerambaFragment : Fragment() {
     }
 
     private fun insertKeramba(nama: String, ukuran: String){
-        if (isEntryValid(nama, ukuran)){
-            kerambaViewModel.insertKeramba(nama, ukuran)
-        }
+        kerambaViewModel.insertKeramba(nama, ukuran)
     }
 
     private fun setupNavigation(){
