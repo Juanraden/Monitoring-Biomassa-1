@@ -2,6 +2,8 @@ package com.kedaireka.monitoring_biomassa.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,7 +14,15 @@ import com.kedaireka.monitoring_biomassa.databinding.ListKerambaBinding
 
 class KerambaListAdapter(
     val onClick: OnClickListener
-): ListAdapter<KerambaDomain, KerambaListAdapter.ViewHolder>(DiffCallBack) {
+): ListAdapter<KerambaDomain, KerambaListAdapter.ViewHolder>(DiffCallBack), Filterable {
+
+    private var list = mutableListOf<KerambaDomain>()
+
+    fun setData(list: List<KerambaDomain>?){
+        this.list.addAll(list!!)
+        submitList(list)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val withDataBinding: ListKerambaBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
@@ -52,6 +62,36 @@ class KerambaListAdapter(
 
         override fun areContentsTheSame(oldItem: KerambaDomain, newItem: KerambaDomain): Boolean {
             return oldItem == newItem
+        }
+    }
+
+    override fun getFilter(): Filter {
+        return customFilter
+    }
+
+    private val customFilter = object : Filter() {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            val results = FilterResults()
+            val filteredList = mutableListOf<KerambaDomain>()
+
+            if (constraint == null || constraint.isEmpty()){
+                filteredList.clear()
+                filteredList.addAll(list)
+            } else {
+                filteredList.clear()
+                for (keramba in list){
+                    if (keramba.nama_keramba.lowercase().contains(constraint.toString().lowercase())){
+                        filteredList.add(keramba)
+                    }
+                }
+            }
+            results.values = filteredList
+
+            return results
+        }
+
+        override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
+            submitList(p1?.values as MutableList<KerambaDomain>)
         }
     }
 }

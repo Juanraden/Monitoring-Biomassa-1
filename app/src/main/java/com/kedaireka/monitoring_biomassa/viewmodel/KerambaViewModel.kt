@@ -24,11 +24,17 @@ class KerambaViewModel @Inject constructor(
     private val _tanggalInstall = MutableLiveData<Long>()
     val tanggalInstall: LiveData<Long> = _tanggalInstall
 
-    fun onSelectDateTime(dateTime: Long) {
-        _tanggalInstall.value = dateTime
+    private val _querySearch = MutableLiveData<String>()
+    val querySearch: LiveData<String> = _querySearch
 
-        Log.i("KerambaViewModel", dateTime.toString())
+    fun setQuerySearch(query: String){
+        _querySearch.value = query
+
+        Log.i("KerambaViewModel", query)
     }
+
+    fun onSelectDateTime(dateTime: Long) {
+        _tanggalInstall.value = dateTime }
 
     fun isEntryValid(jenis: String, ukuran: String): Boolean {
         return !(jenis.isBlank() || ukuran.isBlank() || tanggalInstall.value == null)
