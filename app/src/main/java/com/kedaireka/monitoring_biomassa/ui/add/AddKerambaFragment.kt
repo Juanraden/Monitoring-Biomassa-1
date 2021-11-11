@@ -52,7 +52,7 @@ class AddKerambaFragment : Fragment() {
                     jenisKerambaEt.text.toString().trim(),
                     ukuranKerambaEt.text.toString()
                 )
-
+                kerambaViewModel.onSelectDateTime(0)
                 navController.navigateUp()
             }
         }
@@ -62,12 +62,12 @@ class AddKerambaFragment : Fragment() {
 
     private fun setupObserver() {
         kerambaViewModel.tanggalInstall.observe(viewLifecycleOwner, {
-            if (it != null){
+            if (it > 0){
                 binding.tanggalInstallEt.setText(
                     convertLongToDateString(it),
                     TextView.BufferType.EDITABLE
                 )
-            }
+            } else binding.tanggalInstallEt.setText("")
         })
     }
 
