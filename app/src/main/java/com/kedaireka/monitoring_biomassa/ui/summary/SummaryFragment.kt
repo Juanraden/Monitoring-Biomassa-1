@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
@@ -15,15 +16,14 @@ import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.SummaryFragmentTabAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentSummaryBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject as Inject
+import javax.inject.Inject
 
 
-@AndroidEntryPoint
 class SummaryFragment : Fragment() {
 
-    private lateinit var binding: FragmentSummaryBinding
+    private val args: SummaryFragmentArgs by navArgs()
 
-    @Inject lateinit var tabAdapter: SummaryFragmentTabAdapter
+    private lateinit var binding: FragmentSummaryBinding
 
     private lateinit var navController: NavController
 
@@ -36,7 +36,15 @@ class SummaryFragment : Fragment() {
 
         navController = findNavController()
 
+        setParentArgs()
+
         return binding.root
+    }
+
+    private fun setParentArgs() {
+        val parentArgs = Bundle()
+        parentArgs.putInt("kerambaid", args.kerambaid)
+        this.arguments = parentArgs
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,6 +56,8 @@ class SummaryFragment : Fragment() {
     }
 
     private fun setupTabLayout(){
+        val tabAdapter = SummaryFragmentTabAdapter(this)
+
         with(binding) {
             pager.adapter = tabAdapter
 
