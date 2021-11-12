@@ -18,13 +18,13 @@ import androidx.room.PrimaryKey
     indices = [Index("kerambaid")]
 )
 data class Biota constructor(
-    @PrimaryKey
-    val biotaid: Int,
+    @PrimaryKey(autoGenerate = true)
+    val biotaid: Int = 0,
     val jenis_biota: String,
     val bobot: Double,
     val panjang: Double,
     val jumlah_bibit: Int,
     val tanggal_tebar: Long,
-    val tanggal_panen: Long,
+    val tanggal_panen: Long = 0,
     val kerambaid: Int,
 )
