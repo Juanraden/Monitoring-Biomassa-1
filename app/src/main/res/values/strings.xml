@@ -34,4 +34,8 @@
     <string name="ukuran_meter_kubik">Ukuran (meter kubik)</string>
     <string name="simpan">Simpan</string>
     <string name="tanggal_instalasi">Tanggal Instalasi</string>
+    <string name="ukuran">Ukuran</string>
+    <string name="no_data">no data</string>
+    <string name="meter_kubik">%1$s meter kubik</string>
+    <string name="riwayat_biota">Riwayat Biota</string>
 </resources>
