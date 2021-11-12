@@ -1,14 +1,13 @@
 package com.kedaireka.monitoring_biomassa.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.kedaireka.monitoring_biomassa.R
@@ -42,8 +41,13 @@ class AddFragment : Fragment() {
         setupNavigation()
     }
 
-    fun navigateToFragment(){
-        navController.navigate(AddFragmentDirections.actionAddFragmentToAddKerambaFragment())
+    fun navigateToFragment(view: View){
+        when(view.id){
+            R.id.add_keramba_btn -> navController.navigate(AddFragmentDirections.actionAddFragmentToAddKerambaFragment())
+            R.id.add_biota_btn -> navController.navigate(AddFragmentDirections.actionAddFragmentToAddBiotaFragment())
+            else -> return
+        }
+
     }
 
     private fun setupNavigation() {

@@ -38,4 +38,12 @@
     <string name="no_data">no data</string>
     <string name="meter_kubik">%1$s meter kubik</string>
     <string name="riwayat_biota">Riwayat Biota</string>
+    <string name="keramba_asal">Keramba Asal</string>
+    <string name="ukuran_bibit_gram">Ukuran Bibit (gram)</string>
+    <string name="nama_biota">Nama Biota</string>
+    <string name="ukuran_bibit_cm">Ukuran bibit (cm)</string>
+    <string name="jumlah_tebar">Jumlah Tebar</string>
+    <string name="tanggal_tebar_bibit">Tanggal Tebar Bibit</string>
+    <string name="tambah_biota">Tambah Biota</string>
+    <string name="tambah_keramba">Tambah Keramba</string>
 </resources>

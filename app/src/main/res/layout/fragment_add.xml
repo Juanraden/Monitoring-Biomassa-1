@@ -40,7 +40,7 @@
                 android:layout_height="match_parent">
                 <TextView
                     android:id="@+id/add_keramba_btn"
-                    android:onClick="@{() -> addFragment.navigateToFragment()}"
+                    android:onClick="@{(view) -> addFragment.navigateToFragment(view)}"
                     android:text="@string/keramba"
                     android:textAlignment="center"
                     android:textAppearance="@android:style/TextAppearance.Material.Body1"
@@ -65,6 +65,7 @@
                     app:drawableTopCompat="@drawable/ic_add_circle_30" />
                 <TextView
                     android:id="@+id/add_biota_btn"
+                    android:onClick="@{(view) -> addFragment.navigateToFragment(view)}"
                     android:text="@string/biota"
                     android:textAlignment="center"
                     android:textAppearance="@android:style/TextAppearance.Material.Body1"
