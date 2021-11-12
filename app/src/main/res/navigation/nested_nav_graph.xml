@@ -20,7 +20,8 @@
         android:label="Dashboard" >
         <action
             android:id="@+id/action_homeFragment_to_summaryFragment"
-            app:destination="@id/summaryFragment" />
+            app:destination="@id/summaryFragment" >
+        </action>
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -29,10 +30,26 @@
     <fragment
         android:id="@+id/summaryFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.summary.SummaryFragment"
-        android:label="Summary"
-        tools:layout="@layout/fragment_summary" />
+        android:label="{nama_keramba}"
+        tools:layout="@layout/fragment_summary" >
+        <argument
+            android:name="kerambaid"
+            app:argType="integer" />
+        <argument
+            android:name="nama_keramba"
+            app:argType="string"
+            android:defaultValue="Summary"/>
+        <action
+            android:id="@+id/action_summaryFragment_to_addKerambaFragment"
+            app:destination="@id/addKerambaFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addKerambaFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.add.AddKerambaFragment"
-        android:label="Tambah Keramba" />
+        android:label="Tambah Keramba" >
+        <argument
+            android:name="kerambaid"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>
