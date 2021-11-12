@@ -5,11 +5,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.kedaireka.monitoring_biomassa.ui.summary.InfoFragment
 import com.kedaireka.monitoring_biomassa.ui.summary.PakanFragment
 import com.kedaireka.monitoring_biomassa.ui.summary.PanenFragment
+import dagger.hilt.android.scopes.ActivityScoped
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
-@FragmentScoped
-class SummaryFragmentTabAdapter @Inject constructor(fragment: Fragment): FragmentStateAdapter(fragment) {
+
+class SummaryFragmentTabAdapter constructor(fragment: Fragment): FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int =  4
 

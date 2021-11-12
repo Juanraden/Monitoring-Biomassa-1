@@ -48,8 +48,9 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         kerambaListAdapter =KerambaListAdapter(
-            OnClickListener { navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment()) }
-        )
+            OnClickListener {
+                navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment(it.kerambaid, it.nama_keramba))
+            })
         setupNavigation()
 
         setupKerambaList()

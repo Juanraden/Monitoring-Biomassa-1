@@ -29,8 +29,12 @@ class KerambaViewModel @Inject constructor(
 
     fun setQuerySearch(query: String){
         _querySearch.value = query
+    }
 
-        Log.i("KerambaViewModel", query)
+    fun loadKeramba(id: Int): LiveData<KerambaDomain>{
+        return Transformations.map(kerambaDAO.getById(id).asLiveData()){
+            kerambaMapper.mapFromEntity(it)
+        }
     }
 
     fun onSelectDateTime(dateTime: Long) {
