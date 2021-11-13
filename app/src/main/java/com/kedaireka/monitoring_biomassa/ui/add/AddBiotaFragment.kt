@@ -2,6 +2,7 @@ package com.kedaireka.monitoring_biomassa.ui.add
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class AddBiotaFragment : Fragment(), AdapterView.OnItemSelectedListener, DatePickerDialog.OnDateSetListener {
+class AddBiotaFragment : Fragment(), AdapterView.OnItemSelectedListener,
+    DatePickerDialog.OnDateSetListener {
 
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
@@ -52,9 +54,52 @@ class AddBiotaFragment : Fragment(), AdapterView.OnItemSelectedListener, DatePic
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
 
-        binding.addBiotaFragment = this@AddBiotaFragment
+        with(binding) {
+            lifecycleOwner = viewLifecycleOwner
+
+            addBiotaFragment = this@AddBiotaFragment
+
+            saveBiotaBtn.setOnClickListener {
+                if (isEntryValid(
+                        jenisBiotaEt.text.toString().trim(),
+                        bobotBibitEt.text.toString(),
+                        panjangBibitEt.text.toString(),
+                        jumlahBibitEt.text.toString()
+                    )
+                ) {
+                    biotaViewModel.insertBiota(
+                        jenisBiotaEt.text.toString().trim(),
+                        bobotBibitEt.text.toString(),
+                        panjangBibitEt.text.toString(),
+                        jumlahBibitEt.text.toString()
+                    )
+
+                    navController.navigateUp()
+
+                } else {
+                    if (TextUtils.isEmpty(jenisBiotaEt.text)) {
+                        jenisBiotaEt.error = "Jenis biota harus diisi!"
+                    }
+
+                    if (TextUtils.isEmpty(bobotBibitEt.text)) {
+                        bobotBibitEt.error = "Bobot bibit harus diisi!"
+                    }
+
+                    if (TextUtils.isEmpty(panjangBibitEt.text)) {
+                        panjangBibitEt.error = "Panjang bibit harus diisi!"
+                    }
+
+                    if (TextUtils.isEmpty(jumlahBibitEt.text)) {
+                        jumlahBibitEt.error = "Banyaknya bibit harus diisi!"
+                    }
+
+                    if (TextUtils.isEmpty(tanggalTebarEt.text)) {
+                        tanggalTebarEt.error = "Tanggal tebar harus diketahui!"
+                    }
+                }
+            }
+        }
 
         setupNavigation()
 
@@ -62,22 +107,6 @@ class AddBiotaFragment : Fragment(), AdapterView.OnItemSelectedListener, DatePic
 
         setupObserver()
 
-        binding.saveBiotaBtn.setOnClickListener {
-            if (isEntryValid(
-                    binding.jenisBiotaEt.text.toString().trim(),
-                    binding.bobotBibitEt.text.toString(),
-                    binding.panjangBibitEt.text.toString(),
-                    binding.jumlahBibitEt.text.toString()
-                )
-            ) {
-                biotaViewModel.insertBiota(
-                    binding.jenisBiotaEt.text.toString().trim(),
-                    binding.bobotBibitEt.text.toString(),
-                    binding.panjangBibitEt.text.toString(),
-                    binding.jumlahBibitEt.text.toString()
-                )
-            }
-        }
     }
 
     override fun onStop() {
@@ -88,7 +117,7 @@ class AddBiotaFragment : Fragment(), AdapterView.OnItemSelectedListener, DatePic
 
     private fun setupObserver() {
         biotaViewModel.selectedTanggalTebar.observe(viewLifecycleOwner, {
-            if (it > 0){
+            if (it > 0) {
                 binding.tanggalTebarEt.setText(
                     convertLongToDateString(it),
                     TextView.BufferType.EDITABLE
