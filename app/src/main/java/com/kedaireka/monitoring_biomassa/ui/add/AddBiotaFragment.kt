@@ -155,7 +155,7 @@ class AddBiotaFragment : Fragment(), AdapterView.OnItemSelectedListener,
 
     private fun setupDropdown() {
 
-        kerambaViewModel.allKeramba.observe(viewLifecycleOwner, {
+        kerambaViewModel.getAllKeramba().observe(viewLifecycleOwner, {
             mapKeramba = it.map { keramba -> keramba.nama_keramba to keramba.kerambaid }.toMap()
 
             val kerambaList = mapKeramba.keys.toList()
