@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -15,14 +16,11 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.SummaryFragmentTabAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentSummaryBinding
+import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
 class SummaryFragment : Fragment() {
-
-    private val args: SummaryFragmentArgs by navArgs()
-
     private lateinit var binding: FragmentSummaryBinding
 
     private lateinit var navController: NavController
@@ -36,16 +34,9 @@ class SummaryFragment : Fragment() {
 
         navController = findNavController()
 
-        setParentArgs()
-
         return binding.root
     }
 
-    private fun setParentArgs() {
-        val parentArgs = Bundle()
-        parentArgs.putInt("kerambaid", args.kerambaid)
-        this.arguments = parentArgs
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

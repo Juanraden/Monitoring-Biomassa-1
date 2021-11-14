@@ -58,8 +58,6 @@
                         android:minHeight="48dp" />
                 </com.google.android.material.card.MaterialCardView>
 
-
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/jenis_biota_tv"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -71,7 +69,7 @@
                         android:id="@+id/jenis_biota_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/nama_biota"
+                        android:hint="@string/jenis_biota"
                         android:importantForAutofill="no"
                         android:inputType="text"
                         android:minHeight="48dp"
@@ -158,6 +156,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
+                    android:onClick="@{() -> addBiotaFragment.saveBiota()}"
                     android:id="@+id/save_biota_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

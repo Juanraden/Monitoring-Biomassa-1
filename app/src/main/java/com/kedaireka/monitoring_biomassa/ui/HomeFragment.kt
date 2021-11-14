@@ -1,21 +1,22 @@
 package com.kedaireka.monitoring_biomassa.ui
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.kedaireka.monitoring_biomassa.adapter.KerambaListAdapter
-import com.kedaireka.monitoring_biomassa.adapter.OnClickListener
-import com.kedaireka.monitoring_biomassa.databinding.FragmentHomeBinding
-import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import android.view.*
-import androidx.appcompat.widget.SearchView
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.kedaireka.monitoring_biomassa.R
+import com.kedaireka.monitoring_biomassa.adapter.KerambaListAdapter
+import com.kedaireka.monitoring_biomassa.databinding.FragmentHomeBinding
+import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
@@ -25,7 +26,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var navController: NavController
 
-    private val kerambaViewModel by viewModels<KerambaViewModel>()
+    private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
     private lateinit var kerambaListAdapter: KerambaListAdapter
 
@@ -47,10 +48,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        kerambaListAdapter =KerambaListAdapter(
-            OnClickListener {
-                navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment(it.kerambaid, it.nama_keramba))
-            })
+        kerambaListAdapter = KerambaListAdapter {
+            navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment(it.nama_keramba))
+
+            kerambaViewModel.setKerambaId(it.kerambaid)
+        }
+
         setupNavigation()
 
         setupKerambaList()
@@ -58,24 +61,24 @@ class HomeFragment : Fragment() {
         setupToolbarSearch()
     }
 
-    private fun setupKerambaList(){
+    private fun setupKerambaList() {
         binding.kerambaList.adapter = kerambaListAdapter
 
-        kerambaViewModel.allKeramba.observe(viewLifecycleOwner, {
+        kerambaViewModel.getAllKeramba().observe(viewLifecycleOwner, {
             it.let {
                 kerambaListAdapter.setData(it)
             }
 
             binding.loadingSpinner.visibility = View.GONE
-        })
 
-        kerambaViewModel.querySearch.observe(viewLifecycleOwner, {
-            kerambaListAdapter.filter.filter(it)
+            kerambaViewModel.querySearch.observe(viewLifecycleOwner, {query->
+                kerambaListAdapter.filter.filter(query)
+            })
         })
     }
 
 
-    private fun setupToolbarSearch(){
+    private fun setupToolbarSearch() {
         binding.toolbarFragment.inflateMenu(R.menu.search_menu)
 
         val search = binding.toolbarFragment.menu.findItem(R.id.appSearchBar)
@@ -86,6 +89,7 @@ class HomeFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
+
             override fun onQueryTextChange(newText: String): Boolean {
                 kerambaViewModel.setQuerySearch(newText)
                 return true
@@ -93,9 +97,10 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun setupNavigation(){
+    private fun setupNavigation() {
 
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.addFragment,R.id.settingsFragment))
+        val appBarConfiguration =
+            AppBarConfiguration(setOf(R.id.homeFragment, R.id.addFragment, R.id.settingsFragment))
 
         binding.toolbarFragment.setupWithNavController(navController, appBarConfiguration)
 
