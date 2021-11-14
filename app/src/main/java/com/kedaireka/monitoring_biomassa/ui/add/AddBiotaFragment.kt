@@ -12,6 +12,7 @@ import android.widget.DatePicker
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -32,7 +33,7 @@ class AddBiotaFragment : Fragment(), AdapterView.OnItemSelectedListener,
 
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
-    private val biotaViewModel by activityViewModels<BiotaViewModel>()
+    private val biotaViewModel by viewModels<BiotaViewModel>()
 
     private lateinit var binding: FragmentAddBiotaBinding
 
@@ -65,12 +66,6 @@ class AddBiotaFragment : Fragment(), AdapterView.OnItemSelectedListener,
 
         setupObserver()
 
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        biotaViewModel.onSelectDateTime(0)
     }
 
     private fun setupObserver() {
