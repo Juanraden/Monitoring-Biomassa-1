@@ -13,7 +13,7 @@ import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
 import com.kedaireka.monitoring_biomassa.databinding.ListKerambaBinding
 
 class KerambaListAdapter(
-    val onClick: OnClickListener
+    val clickListener: (obj: KerambaDomain) -> Unit
 ): ListAdapter<KerambaDomain, KerambaListAdapter.ViewHolder>(DiffCallBack), Filterable {
 
     private var list = mutableListOf<KerambaDomain>()
@@ -48,9 +48,7 @@ class KerambaListAdapter(
 
                 namaKerambaTv.text = kerambaDomain.nama_keramba
 
-                kerambaCard.setOnClickListener {
-                    onClick.onClick(kerambaDomain)
-                }
+                kerambaCard.setOnClickListener { clickListener(kerambaDomain) }
             }
             listKerambaBinding.executePendingBindings()
         }
@@ -95,10 +93,6 @@ class KerambaListAdapter(
             submitList(p1?.values as MutableList<KerambaDomain>)
         }
     }
-}
-
-class OnClickListener(val clickListener: (kerambaDomain: KerambaDomain) -> Unit){
-    fun onClick(kerambaDomain: KerambaDomain) = clickListener(kerambaDomain)
 }
 
 
