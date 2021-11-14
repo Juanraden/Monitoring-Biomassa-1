@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class BiotaFragment : Fragment() {
 
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
-    private val biotaViewModel by viewModels<BiotaViewModel>()
+    private val biotaViewModel by activityViewModels<BiotaViewModel>()
 
     private lateinit var binding: FragmentBiotaBinding
 
