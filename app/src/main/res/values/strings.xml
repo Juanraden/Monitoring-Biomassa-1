@@ -40,8 +40,8 @@
     <string name="riwayat_biota">Riwayat Biota</string>
     <string name="keramba_asal">Keramba Asal</string>
     <string name="ukuran_bibit_gram">Ukuran Bibit (gram)</string>
-    <string name="nama_biota">Nama Biota</string>
-    <string name="ukuran_bibit_cm">Ukuran bibit (cm)</string>
+    <string name="jenis_biota">Jenis Biota</string>
+    <string name="ukuran_bibit_cm">Ukuran Bibit (cm)</string>
     <string name="jumlah_tebar">Jumlah Tebar</string>
     <string name="tanggal_tebar_bibit">Tanggal Tebar Bibit</string>
     <string name="tambah_biota">Tambah Biota</string>

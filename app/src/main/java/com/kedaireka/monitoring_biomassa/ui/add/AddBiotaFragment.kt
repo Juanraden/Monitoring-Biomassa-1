@@ -55,51 +55,9 @@ class AddBiotaFragment : Fragment(), AdapterView.OnItemSelectedListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding) {
-            lifecycleOwner = viewLifecycleOwner
+        binding.lifecycleOwner = viewLifecycleOwner
 
-            addBiotaFragment = this@AddBiotaFragment
-
-            saveBiotaBtn.setOnClickListener {
-                if (isEntryValid(
-                        jenisBiotaEt.text.toString().trim(),
-                        bobotBibitEt.text.toString(),
-                        panjangBibitEt.text.toString(),
-                        jumlahBibitEt.text.toString()
-                    )
-                ) {
-                    biotaViewModel.insertBiota(
-                        jenisBiotaEt.text.toString().trim(),
-                        bobotBibitEt.text.toString(),
-                        panjangBibitEt.text.toString(),
-                        jumlahBibitEt.text.toString()
-                    )
-
-                    navController.navigateUp()
-
-                } else {
-                    if (TextUtils.isEmpty(jenisBiotaEt.text)) {
-                        jenisBiotaEt.error = "Jenis biota harus diisi!"
-                    }
-
-                    if (TextUtils.isEmpty(bobotBibitEt.text)) {
-                        bobotBibitEt.error = "Bobot bibit harus diisi!"
-                    }
-
-                    if (TextUtils.isEmpty(panjangBibitEt.text)) {
-                        panjangBibitEt.error = "Panjang bibit harus diisi!"
-                    }
-
-                    if (TextUtils.isEmpty(jumlahBibitEt.text)) {
-                        jumlahBibitEt.error = "Banyaknya bibit harus diisi!"
-                    }
-
-                    if (TextUtils.isEmpty(tanggalTebarEt.text)) {
-                        tanggalTebarEt.error = "Tanggal tebar harus diketahui!"
-                    }
-                }
-            }
-        }
+        binding.addBiotaFragment = this@AddBiotaFragment
 
         setupNavigation()
 
@@ -126,6 +84,48 @@ class AddBiotaFragment : Fragment(), AdapterView.OnItemSelectedListener,
                 binding.tanggalTebarEt.error = null
             } else binding.tanggalTebarEt.setText("")
         })
+    }
+
+    fun saveBiota() {
+        binding.apply {
+            if (isEntryValid(
+                    jenisBiotaEt.text.toString().trim(),
+                    bobotBibitEt.text.toString(),
+                    panjangBibitEt.text.toString(),
+                    jumlahBibitEt.text.toString()
+                )
+            ) {
+                biotaViewModel.insertBiota(
+                    jenisBiotaEt.text.toString().trim(),
+                    bobotBibitEt.text.toString(),
+                    panjangBibitEt.text.toString(),
+                    jumlahBibitEt.text.toString()
+                )
+
+                navController.navigateUp()
+
+            } else {
+                if (TextUtils.isEmpty(jenisBiotaEt.text)) {
+                    jenisBiotaEt.error = "Jenis biota harus diisi!"
+                }
+
+                if (TextUtils.isEmpty(bobotBibitEt.text)) {
+                    bobotBibitEt.error = "Bobot bibit harus diisi!"
+                }
+
+                if (TextUtils.isEmpty(panjangBibitEt.text)) {
+                    panjangBibitEt.error = "Panjang bibit harus diisi!"
+                }
+
+                if (TextUtils.isEmpty(jumlahBibitEt.text)) {
+                    jumlahBibitEt.error = "Banyaknya bibit harus diisi!"
+                }
+
+                if (TextUtils.isEmpty(tanggalTebarEt.text)) {
+                    tanggalTebarEt.error = "Tanggal tebar harus diketahui!"
+                }
+            }
+        }
     }
 
     fun showDatePicker() {
@@ -173,10 +173,10 @@ class AddBiotaFragment : Fragment(), AdapterView.OnItemSelectedListener,
 
 
     override fun onItemSelected(parent: AdapterView<*>, p1: View?, pos: Int, id: Long) {
-        val nama_keramba = parent.getItemAtPosition(pos)
+        val namaKeramba = parent.getItemAtPosition(pos)
 
-        if (nama_keramba != null) {
-            biotaViewModel.selectKerambaId(mapKeramba[nama_keramba]!!)
+        if (namaKeramba != null) {
+            biotaViewModel.selectKerambaId(mapKeramba[namaKeramba]!!)
         }
     }
 
