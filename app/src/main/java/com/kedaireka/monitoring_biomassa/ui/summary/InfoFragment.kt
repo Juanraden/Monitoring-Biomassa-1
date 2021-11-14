@@ -42,33 +42,27 @@ class InfoFragment : Fragment() {
     }
 
     private fun setupFragment() {
-
-        val parentFragmentArgs = parentFragment?.arguments
-        val id = parentFragmentArgs?.getInt("kerambaid")
-
-        if (id != null){
-            kerambaViewModel.loadKeramba(id).observe(viewLifecycleOwner, {keramba->
-                with(binding){
+        kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, { id ->
+            kerambaViewModel.loadKerambaData(id).observe(viewLifecycleOwner, { keramba ->
+                with(binding) {
                     namaKerambaTv.text = keramba.nama_keramba
 
                     tanggalInstallTv.text = convertLongToDateString(keramba.tanggal_install)
 
-                    ukuranKerambaTv.text = getString(R.string.meter_kubik, keramba.ukuran.toString())
+                    ukuranKerambaTv.text =
+                        getString(R.string.meter_kubik, keramba.ukuran.toString())
 
                     editBtn.setOnClickListener {
-                        navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToAddKerambaFragment(keramba.kerambaid))
+                        navController.navigate(
+                            SummaryFragmentDirections.actionSummaryFragmentToAddKerambaFragment(
+                                keramba.kerambaid
+                            )
+                        )
                     }
                 }
             })
-        } else{
-            with(binding){
-                namaKerambaTv.text = getString(R.string.no_data)
 
-                tanggalInstallTv.text = getString(R.string.no_data)
-
-                ukuranKerambaTv.text = getString(R.string.no_data)
-            }
-        }
+        })
     }
 
 }
