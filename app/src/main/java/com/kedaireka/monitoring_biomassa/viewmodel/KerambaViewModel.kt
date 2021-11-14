@@ -1,6 +1,5 @@
 package com.kedaireka.monitoring_biomassa.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
@@ -17,8 +16,15 @@ class KerambaViewModel @Inject constructor(
     private val kerambaDAO: KerambaDAO,
     private val kerambaMapper: KerambaMapper,
 ): ViewModel() {
-    val allKeramba: LiveData<List<KerambaDomain>> = Transformations.map(kerambaDAO.getAll().asLiveData()){
+    fun getAllKeramba(): LiveData<List<KerambaDomain>> = Transformations.map(kerambaDAO.getAll().asLiveData()){
         kerambaMapper.mapFromList(it)
+    }
+
+    private val _loadedKerambaid = MutableLiveData<Int>()
+    val loadedKerambaid: LiveData<Int> = _loadedKerambaid
+
+    fun setKerambaId(id: Int){
+        _loadedKerambaid.value = id
     }
 
     private val _tanggalInstall = MutableLiveData<Long>()
@@ -31,7 +37,7 @@ class KerambaViewModel @Inject constructor(
         _querySearch.value = query
     }
 
-    fun loadKeramba(id: Int): LiveData<KerambaDomain>{
+    fun loadKerambaData(id: Int): LiveData<KerambaDomain>{
         return Transformations.map(kerambaDAO.getById(id).asLiveData()){
             kerambaMapper.mapFromEntity(it)
         }
