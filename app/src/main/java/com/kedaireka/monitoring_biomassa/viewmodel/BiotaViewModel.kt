@@ -1,11 +1,10 @@
 package com.kedaireka.monitoring_biomassa.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.database.dao.BiotaDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Biota
+import com.kedaireka.monitoring_biomassa.util.BiotaMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,9 +12,13 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class BiotaViewModel @Inject constructor(private val biotaDao: BiotaDAO): ViewModel() {
+class BiotaViewModel @Inject constructor(
+    private val biotaDao: BiotaDAO,
+    private val biotaMapper: BiotaMapper): ViewModel() {
+
+    fun getAllBiota(id: Int): LiveData<List<BiotaDomain>> = Transformations.map(biotaDao.getAll(id).asLiveData()){ biotaMapper.mapFromList(it) }
+
     private val _selectedKerambaId = MutableLiveData<Int>()
-    val selectedKerambaId: LiveData<Int> = _selectedKerambaId
 
     private val _selectedTanggalTebar = MutableLiveData<Long>()
     val selectedTanggalTebar: LiveData<Long> = _selectedTanggalTebar
