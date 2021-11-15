@@ -4,12 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="keramba"
-            type="com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain" />
-    </data>
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/keramba_card"
         android:clickable="true"

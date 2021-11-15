@@ -4,12 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="Biota"
-            type="com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain" />
-    </data>
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/biota_card"
         android:clickable="true"
