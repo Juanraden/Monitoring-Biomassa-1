@@ -18,6 +18,8 @@ class BiotaViewModel @Inject constructor(
 
     fun getAllBiota(id: Int): LiveData<List<BiotaDomain>> = Transformations.map(biotaDao.getAll(id).asLiveData()){ biotaMapper.mapFromList(it) }
 
+    fun getAllBiotaHistory(id: Int): LiveData<List<BiotaDomain>> = Transformations.map(biotaDao.getAllHistory(id).asLiveData()){ biotaMapper.mapFromList(it) }
+
     private val _selectedKerambaId = MutableLiveData<Int>()
 
     private val _selectedTanggalTebar = MutableLiveData<Long>()

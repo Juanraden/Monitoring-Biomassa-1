@@ -46,4 +46,9 @@
     <string name="tambah">Tambah</string>
     <string name="tambah_pakan">Tambah Pakan</string>
     <string name="jenis_pakan">Jenis Pakan</string>
+
+    <!--    Strings related to Summary Fragment-->
+    <string name="tanggal_panen">Tanggal panen: %1$s</string>
+    <string name="jumlah_ekor">Jumlah: %1$s ekor</string>
+    <string name="bobot_satuan">Bobot satuan: %1$s kg</string>
 </resources>

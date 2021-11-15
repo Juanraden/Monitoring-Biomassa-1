@@ -121,8 +121,8 @@ class InfoFragment : Fragment() {
                     binding.chartCard.visibility = View.GONE
                 }
             })
-
         })
-    }
 
+        binding.biotaHistoryBtn.setOnClickListener { navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToBiotaHistoryFragment()) }
+    }
 }

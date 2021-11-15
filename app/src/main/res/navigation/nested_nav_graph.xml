@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_summaryFragment_to_addKerambaFragment"
             app:destination="@id/addKerambaFragment" />
+        <action
+            android:id="@+id/action_summaryFragment_to_biotaHistoryFragment"
+            app:destination="@id/biotaHistoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/addKerambaFragment"
@@ -62,4 +65,8 @@
         android:id="@+id/addPakanFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.add.AddPakanFragment"
         android:label="@string/tambah_pakan" />
+    <fragment
+        android:id="@+id/biotaHistoryFragment"
+        android:name="com.kedaireka.monitoring_biomassa.ui.summary.BiotaHistoryFragment"
+        android:label="@string/riwayat_biota" />
 </navigation>
