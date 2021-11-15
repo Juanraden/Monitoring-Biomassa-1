@@ -28,7 +28,6 @@
             android:id="@+id/layout_fragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="@dimen/layout_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,6 +41,8 @@
 
                 <TextView
                     android:id="@+id/keramba_dropdown_label"
+                    android:layout_marginStart="@dimen/layout_padding"
+                    android:layout_marginEnd="@dimen/layout_padding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:labelFor="@+id/keramba_dropdown"
@@ -50,6 +51,8 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/layout_padding"
+                    android:layout_marginEnd="@dimen/layout_padding"
                     android:layout_marginBottom="20dp">
                     <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/keramba_dropdown"
@@ -63,6 +66,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/layout_padding"
+                    android:layout_marginEnd="@dimen/layout_padding"
                     android:layout_marginBottom="20dp">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -83,6 +88,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/layout_padding"
+                    android:layout_marginEnd="@dimen/layout_padding"
                     android:layout_marginBottom="20dp">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -102,6 +109,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/layout_padding"
+                    android:layout_marginEnd="@dimen/layout_padding"
                     android:layout_marginBottom="20dp">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -121,6 +130,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/layout_padding"
+                    android:layout_marginEnd="@dimen/layout_padding"
                     android:layout_marginBottom="20dp">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -139,6 +150,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/layout_padding"
+                    android:layout_marginEnd="@dimen/layout_padding"
                     android:layout_marginBottom="20dp"
                     app:endIconDrawable="@drawable/ic_baseline_date_range_24"
                     app:endIconMode="custom">
@@ -160,6 +173,8 @@
                     android:id="@+id/save_biota_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/layout_padding"
+                    android:layout_marginEnd="@dimen/layout_padding"
                     android:text="@string/simpan" />
 
             </LinearLayout>

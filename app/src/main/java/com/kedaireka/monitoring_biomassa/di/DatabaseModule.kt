@@ -5,7 +5,6 @@ import androidx.room.Room
 import com.kedaireka.monitoring_biomassa.database.DatabaseBiomassa
 import com.kedaireka.monitoring_biomassa.database.dao.BiotaDAO
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
-import com.kedaireka.monitoring_biomassa.database.entity.Biota
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,12 +31,12 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideKerambaDAO(databaseBiomassa: DatabaseBiomassa): KerambaDAO{
-        return databaseBiomassa.KerambaDAO()
+        return databaseBiomassa.kerambaDAO()
     }
 
     @Singleton
     @Provides
     fun provideBiotaDAO(databaseBiomassa: DatabaseBiomassa): BiotaDAO {
-        return databaseBiomassa.BiotaDAO()
+        return databaseBiomassa.biotaDAO()
     }
 }

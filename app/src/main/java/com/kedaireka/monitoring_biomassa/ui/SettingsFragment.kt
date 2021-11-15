@@ -12,12 +12,10 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.databinding.FragmentSettingsBinding
-import com.kedaireka.monitoring_biomassa.ui.login.LoginFragment
 
 class SettingsFragment : Fragment(){
     private lateinit var binding: FragmentSettingsBinding

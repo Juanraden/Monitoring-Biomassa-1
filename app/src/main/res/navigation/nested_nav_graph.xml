@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nested_nav_graph"
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/addFragment"
@@ -16,6 +15,9 @@
         <action
             android:id="@+id/action_addFragment_to_addBiotaFragment"
             app:destination="@id/addBiotaFragment" />
+        <action
+            android:id="@+id/action_addFragment_to_addPakanFragment"
+            app:destination="@id/addPakanFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -56,4 +58,8 @@
         android:id="@+id/addBiotaFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.add.AddBiotaFragment"
         android:label="@string/tambah_biota" />
+    <fragment
+        android:id="@+id/addPakanFragment"
+        android:name="com.kedaireka.monitoring_biomassa.ui.add.AddPakanFragment"
+        android:label="@string/tambah_pakan" />
 </navigation>

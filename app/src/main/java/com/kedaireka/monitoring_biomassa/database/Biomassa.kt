@@ -4,16 +4,20 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.kedaireka.monitoring_biomassa.database.dao.BiotaDAO
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
+import com.kedaireka.monitoring_biomassa.database.dao.PakanDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Biota
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
+import com.kedaireka.monitoring_biomassa.database.entity.Pakan
 
-@Database(entities = [Keramba::class, Biota::class], version = 1, exportSchema = false)
+@Database(entities = [Keramba::class, Biota::class, Pakan::class], version = 1, exportSchema = false)
 abstract class DatabaseBiomassa: RoomDatabase() {
-    abstract fun KerambaDAO(): KerambaDAO
+    abstract fun kerambaDAO(): KerambaDAO
 
-    abstract fun BiotaDAO(): BiotaDAO
+    abstract fun biotaDAO(): BiotaDAO
+
+    abstract fun pakanDAO(): PakanDAO
 
     companion object{
-        val DATABASE_NAME = "biomassa_db"
+        const val DATABASE_NAME = "biomassa_db"
     }
 }
