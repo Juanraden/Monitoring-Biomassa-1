@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.kedaireka.monitoring_biomassa.database.DatabaseBiomassa
 import com.kedaireka.monitoring_biomassa.database.dao.BiotaDAO
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
+import com.kedaireka.monitoring_biomassa.database.dao.PakanDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +39,11 @@ object DatabaseModule {
     @Provides
     fun provideBiotaDAO(databaseBiomassa: DatabaseBiomassa): BiotaDAO {
         return databaseBiomassa.biotaDAO()
+    }
+
+    @Singleton
+    @Provides
+    fun providePakanDao(databaseBiomassa: DatabaseBiomassa): PakanDAO{
+        return databaseBiomassa.pakanDAO()
     }
 }

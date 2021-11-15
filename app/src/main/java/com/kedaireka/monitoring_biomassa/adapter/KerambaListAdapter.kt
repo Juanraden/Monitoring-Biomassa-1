@@ -44,8 +44,6 @@ class KerambaListAdapter(
 
         fun bind(kerambaDomain: KerambaDomain){
             with(listKerambaBinding){
-                keramba = kerambaDomain
-
                 namaKerambaTv.text = kerambaDomain.nama_keramba
 
                 kerambaCard.setOnClickListener { clickListener(kerambaDomain) }

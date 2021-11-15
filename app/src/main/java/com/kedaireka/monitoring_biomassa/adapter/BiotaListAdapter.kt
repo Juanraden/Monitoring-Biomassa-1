@@ -42,8 +42,6 @@ class BiotaListAdapter(
     inner class ViewHolder(private val binding: ListBiotaBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(biotaDomain: BiotaDomain){
             with(binding){
-                biota = biotaDomain
-
                 jenisBiotaTv.text = biotaDomain.jenis_biota
 
                 jumlahBibitTv.text = biotaDomain.jumlah_bibit.toString()

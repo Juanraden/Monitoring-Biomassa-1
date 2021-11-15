@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="addPakanFragment"
+            type="com.kedaireka.monitoring_biomassa.ui.add.AddPakanFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/layout_padding"
             android:layout_marginBottom="20dp"
+            android:paddingTop="@dimen/layout_padding"
             app:layout_constraintEnd_toStartOf="@+id/add_pakan_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_fragment">
@@ -38,7 +42,7 @@
                 android:id="@+id/jenis_pakan_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/jenis_biota"
+                android:hint="@string/jenis_pakan"
                 android:importantForAutofill="no"
                 android:inputType="text"
                 android:minHeight="48dp"
@@ -53,23 +57,41 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="@dimen/layout_padding"
             android:minHeight="48dp"
+            android:onClick="@{() -> addPakanFragment.insertPakan() }"
             android:text="@string/tambah"
             app:layout_constraintBottom_toBottomOf="@id/jenis_pakan_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/jenis_pakan_tv"
             app:layout_constraintTop_toTopOf="@id/jenis_pakan_tv" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/pakan_list"
+
+        <FrameLayout
+            android:id="@+id/layout_fragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/layout_padding"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="@dimen/layout_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/jenis_pakan_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/jenis_pakan_tv">
+
+            <ProgressBar
+                android:id="@+id/loading_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="visible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pakan_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/jenis_pakan_tv" />
+        </FrameLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
