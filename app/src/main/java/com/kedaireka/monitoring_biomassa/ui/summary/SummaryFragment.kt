@@ -5,10 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
@@ -16,9 +14,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.SummaryFragmentTabAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentSummaryBinding
-import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 class SummaryFragment : Fragment() {
     private lateinit var binding: FragmentSummaryBinding

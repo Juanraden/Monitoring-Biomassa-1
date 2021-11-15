@@ -44,6 +44,7 @@ class AddFragment : Fragment() {
     fun navigateToFragment(view: View){
         when(view.id){
             R.id.add_keramba_btn -> navController.navigate(AddFragmentDirections.actionAddFragmentToAddKerambaFragment())
+            R.id.add_pakan_btn -> navController.navigate(AddFragmentDirections.actionAddFragmentToAddPakanFragment())
             R.id.add_biota_btn -> navController.navigate(AddFragmentDirections.actionAddFragmentToAddBiotaFragment())
             else -> return
         }

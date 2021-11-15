@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="addFragment"
             type="com.kedaireka.monitoring_biomassa.ui.AddFragment" />
@@ -16,66 +17,71 @@
         tools:context=".ui.AddFragment">
 
         <androidx.appcompat.widget.Toolbar
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/add_grid"
             android:id="@+id/toolbar_fragment"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_constraintBottom_toTopOf="@+id/add_grid"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/add_grid"
             android:layout_width="0dp"
-            android:layout_margin="@dimen/layout_padding"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_fragment">
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:padding="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:padding="10dp">
+
                 <TextView
                     android:id="@+id/add_keramba_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:onClick="@{(view) -> addFragment.navigateToFragment(view)}"
                     android:text="@string/keramba"
                     android:textAlignment="center"
                     android:textAppearance="@android:style/TextAppearance.Material.Body1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/add_pakan_btn"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:drawableTopCompat="@drawable/ic_add_circle_30"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:drawableTopCompat="@drawable/ic_add_circle_30" />
+                    app:layout_constraintEnd_toStartOf="@id/add_pakan_btn"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:id="@+id/add_pakan_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{(view) -> addFragment.navigateToFragment(view)}"
                     android:text="@string/pakan"
                     android:textAlignment="center"
                     android:textAppearance="@android:style/TextAppearance.Material.Body1"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:drawableTopCompat="@drawable/ic_add_circle_30"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/add_keramba_btn"
                     app:layout_constraintEnd_toStartOf="@+id/add_biota_btn"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:drawableTopCompat="@drawable/ic_add_circle_30" />
+                    app:layout_constraintStart_toEndOf="@id/add_keramba_btn"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:id="@+id/add_biota_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:onClick="@{(view) -> addFragment.navigateToFragment(view)}"
                     android:text="@string/biota"
                     android:textAlignment="center"
                     android:textAppearance="@android:style/TextAppearance.Material.Body1"
-                    app:layout_constraintStart_toEndOf="@id/add_pakan_btn"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:drawableTopCompat="@drawable/ic_add_circle_30"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:drawableTopCompat="@drawable/ic_add_circle_30" />
+                    app:layout_constraintStart_toEndOf="@id/add_pakan_btn"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

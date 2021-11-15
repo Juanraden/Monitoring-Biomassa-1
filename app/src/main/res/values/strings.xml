@@ -17,8 +17,6 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome!"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
 
     <!--    Strings related to Summary Fragment-->
@@ -35,7 +33,6 @@
     <string name="simpan">Simpan</string>
     <string name="tanggal_instalasi">Tanggal Instalasi</string>
     <string name="ukuran">Ukuran</string>
-    <string name="no_data">no data</string>
     <string name="meter_kubik">%1$s meter kubik</string>
     <string name="riwayat_biota">Riwayat Biota</string>
     <string name="keramba_asal">Keramba Asal</string>
@@ -46,4 +43,6 @@
     <string name="tanggal_tebar_bibit">Tanggal Tebar Bibit</string>
     <string name="tambah_biota">Tambah Biota</string>
     <string name="tambah_keramba">Tambah Keramba</string>
+    <string name="tambah">Tambah</string>
+    <string name="tambah_pakan">Tambah Pakan</string>
 </resources>
