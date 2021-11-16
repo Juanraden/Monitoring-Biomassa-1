@@ -9,9 +9,7 @@
         android:label="@string/tambahkan" >
         <action
             android:id="@+id/action_addFragment_to_addKerambaFragment"
-            app:destination="@id/addKerambaFragment"
-            app:popUpTo="@id/addFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/addKerambaFragment" />
         <action
             android:id="@+id/action_addFragment_to_addBiotaFragment"
             app:destination="@id/addBiotaFragment" />
@@ -35,12 +33,8 @@
     <fragment
         android:id="@+id/summaryFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.summary.SummaryFragment"
-        android:label="{nama_keramba}"
+        android:label="Summary"
         tools:layout="@layout/fragment_summary" >
-        <argument
-            android:name="nama_keramba"
-            app:argType="string"
-            android:defaultValue="Summary"/>
         <action
             android:id="@+id/action_summaryFragment_to_addKerambaFragment"
             app:destination="@id/addKerambaFragment" />

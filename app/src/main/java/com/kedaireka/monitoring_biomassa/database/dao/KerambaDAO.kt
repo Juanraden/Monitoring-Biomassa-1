@@ -1,9 +1,6 @@
 package com.kedaireka.monitoring_biomassa.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
 import kotlinx.coroutines.flow.Flow
 
@@ -14,6 +11,9 @@ interface KerambaDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOne(keramba: Keramba)
+
+    @Update
+    fun updateOne(keramba: Keramba)
 
     @Query("SELECT * FROM keramba ORDER BY tanggal_install")
     fun getAll(): Flow<List<Keramba>>

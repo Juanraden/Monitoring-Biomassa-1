@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,8 +15,13 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.SummaryFragmentTabAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentSummaryBinding
+import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SummaryFragment : Fragment() {
+    private val kerambaViewModel by activityViewModels<KerambaViewModel>()
+
     private lateinit var binding: FragmentSummaryBinding
 
     private lateinit var navController: NavController
@@ -66,5 +72,11 @@ class SummaryFragment : Fragment() {
         binding.toolbarFragment.setNavigationOnClickListener {
             navController.navigateUp(appBarConfiguration)
         }
+
+        kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, {id->
+            kerambaViewModel.loadKerambaData(id).observe(viewLifecycleOwner, {keramba->
+                binding.toolbarFragment.title = keramba.nama_keramba
+            })
+        })
     }
 }
