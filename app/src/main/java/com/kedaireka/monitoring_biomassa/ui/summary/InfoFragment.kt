@@ -18,6 +18,7 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.databinding.FragmentInfoBinding
+import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetKeramba
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
@@ -66,11 +67,15 @@ class InfoFragment : Fragment() {
                         getString(R.string.meter_kubik, keramba.ukuran.toString())
 
                     editBtn.setOnClickListener {
-                        navController.navigate(
-                            SummaryFragmentDirections.actionSummaryFragmentToAddKerambaFragment(
-                                keramba.kerambaid
-                            )
-                        )
+                        val bottomSheetKeramba = BottomSheetKeramba()
+
+                        val bundle = Bundle()
+
+                        bundle.putInt("kerambaid", keramba.kerambaid)
+
+                        bottomSheetKeramba.arguments = bundle
+
+                        bottomSheetKeramba.show(childFragmentManager, "BottomSheetKeramba")
                     }
                 }
             })

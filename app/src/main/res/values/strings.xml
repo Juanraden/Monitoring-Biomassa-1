@@ -52,4 +52,5 @@
     <string name="jumlah_ekor">Jumlah: %1$s ekor</string>
     <string name="bobot_satuan">Bobot satuan: %1$s kg</string>
     <string name="update_keramba">Update Keramba</string>
+    <string name="batalkan">batalkan</string>
 </resources>
