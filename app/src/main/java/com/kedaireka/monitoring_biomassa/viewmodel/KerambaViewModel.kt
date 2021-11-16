@@ -16,22 +16,22 @@ class KerambaViewModel @Inject constructor(
     private val kerambaDAO: KerambaDAO,
     private val kerambaMapper: KerambaMapper,
 ): ViewModel() {
-    fun getAllKeramba(): LiveData<List<KerambaDomain>> = Transformations.map(kerambaDAO.getAll().asLiveData()){
-        kerambaMapper.mapFromList(it)
-    }
-
     private val _loadedKerambaid = MutableLiveData<Int>()
     val loadedKerambaid: LiveData<Int> = _loadedKerambaid
-
-    fun setKerambaId(id: Int){
-        _loadedKerambaid.value = id
-    }
 
     private val _tanggalInstall = MutableLiveData<Long>()
     val tanggalInstall: LiveData<Long> = _tanggalInstall
 
     private val _querySearch = MutableLiveData<String>()
     val querySearch: LiveData<String> = _querySearch
+
+    fun setKerambaId(id: Int){
+        _loadedKerambaid.value = id
+    }
+
+    fun getAllKeramba(): LiveData<List<KerambaDomain>> = Transformations.map(kerambaDAO.getAll().asLiveData()){
+        kerambaMapper.mapFromList(it)
+    }
 
     fun setQuerySearch(query: String){
         _querySearch.value = query
@@ -55,6 +55,21 @@ class KerambaViewModel @Inject constructor(
             withContext(Dispatchers.IO){
                 kerambaDAO.insertOne(
                     Keramba(
+                        nama_keramba = nama,
+                        ukuran = ukuran.toDouble(),
+                        tanggal_install = _tanggalInstall.value!!
+                    )
+                )
+            }
+        }
+    }
+
+    fun updateKeramba(id: Int, nama: String, ukuran: String){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                kerambaDAO.updateOne(
+                    Keramba(
+                        kerambaid = id,
                         nama_keramba = nama,
                         ukuran = ukuran.toDouble(),
                         tanggal_install = _tanggalInstall.value!!
