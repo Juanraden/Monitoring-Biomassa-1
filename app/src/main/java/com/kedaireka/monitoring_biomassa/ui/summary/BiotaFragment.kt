@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ConcatAdapter
+import com.kedaireka.monitoring_biomassa.adapter.BiotaHeaderAdapter
 import com.kedaireka.monitoring_biomassa.adapter.BiotaListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
@@ -20,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class BiotaFragment : Fragment() {
 
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
+
     private val biotaViewModel by activityViewModels<BiotaViewModel>()
 
     private lateinit var binding: FragmentBiotaBinding
@@ -44,9 +47,13 @@ class BiotaFragment : Fragment() {
     }
 
     private fun setupBiotaList() {
+        val biotaHeaderAdapter = BiotaHeaderAdapter{ navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToAddBiotaFragment()) }
+
         val biotaListAdapter = BiotaListAdapter{ Toast.makeText(requireContext(), it.jenis_biota, Toast.LENGTH_SHORT).show() }
 
-        binding.biotaList.adapter = biotaListAdapter
+        val concatAdapter = ConcatAdapter(biotaListAdapter, biotaHeaderAdapter)
+
+        binding.biotaList.adapter = concatAdapter
 
         kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, {id->
             biotaViewModel.getAllBiota(id).observe(viewLifecycleOwner, {

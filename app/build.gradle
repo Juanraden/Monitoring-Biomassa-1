@@ -50,6 +50,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.31"
 
+    //recyclerview
+    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+
     //navigation component
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"

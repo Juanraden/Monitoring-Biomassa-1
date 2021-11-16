@@ -5,6 +5,7 @@ buildscript {
         mavenCentral()
     }
     ext {
+        recyclerview_version = "1.2.1"
         nav_version = "2.4.0-beta01"
         lifecycle_version = '2.4.0'
         retrofit_version = "2.9.0"

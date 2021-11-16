@@ -41,6 +41,9 @@
         <action
             android:id="@+id/action_summaryFragment_to_biotaHistoryFragment"
             app:destination="@id/biotaHistoryFragment" />
+        <action
+            android:id="@+id/action_summaryFragment_to_addBiotaFragment"
+            app:destination="@id/addBiotaFragment" />
     </fragment>
     <fragment
         android:id="@+id/addKerambaFragment"
