@@ -68,7 +68,7 @@ class AddPakanFragment : Fragment() {
 
     private fun setupNavigation() {
 
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.addFragment,R.id.settingsFragment))
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment,R.id.settingsFragment))
 
         binding.toolbarFragment.setupWithNavController(navController, appBarConfiguration)
 

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.kedaireka.monitoring_biomassa.adapter.BiotaHeaderAdapter
 import com.kedaireka.monitoring_biomassa.adapter.BiotaListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaBinding
+import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetBiota
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,17 +48,29 @@ class BiotaFragment : Fragment() {
     }
 
     private fun setupBiotaList() {
-        val biotaHeaderAdapter = BiotaHeaderAdapter{ navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToAddBiotaFragment()) }
-
-        val biotaListAdapter = BiotaListAdapter{ Toast.makeText(requireContext(), it.jenis_biota, Toast.LENGTH_SHORT).show() }
-
-        val concatAdapter = ConcatAdapter(biotaListAdapter, biotaHeaderAdapter)
-
-        binding.biotaList.adapter = concatAdapter
 
         kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, {id->
-            biotaViewModel.getAllBiota(id).observe(viewLifecycleOwner, {
-                biotaListAdapter.submitList(it)
+            biotaViewModel.getAllBiota(id).observe(viewLifecycleOwner, {listBiota->
+
+                val biotaHeaderAdapter = BiotaHeaderAdapter{
+                    val bundle = Bundle()
+
+                    bundle.putInt("kerambaid", id)
+
+                    val bottomSheetBiota = BottomSheetBiota()
+
+                    bottomSheetBiota.arguments = bundle
+
+                    bottomSheetBiota.show(childFragmentManager, "BottomSheetBiota")
+                }
+
+                val biotaListAdapter = BiotaListAdapter{biota-> Toast.makeText(requireContext(), biota.jenis_biota, Toast.LENGTH_SHORT).show() }
+
+                val concatAdapter = ConcatAdapter(biotaListAdapter, biotaHeaderAdapter)
+
+                binding.biotaList.adapter = concatAdapter
+
+                biotaListAdapter.submitList(listBiota)
 
                 binding.loadingSpinner.visibility = View.GONE
             })

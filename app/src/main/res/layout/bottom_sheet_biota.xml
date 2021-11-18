@@ -1,39 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
-            name="addBiotaFragment"
-            type="com.kedaireka.monitoring_biomassa.ui.add.AddBiotaFragment" />
+            name="bottomSheetBiota"
+            type="com.kedaireka.monitoring_biomassa.ui.add.BottomSheetBiota" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_fragment"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:layout_constraintBottom_toTopOf="@+id/layout_fragment"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/title_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="@string/tambah_biota"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="5dp"
+                android:src="@drawable/ic_baseline_close_24" />
+
+        </RelativeLayout>
 
         <ScrollView
             android:id="@+id/layout_fragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingTop="@dimen/layout_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar_fragment"
-            tools:context=".ui.add.AddKerambaFragment">
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_fragment">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,10 +57,10 @@
 
                 <TextView
                     android:id="@+id/keramba_dropdown_label"
-                    android:layout_marginStart="@dimen/layout_padding"
-                    android:layout_marginEnd="@dimen/layout_padding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/layout_padding"
+                    android:layout_marginEnd="@dimen/layout_padding"
                     android:labelFor="@+id/keramba_dropdown"
                     android:text="@string/keramba_asal" />
 
@@ -55,6 +70,7 @@
                     android:layout_marginStart="@dimen/layout_padding"
                     android:layout_marginEnd="@dimen/layout_padding"
                     android:layout_marginBottom="20dp">
+
                     <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/keramba_dropdown"
                         android:layout_width="match_parent"
@@ -164,21 +180,22 @@
                         android:enabled="true"
                         android:focusable="false"
                         android:hint="@string/tanggal_tebar_bibit"
-                        android:onClick="@{() -> addBiotaFragment.showDatePicker()}"
+                        android:onClick="@{() -> bottomSheetBiota.showDatePicker()}"
                         android:minHeight="48dp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:onClick="@{() -> addBiotaFragment.saveBiota()}"
                     android:id="@+id/save_biota_btn"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/layout_padding"
                     android:layout_marginEnd="@dimen/layout_padding"
+                    android:onClick="@{() -> bottomSheetBiota.saveBiota()}"
                     android:text="@string/simpan" />
 
             </LinearLayout>
         </ScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </layout>

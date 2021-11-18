@@ -24,5 +24,7 @@ class BottomSheetAdd: BottomSheetDialogFragment() {
         binding.cancelBtn.setOnClickListener { dismiss() }
 
         binding.addKerambaBtn.setOnClickListener { BottomSheetKeramba().show(childFragmentManager, "BottomSheetKeramba") }
+
+        binding.addBiotaBtn.setOnClickListener { BottomSheetBiota().show(childFragmentManager, "BottomSheetBiota") }
     }
 }

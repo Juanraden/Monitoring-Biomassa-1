@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -34,8 +33,6 @@ class InfoFragment : Fragment() {
     private lateinit var binding: FragmentInfoBinding
 
     private lateinit var navController: NavController
-
-    private lateinit var pieChart: PieChart
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,53 +78,52 @@ class InfoFragment : Fragment() {
             })
 
             biotaViewModel.getAllBiota(id).observe(viewLifecycleOwner, { list ->
-                if (list.isNotEmpty()) {
-                    val barEntries = ArrayList<PieEntry>()
 
-                    //mapping data if data is double
-                    val mappedData = mutableMapOf<String, Int>()
+                val barEntries = ArrayList<PieEntry>()
 
-                    list.forEach { mappedData[it.jenis_biota.lowercase()] = 0 }
+                //mapping data if data is double
+                val mappedData = mutableMapOf<String, Int>()
 
-                    list.forEach { mappedData[it.jenis_biota.lowercase()] = mappedData[it.jenis_biota.lowercase()]!! + it.jumlah_bibit }
+                list.forEach { mappedData[it.jenis_biota.lowercase()] = 0 }
 
-                    mappedData.forEach{ barEntries.add(PieEntry(it.value.toFloat(), it.key)) }
+                list.forEach { mappedData[it.jenis_biota.lowercase()] = mappedData[it.jenis_biota.lowercase()]!! + it.jumlah_bibit }
 
-                    val dataSet = PieDataSet(barEntries, "")
+                mappedData.forEach{ barEntries.add(PieEntry(it.value.toFloat(), it.key)) }
 
-                    dataSet.setDrawIcons(false)
-                    dataSet.sliceSpace = 3f
-                    dataSet.iconsOffset = MPPointF(0F, 40F)
-                    dataSet.selectionShift = 5f
-                    dataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
+                val dataSet = PieDataSet(barEntries, "")
 
-                    val dataNow = PieData(dataSet)
+                dataSet.setDrawIcons(false)
+                dataSet.sliceSpace = 3f
+                dataSet.iconsOffset = MPPointF(0F, 40F)
+                dataSet.selectionShift = 5f
+                dataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
+
+                val dataNow = PieData(dataSet)
 
 //                    dataNow.setValueFormatter(PercentFormatter())
 
-                    pieChart = binding.biotaChart
-
-                    pieChart.apply {
-                        data = dataNow
+                binding.biotaChart.apply {
+                    data = dataNow
 //                        setUsePercentValues(true)
-                        animateY(1400, Easing.EaseInOutQuad)
-                        setDrawEntryLabels(false)
-                        holeRadius = 58f
-                        description.text = ""
+                    animateY(1400, Easing.EaseInOutQuad)
+                    setDrawEntryLabels(false)
+                    holeRadius = 58f
+                    description.text = ""
 
-                        transparentCircleRadius = 61f
-                        isDrawHoleEnabled = true
-                        setHoleColor(Color.WHITE)
-                        centerText = "Komposisi Biota"
+                    transparentCircleRadius = 61f
+                    isDrawHoleEnabled = true
+                    setHoleColor(Color.WHITE)
+                    centerText = "Komposisi Biota"
 
-                        invalidate()
-                    }
-                } else{
-                    binding.chartCard.visibility = View.GONE
+                    invalidate()
                 }
             })
         })
 
-        binding.biotaHistoryBtn.setOnClickListener { navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToBiotaHistoryFragment()) }
+        binding.biotaHistoryBtn.setOnClickListener {
+            navController.navigate(
+                SummaryFragmentDirections.actionSummaryFragmentToBiotaHistoryFragment()
+            )
+        }
     }
 }
