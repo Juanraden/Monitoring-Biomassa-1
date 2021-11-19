@@ -24,9 +24,16 @@
         <action
             android:id="@+id/action_summaryFragment_to_biotaHistoryFragment"
             app:destination="@id/biotaHistoryFragment" />
+        <action
+            android:id="@+id/action_summaryFragment_to_biotaTabFragment"
+            app:destination="@id/biotaTabFragment" />
     </fragment>
     <fragment
         android:id="@+id/biotaHistoryFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.summary.BiotaHistoryFragment"
         android:label="@string/riwayat_biota" />
+    <fragment
+        android:id="@+id/biotaTabFragment"
+        android:name="com.kedaireka.monitoring_biomassa.ui.summary.BiotaTabFragment"
+        android:label="Biota Summary" />
 </navigation>

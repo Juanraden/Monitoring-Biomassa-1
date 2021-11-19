@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
@@ -49,10 +48,10 @@ class BiotaFragment : Fragment() {
 
     private fun setupBiotaList() {
 
-        kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, {id->
-            biotaViewModel.getAllBiota(id).observe(viewLifecycleOwner, {listBiota->
+        kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, { id ->
+            biotaViewModel.getAllBiota(id).observe(viewLifecycleOwner, { listBiota ->
 
-                val biotaHeaderAdapter = BiotaHeaderAdapter{
+                val biotaHeaderAdapter = BiotaHeaderAdapter {
                     val bundle = Bundle()
 
                     bundle.putInt("kerambaid", id)
@@ -64,7 +63,11 @@ class BiotaFragment : Fragment() {
                     bottomSheetBiota.show(childFragmentManager, "BottomSheetBiota")
                 }
 
-                val biotaListAdapter = BiotaListAdapter{biota-> Toast.makeText(requireContext(), biota.jenis_biota, Toast.LENGTH_SHORT).show() }
+                val biotaListAdapter = BiotaListAdapter { biota ->
+                    navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToBiotaTabFragment())
+
+                    biotaViewModel.setBiotaid(biota.biotaid)
+                }
 
                 val concatAdapter = ConcatAdapter(biotaListAdapter, biotaHeaderAdapter)
 
