@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
-import com.kedaireka.monitoring_biomassa.util.KerambaMapper
+import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class KerambaViewModel @Inject constructor(
     private val kerambaDAO: KerambaDAO,
-    private val kerambaMapper: KerambaMapper,
+    private val kerambaMapper: EntityMapper<Keramba, KerambaDomain>,
 ): ViewModel() {
     private val _loadedKerambaid = MutableLiveData<Int>()
     val loadedKerambaid: LiveData<Int> = _loadedKerambaid
@@ -29,8 +29,8 @@ class KerambaViewModel @Inject constructor(
         _loadedKerambaid.value = id
     }
 
-    fun getAllKeramba(): LiveData<List<KerambaDomain>> = Transformations.map(kerambaDAO.getAll().asLiveData()){
-        kerambaMapper.mapFromList(it)
+    fun getAllKeramba(): LiveData<List<KerambaDomain>> = Transformations.map(kerambaDAO.getAll().asLiveData()){list->
+        list.map { kerambaMapper.mapFromEntity(it) }
     }
 
     fun setQuerySearch(query: String){

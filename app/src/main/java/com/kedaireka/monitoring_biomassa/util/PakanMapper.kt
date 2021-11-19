@@ -18,8 +18,4 @@ class PakanMapper @Inject constructor(): EntityMapper<Pakan, PakanDomain> {
             jenis_pakan = target.jenis_pakan
         )
     }
-
-    fun mapFromList(entities: List<Pakan>): List<PakanDomain>{
-        return entities.map { mapFromEntity(it) }
-    }
 }
