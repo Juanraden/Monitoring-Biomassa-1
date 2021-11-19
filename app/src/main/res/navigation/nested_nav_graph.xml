@@ -4,20 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/homeFragment">
     <fragment
-        android:id="@+id/addFragment"
-        android:name="com.kedaireka.monitoring_biomassa.ui.AddFragment"
-        android:label="@string/tambahkan" >
-        <action
-            android:id="@+id/action_addFragment_to_addKerambaFragment"
-            app:destination="@id/addKerambaFragment" />
-        <action
-            android:id="@+id/action_addFragment_to_addBiotaFragment"
-            app:destination="@id/addBiotaFragment" />
-        <action
-            android:id="@+id/action_addFragment_to_addPakanFragment"
-            app:destination="@id/addPakanFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/homeFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.HomeFragment"
         android:label="@string/home_page_name" >
@@ -36,31 +22,18 @@
         android:label="Summary"
         tools:layout="@layout/fragment_summary" >
         <action
-            android:id="@+id/action_summaryFragment_to_addKerambaFragment"
-            app:destination="@id/addKerambaFragment" />
-        <action
             android:id="@+id/action_summaryFragment_to_biotaHistoryFragment"
             app:destination="@id/biotaHistoryFragment" />
+        <action
+            android:id="@+id/action_summaryFragment_to_biotaTabFragment"
+            app:destination="@id/biotaTabFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/addKerambaFragment"
-        android:name="com.kedaireka.monitoring_biomassa.ui.add.AddKerambaFragment"
-        android:label="@string/tambah_keramba" >
-        <argument
-            android:name="kerambaid"
-            app:argType="integer"
-            android:defaultValue="0" />
-    </fragment>
-    <fragment
-        android:id="@+id/addBiotaFragment"
-        android:name="com.kedaireka.monitoring_biomassa.ui.add.AddBiotaFragment"
-        android:label="@string/tambah_biota" />
-    <fragment
-        android:id="@+id/addPakanFragment"
-        android:name="com.kedaireka.monitoring_biomassa.ui.add.AddPakanFragment"
-        android:label="@string/tambah_pakan" />
     <fragment
         android:id="@+id/biotaHistoryFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.summary.BiotaHistoryFragment"
         android:label="@string/riwayat_biota" />
+    <fragment
+        android:id="@+id/biotaTabFragment"
+        android:name="com.kedaireka.monitoring_biomassa.ui.summary.BiotaTabFragment"
+        android:label="Biota Summary" />
 </navigation>

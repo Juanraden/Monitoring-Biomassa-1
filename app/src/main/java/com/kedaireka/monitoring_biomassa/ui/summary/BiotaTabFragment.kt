@@ -1,31 +1,28 @@
 package com.kedaireka.monitoring_biomassa.ui.summary
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.tabs.TabLayoutMediator
 import com.kedaireka.monitoring_biomassa.R
-import com.kedaireka.monitoring_biomassa.adapter.BiotaHistoryListAdapter
-import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaHistoryBinding
+import com.kedaireka.monitoring_biomassa.adapter.BiotaFragmentTabAdapter
+import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaTabBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
-import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BiotaHistoryFragment : Fragment() {
-    private val kerambaViewModel by activityViewModels<KerambaViewModel>()
+class BiotaTabFragment : Fragment() {
+    private val biotaViewModel by activityViewModels<BiotaViewModel>()
 
-    private val biotaViewModel by viewModels<BiotaViewModel>()
-
-    private lateinit var binding: FragmentBiotaHistoryBinding
+    private lateinit var binding: FragmentBiotaTabBinding
 
     private lateinit var navController: NavController
 
@@ -34,7 +31,7 @@ class BiotaHistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentBiotaHistoryBinding.inflate(inflater, container, false)
+        binding = FragmentBiotaTabBinding.inflate(inflater, container, false)
 
         navController = findNavController()
 
@@ -44,29 +41,26 @@ class BiotaHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = viewLifecycleOwner
-
         setupNavigation()
 
-        setupBiotaHistoryList()
+        setupTabLayout()
     }
 
-    private fun setupBiotaHistoryList() {
-        val biotaHistoryListAdapter = BiotaHistoryListAdapter()
+    private fun setupTabLayout() {
+        val adapter = BiotaFragmentTabAdapter(this)
 
-        binding.biotaHistoryList.adapter = biotaHistoryListAdapter
+        with(binding){
+            pager.adapter = adapter
 
-        kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, {id->
-            biotaViewModel.getAllBiotaHistory(id).observe(viewLifecycleOwner, {
-                biotaHistoryListAdapter.submitList(it)
-
-                binding.loadingSpinner.visibility = View.GONE
-            })
-        })
+            TabLayoutMediator(tabLayout, pager){tab, position->
+                when(position){
+                    0 -> tab.text = getString(R.string.info)
+                    1 -> tab.text = getString(R.string.data)
+                }
+            }.attach()
+        }
     }
-
     private fun setupNavigation() {
-
         val appBarConfiguration =
             AppBarConfiguration(setOf(R.id.homeFragment, R.id.settingsFragment))
 
@@ -75,5 +69,11 @@ class BiotaHistoryFragment : Fragment() {
         binding.toolbarFragment.setNavigationOnClickListener {
             navController.navigateUp(appBarConfiguration)
         }
+
+        biotaViewModel.loadedBiotaid.observe(viewLifecycleOwner, {id->
+            biotaViewModel.loadBiotaData(id).observe(viewLifecycleOwner, {biota->
+                binding.toolbarFragment.title = biota.jenis_biota
+            })
+        })
     }
 }

@@ -30,8 +30,4 @@ class BiotaMapper @Inject constructor(): EntityMapper<Biota, BiotaDomain> {
             kerambaid = target.kerambaid
         )
     }
-
-    fun mapFromList(entities: List<Biota>): List<BiotaDomain>{
-        return entities.map { mapFromEntity(it) }
-    }
 }

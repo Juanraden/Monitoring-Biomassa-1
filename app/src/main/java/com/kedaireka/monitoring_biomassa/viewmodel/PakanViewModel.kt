@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
 import com.kedaireka.monitoring_biomassa.database.dao.PakanDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Pakan
-import com.kedaireka.monitoring_biomassa.util.PakanMapper
+import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,9 +14,11 @@ import javax.inject.Inject
 @HiltViewModel
 class PakanViewModel @Inject constructor(
     private val pakanDAO: PakanDAO,
-    private val pakanMapper: PakanMapper
+    private val pakanMapper: EntityMapper<Pakan, PakanDomain>
 ): ViewModel() {
-    fun getAll(): LiveData<List<PakanDomain>> = Transformations.map(pakanDAO.getAll().asLiveData()){ pakanMapper.mapFromList(it) }
+    fun getAll(): LiveData<List<PakanDomain>> = Transformations.map(pakanDAO.getAll().asLiveData()){list->
+        list.map { pakanMapper.mapFromEntity(it) }
+    }
 
     fun insertPakan(jenis_pakan: String){
         viewModelScope.launch {

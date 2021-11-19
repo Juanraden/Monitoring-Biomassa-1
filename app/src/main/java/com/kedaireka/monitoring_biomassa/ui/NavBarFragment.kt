@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.databinding.FragmentNavBarBinding
+import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetAdd
 
 class NavBarFragment : Fragment() {
 
@@ -33,5 +34,9 @@ class NavBarFragment : Fragment() {
         val navController = nestedNavHostFragment.findNavController()
 
         binding.bottomNavView.setupWithNavController(navController)
+
+        binding.fab.setOnClickListener {
+            BottomSheetAdd().show(childFragmentManager, "BottomSheetAdd")
+        }
     }
 }

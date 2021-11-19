@@ -22,8 +22,4 @@ class KerambaMapper @Inject constructor(): EntityMapper<Keramba, KerambaDomain> 
             tanggal_install = target.tanggal_install
         )
     }
-
-    fun mapFromList(entities: List<Keramba>): List<KerambaDomain>{
-        return entities.map{ mapFromEntity(it)}
-    }
 }

@@ -1,24 +1,23 @@
 package com.kedaireka.monitoring_biomassa.ui.add
 
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
+import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
-import com.kedaireka.monitoring_biomassa.databinding.FragmentAddKerambaBinding
+import com.kedaireka.monitoring_biomassa.databinding.BottomSheetKerambaBinding
 import com.kedaireka.monitoring_biomassa.ui.DatePickerFragment
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
@@ -26,23 +25,17 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class AddKerambaFragment : Fragment(), DatePickerDialog.OnDateSetListener {
-    private val navArgs: AddKerambaFragmentArgs by navArgs()
-
-    private lateinit var binding: FragmentAddKerambaBinding
-
+class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateSetListener {
     private val kerambaViewModel by viewModels<KerambaViewModel>()
 
-    private lateinit var navController: NavController
+    private lateinit var binding: BottomSheetKerambaBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentAddKerambaBinding.inflate(inflater, container, false)
-
-        navController = findNavController()
+        binding = BottomSheetKerambaBinding.inflate(inflater)
 
         return binding.root
     }
@@ -50,20 +43,72 @@ class AddKerambaFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
-            lifecycleOwner = viewLifecycleOwner
+        binding.bottomSheetKeramba = this@BottomSheetKeramba
 
-            addKerambaFragment = this@AddKerambaFragment
-        }
+        binding.ivClose.setOnClickListener { dismiss() }
 
-        setupNavigation()
+        if (this.arguments != null) {
+            val id = arguments!!.getInt("kerambaid")
 
-        if (navArgs.kerambaid > 0) {
-            kerambaViewModel.loadKerambaData(navArgs.kerambaid)
+            kerambaViewModel.loadKerambaData(id)
                 .observe(viewLifecycleOwner, { bind(kerambaDomain = it) })
         }
 
         setupObserver()
+    }
+    
+
+    override fun onStart() {
+        super.onStart()
+
+        val view: FrameLayout = dialog?.findViewById(R.id.design_bottom_sheet)!!
+
+        view.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+
+        val behavior = BottomSheetBehavior.from(view)
+
+        behavior.peekHeight = 3000
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+
+        })
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        dialog.dismiss()
+        super.onCancel(dialog)
+    }
+
+    override fun dismiss() {
+        hideKeyBoard()
+        super.dismiss()
+    }
+
+    private fun hideKeyBoard() {
+        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val view = dialog?.window?.currentFocus
+        view?.let {
+            imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        }
     }
 
     fun onSaveKerambaBtnClicked() {
@@ -73,10 +118,9 @@ class AddKerambaFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                     ukuranKerambaEt.text.toString()
                 )
             ) {
-
-                if (navArgs.kerambaid > 0) {
+                if (this@BottomSheetKeramba.arguments != null) {
                     updateKeramba(
-                        navArgs.kerambaid,
+                        arguments!!.getInt("kerambaid"),
                         namaKerambaEt.text.toString().trim(),
                         ukuranKerambaEt.text.toString()
                     )
@@ -86,8 +130,7 @@ class AddKerambaFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                         ukuranKerambaEt.text.toString()
                     )
                 }
-
-                navController.navigateUp()
+                dismiss()
             } else {
                 if (TextUtils.isEmpty(namaKerambaEt.text)) {
                     namaKerambaEt.error = "Nama keramba harus diisi!"
@@ -110,7 +153,7 @@ class AddKerambaFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     private fun bind(kerambaDomain: KerambaDomain) {
         binding.apply {
-            toolbarFragment.title = kerambaDomain.nama_keramba
+            titleTv.text = kerambaDomain.nama_keramba
 
             namaKerambaEt.setText(kerambaDomain.nama_keramba, TextView.BufferType.SPANNABLE)
 
@@ -147,17 +190,6 @@ class AddKerambaFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         kerambaViewModel.insertKeramba(nama, ukuran)
     }
 
-    private fun setupNavigation() {
-        val appBarConfiguration =
-            AppBarConfiguration(setOf(R.id.homeFragment, R.id.addFragment, R.id.settingsFragment))
-
-        binding.toolbarFragment.setupWithNavController(navController, appBarConfiguration)
-
-        binding.toolbarFragment.setNavigationOnClickListener {
-            navController.navigateUp(appBarConfiguration)
-        }
-    }
-
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val selectedDate: Calendar = Calendar.getInstance()
         selectedDate.set(year, month, dayOfMonth)
@@ -165,4 +197,3 @@ class AddKerambaFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         kerambaViewModel.onSelectDateTime(selectedDate.timeInMillis)
     }
 }
-
