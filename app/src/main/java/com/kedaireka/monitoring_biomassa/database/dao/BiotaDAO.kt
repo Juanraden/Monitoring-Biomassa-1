@@ -20,4 +20,7 @@ interface BiotaDAO {
 
     @Query("SELECT * FROM biota WHERE tanggal_panen > 0 AND kerambaid =:id")
     fun getAllHistory(id: Int): Flow<List<Biota>>
+
+    @Query("SELECT * FROM biota WHERE biotaid =:id")
+    fun getById(id: Int): Flow<Biota>
 }
