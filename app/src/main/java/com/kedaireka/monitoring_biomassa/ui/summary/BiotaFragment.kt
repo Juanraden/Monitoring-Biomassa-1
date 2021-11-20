@@ -52,15 +52,17 @@ class BiotaFragment : Fragment() {
             biotaViewModel.getAllBiota(id).observe(viewLifecycleOwner, { listBiota ->
 
                 val biotaHeaderAdapter = BiotaHeaderAdapter {
-                    val bundle = Bundle()
+                    if (childFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
+                        val bundle = Bundle()
 
-                    bundle.putInt("kerambaid", id)
+                        bundle.putInt("kerambaid", id)
 
-                    val bottomSheetBiota = BottomSheetBiota()
+                        val bottomSheetBiota = BottomSheetBiota()
 
-                    bottomSheetBiota.arguments = bundle
+                        bottomSheetBiota.arguments = bundle
 
-                    bottomSheetBiota.show(childFragmentManager, "BottomSheetBiota")
+                        bottomSheetBiota.show(childFragmentManager, "BottomSheetBiota")
+                    }
                 }
 
                 val biotaListAdapter = BiotaListAdapter { biota ->
