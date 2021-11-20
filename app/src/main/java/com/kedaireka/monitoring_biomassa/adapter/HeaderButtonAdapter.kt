@@ -5,21 +5,21 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.kedaireka.monitoring_biomassa.R
-import com.kedaireka.monitoring_biomassa.databinding.HeaderListBiotaBinding
+import com.kedaireka.monitoring_biomassa.databinding.HeaderButtonBinding
 
-class BiotaHeaderAdapter (val clickListener: () -> Unit): RecyclerView.Adapter<BiotaHeaderAdapter.HeaderViewHolder>() {
+class HeaderButtonAdapter (val clickListener: () -> Unit): RecyclerView.Adapter<HeaderButtonAdapter.HeaderViewHolder>() {
 
-    inner class HeaderViewHolder(private val binding: HeaderListBiotaBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class HeaderViewHolder(private val binding: HeaderButtonBinding) : RecyclerView.ViewHolder(binding.root){
 
         fun bind() {
-            binding.addBiotaBtn.setOnClickListener { clickListener() }
+            binding.addBtn.setOnClickListener { clickListener() }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
-        val withDataBinding: HeaderListBiotaBinding = DataBindingUtil.inflate(
+        val withDataBinding: HeaderButtonBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.header_list_biota,
+            R.layout.header_button,
             parent,
             false
         )
