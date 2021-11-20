@@ -179,7 +179,9 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
     }
 
     fun showDatePicker() {
-        DatePickerFragment.create().show(childFragmentManager, "datePicker")
+        if (childFragmentManager.findFragmentByTag("DatePicker") == null) {
+            DatePickerFragment.create().show(childFragmentManager, "DatePicker")
+        }
     }
 
     private fun isEntryValid(nama: String, ukuran: String): Boolean {

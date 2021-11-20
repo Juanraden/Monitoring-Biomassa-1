@@ -166,7 +166,9 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
     }
 
     fun showDatePicker() {
-        DatePickerFragment.create().show(childFragmentManager, "datePicker")
+        if (childFragmentManager.findFragmentByTag("DatePicker") == null) {
+            DatePickerFragment.create().show(childFragmentManager, "DatePicker")
+        }
     }
 
     private fun isEntryValid(

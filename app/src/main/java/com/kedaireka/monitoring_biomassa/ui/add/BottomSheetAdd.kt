@@ -23,8 +23,16 @@ class BottomSheetAdd: BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.cancelBtn.setOnClickListener { dismiss() }
 
-        binding.addKerambaBtn.setOnClickListener { BottomSheetKeramba().show(childFragmentManager, "BottomSheetKeramba") }
+        binding.addKerambaBtn.setOnClickListener {
+            if (childFragmentManager.findFragmentByTag("BottomSheetKeramba") == null) {
+                BottomSheetKeramba().show(childFragmentManager, "BottomSheetKeramba")
+            }
+        }
 
-        binding.addBiotaBtn.setOnClickListener { BottomSheetBiota().show(childFragmentManager, "BottomSheetBiota") }
+        binding.addBiotaBtn.setOnClickListener {
+            if (childFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
+                BottomSheetBiota().show(childFragmentManager, "BottomSheetBiota")
+            }
+        }
     }
 }

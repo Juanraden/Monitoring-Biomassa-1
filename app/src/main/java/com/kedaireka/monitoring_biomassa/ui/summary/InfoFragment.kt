@@ -64,15 +64,17 @@ class InfoFragment : Fragment() {
                         getString(R.string.meter_kubik, keramba.ukuran.toString())
 
                     editBtn.setOnClickListener {
-                        val bottomSheetKeramba = BottomSheetKeramba()
+                        if (childFragmentManager.findFragmentByTag("BottomSheetKeramba") == null) {
+                            val bottomSheetKeramba = BottomSheetKeramba()
 
-                        val bundle = Bundle()
+                            val bundle = Bundle()
 
-                        bundle.putInt("kerambaid", keramba.kerambaid)
+                            bundle.putInt("kerambaid", keramba.kerambaid)
 
-                        bottomSheetKeramba.arguments = bundle
+                            bottomSheetKeramba.arguments = bundle
 
-                        bottomSheetKeramba.show(childFragmentManager, "BottomSheetKeramba")
+                            bottomSheetKeramba.show(childFragmentManager, "BottomSheetKeramba")
+                        }
                     }
                 }
             })

@@ -36,7 +36,9 @@ class NavBarFragment : Fragment() {
         binding.bottomNavView.setupWithNavController(navController)
 
         binding.fab.setOnClickListener {
-            BottomSheetAdd().show(childFragmentManager, "BottomSheetAdd")
+            if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null) {
+                BottomSheetAdd().show(childFragmentManager, "BottomSheetAdd")
+            }
         }
     }
 }
