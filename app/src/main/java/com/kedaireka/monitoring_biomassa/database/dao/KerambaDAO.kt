@@ -2,6 +2,7 @@ package com.kedaireka.monitoring_biomassa.database.dao
 
 import androidx.room.*
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
+import com.kedaireka.monitoring_biomassa.database.relation.KerambaAndBiota
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,4 +21,8 @@ interface KerambaDAO {
 
     @Query("SELECT * FROM keramba WHERE kerambaid = :id")
     fun getById(id: Int): Flow<Keramba>
+
+    @Transaction
+    @Query("SELECT * FROM keramba")
+    fun getKerambaAndBiota(): Flow<List<KerambaAndBiota>>
 }

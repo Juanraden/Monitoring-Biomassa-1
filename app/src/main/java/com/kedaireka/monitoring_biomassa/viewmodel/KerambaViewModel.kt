@@ -1,8 +1,10 @@
 package com.kedaireka.monitoring_biomassa.viewmodel
 
 import androidx.lifecycle.*
+import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
+import com.kedaireka.monitoring_biomassa.database.entity.Biota
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
 import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +17,7 @@ import javax.inject.Inject
 class KerambaViewModel @Inject constructor(
     private val kerambaDAO: KerambaDAO,
     private val kerambaMapper: EntityMapper<Keramba, KerambaDomain>,
+    private val biotaMapper: EntityMapper<Biota,BiotaDomain>
 ): ViewModel() {
     private val _loadedKerambaid = MutableLiveData<Int>()
     val loadedKerambaid: LiveData<Int> = _loadedKerambaid
@@ -76,6 +79,14 @@ class KerambaViewModel @Inject constructor(
                     )
                 )
             }
+        }
+    }
+
+    fun loadKerambaAndBiota(): LiveData<Map<KerambaDomain, List<BiotaDomain>>>{
+        return Transformations.map(kerambaDAO.getKerambaAndBiota().asLiveData()){listKerambaAndBiota->
+            listKerambaAndBiota.map {
+                kerambaMapper.mapFromEntity(it.keramba) to it.biotaList.map {biota-> biotaMapper.mapFromEntity(biota) }
+            }.toMap()
         }
     }
 }

@@ -54,4 +54,11 @@
     <string name="update_keramba">Update Keramba</string>
     <string name="batalkan">batalkan</string>
     <string name="data">Data</string>
+    <string name="tambah_data">Tambah Data</string>
+    <string name="ukuran_biota_cm">Ukuran Biota (cm)</string>
+    <string name="bobot_biota_gram">Bobot Biota (gram)</string>
+
+    <string name="tanggal_pengukuran">Tanggal pengukuran: %1$s</string>
+    <string name="tanggal_ukur_biota">Tanggal Pengukuran</string>
+    <string name="tambah_data_biota">Tambah Data Biota</string>
 </resources>

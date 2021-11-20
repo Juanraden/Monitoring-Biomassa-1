@@ -9,7 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
-import com.kedaireka.monitoring_biomassa.adapter.BiotaHeaderAdapter
+import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.BiotaListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaBinding
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetBiota
@@ -51,7 +51,7 @@ class BiotaFragment : Fragment() {
         kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, { id ->
             biotaViewModel.getAllBiota(id).observe(viewLifecycleOwner, { listBiota ->
 
-                val biotaHeaderAdapter = BiotaHeaderAdapter {
+                val biotaHeaderAdapter = HeaderButtonAdapter {
                     if (childFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
                         val bundle = Bundle()
 
