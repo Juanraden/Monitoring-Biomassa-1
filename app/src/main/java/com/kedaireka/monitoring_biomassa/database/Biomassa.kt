@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import com.kedaireka.monitoring_biomassa.database.dao.BiotaDAO
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
 import com.kedaireka.monitoring_biomassa.database.dao.PakanDAO
+import com.kedaireka.monitoring_biomassa.database.dao.PengukuranDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Biota
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
 import com.kedaireka.monitoring_biomassa.database.entity.Pakan
@@ -18,7 +19,7 @@ abstract class DatabaseBiomassa: RoomDatabase() {
 
     abstract fun pakanDAO(): PakanDAO
 
-
+    abstract fun pengukuranDAO(): PengukuranDAO
 
     companion object{
         const val DATABASE_NAME = "biomassa_db"

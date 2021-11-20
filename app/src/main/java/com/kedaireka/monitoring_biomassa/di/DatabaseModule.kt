@@ -6,6 +6,7 @@ import com.kedaireka.monitoring_biomassa.database.DatabaseBiomassa
 import com.kedaireka.monitoring_biomassa.database.dao.BiotaDAO
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
 import com.kedaireka.monitoring_biomassa.database.dao.PakanDAO
+import com.kedaireka.monitoring_biomassa.database.dao.PengukuranDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,5 +46,11 @@ object DatabaseModule {
     @Provides
     fun providePakanDao(databaseBiomassa: DatabaseBiomassa): PakanDAO{
         return databaseBiomassa.pakanDAO()
+    }
+
+    @Singleton
+    @Provides
+    fun providePengukuranDao(databaseBiomassa: DatabaseBiomassa): PengukuranDAO{
+        return databaseBiomassa.pengukuranDAO()
     }
 }
