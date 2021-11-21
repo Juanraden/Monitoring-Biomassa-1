@@ -56,6 +56,7 @@ class BiotaFragment : Fragment() {
                         val bundle = Bundle()
 
                         bundle.putInt("kerambaid", id)
+                        bundle.putInt("biotaid", 0)
 
                         val bottomSheetBiota = BottomSheetBiota()
 
