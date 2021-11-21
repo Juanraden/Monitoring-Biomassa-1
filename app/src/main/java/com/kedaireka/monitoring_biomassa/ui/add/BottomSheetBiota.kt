@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kedaireka.monitoring_biomassa.R
+import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetBiotaBinding
 import com.kedaireka.monitoring_biomassa.ui.DatePickerFragment
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
@@ -54,7 +55,29 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
 
         setupDropdown()
 
+        if (this@BottomSheetBiota.arguments != null) {
+            val biotaid: Int = this@BottomSheetBiota.arguments!!.getInt("biotaid")
+
+            if (biotaid > 0){
+                biotaViewModel.loadBiotaData(biotaid).observe(viewLifecycleOwner, { bind(it) })
+            }
+        }
+
         setupObserver()
+    }
+
+    private fun bind(biotaDomain: BiotaDomain){
+        binding.apply {
+            jenisBiotaEt.setText(biotaDomain.jenis_biota, TextView.BufferType.SPANNABLE)
+
+            bobotBibitEt.setText(biotaDomain.bobot.toString(), TextView.BufferType.SPANNABLE)
+
+            panjangBibitEt.setText(biotaDomain.panjang.toString(),TextView.BufferType.SPANNABLE)
+
+            jumlahBibitEt.setText(biotaDomain.jumlah_bibit.toString(), TextView.BufferType.SPANNABLE)
+
+            biotaViewModel.onSelectDateTime(biotaDomain.tanggal_tebar)
+        }
     }
 
     override fun onStart() {
@@ -132,6 +155,23 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                     jumlahBibitEt.text.toString()
                 )
             ) {
+                if (this@BottomSheetBiota.arguments != null) {
+                    val biotaid: Int = this@BottomSheetBiota.arguments!!.getInt("biotaid")
+
+                    if (biotaid > 0){
+                        biotaViewModel.updateBiota(
+                            biotaid,
+                            jenisBiotaEt.text.toString().trim(),
+                            bobotBibitEt.text.toString(),
+                            panjangBibitEt.text.toString(),
+                            jumlahBibitEt.text.toString()
+                        )
+
+                        dismiss()
+                        return@apply
+                    }
+                }
+
                 biotaViewModel.insertBiota(
                     jenisBiotaEt.text.toString().trim(),
                     bobotBibitEt.text.toString(),
@@ -183,15 +223,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
     private fun setupDropdown() {
         kerambaViewModel.getAllKeramba().observe(viewLifecycleOwner, { listKeramba ->
 
-            mapKeramba = if (this@BottomSheetBiota.arguments != null) {
-                val kerambaid = this@BottomSheetBiota.arguments!!.getInt("kerambaid")
-
-                listKeramba.map { keramba -> keramba.nama_keramba to keramba.kerambaid }.toMap().filterValues { it == kerambaid }
-
-            } else {
-                listKeramba.map { keramba -> keramba.nama_keramba to keramba.kerambaid }.toMap()
-            }
-
+            mapKeramba = listKeramba.map { keramba -> keramba.nama_keramba to keramba.kerambaid }.toMap()
 
             val kerambaList = mapKeramba.keys.toList()
 
@@ -201,6 +233,17 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
             binding.kerambaDropdown.adapter = arrayAdapter
+
+            if (this@BottomSheetBiota.arguments != null) {
+                val kerambaid: Int = this@BottomSheetBiota.arguments!!.getInt("kerambaid")
+
+                val kerambaidList: List<Int> = mapKeramba.values.toList()
+
+                val index: Int = kerambaidList.indexOf(kerambaid)
+
+                binding.kerambaDropdown.setSelection(index)
+
+            }
 
             binding.kerambaDropdown.onItemSelectedListener = this@BottomSheetBiota
         })

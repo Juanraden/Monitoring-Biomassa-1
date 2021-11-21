@@ -68,4 +68,22 @@ class BiotaViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateBiota(biotaid: Int, jenis: String, bobot: String, panjang: String, jumlah: String){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                biotaDao.updateOne(
+                    Biota(
+                        biotaid = biotaid,
+                        jenis_biota = jenis,
+                        bobot = bobot.toDouble(),
+                        panjang = panjang.toDouble(),
+                        jumlah_bibit = jumlah.toInt(),
+                        tanggal_tebar = _selectedTanggalTebar.value!!,
+                        kerambaid = _selectedKerambaId.value!!
+                    )
+                )
+            }
+        }
+    }
 }
