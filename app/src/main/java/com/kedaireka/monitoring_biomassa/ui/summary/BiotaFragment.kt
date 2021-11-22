@@ -72,7 +72,7 @@ class BiotaFragment : Fragment() {
                     biotaViewModel.setBiotaid(biota.biotaid)
                 }
 
-                val concatAdapter = ConcatAdapter(biotaListAdapter, biotaHeaderAdapter)
+                val concatAdapter = ConcatAdapter(biotaHeaderAdapter, biotaListAdapter)
 
                 binding.biotaList.adapter = concatAdapter
 
