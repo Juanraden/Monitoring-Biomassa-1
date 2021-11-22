@@ -39,26 +39,40 @@ class BiotaDataFragment : Fragment() {
         setupPengukuranList()
     }
 
-    private fun setupPengukuranList(){
-        biotaViewModel.loadedBiotaid.observe(viewLifecycleOwner, {biotaid->
-            pengukuranViewModel.getAll(biotaid).observe(viewLifecycleOwner, {list->
-                val headerButtonAdapter = HeaderButtonAdapter{
-                    val bottomSheetPengukuran = BottomSheetPengukuran()
+    private fun setupPengukuranList() {
+        biotaViewModel.loadedBiotaid.observe(viewLifecycleOwner, { biotaid ->
 
-                    if (childFragmentManager.findFragmentByTag("BottomSheetPengukuran") == null) {
-                        bottomSheetPengukuran.show(childFragmentManager, "BottomSheetPengukuran")
+            biotaViewModel.loadBiotaData(biotaid).observe(viewLifecycleOwner, { biota ->
+                val bundle = Bundle()
+                bundle.putInt("biotaid", biota.biotaid)
+                bundle.putInt("kerambaid", biota.kerambaid)
+
+                pengukuranViewModel.getAll(biotaid).observe(viewLifecycleOwner, { list ->
+                    val headerButtonAdapter = HeaderButtonAdapter {
+
+                        if (childFragmentManager.findFragmentByTag("BottomSheetPengukuran") == null) {
+
+                            val bottomSheetPengukuran = BottomSheetPengukuran()
+
+                            bottomSheetPengukuran.arguments = bundle
+
+                            bottomSheetPengukuran.show(
+                                childFragmentManager,
+                                "BottomSheetPengukuran"
+                            )
+                        }
                     }
-                }
 
-                val pengukuranListAdapter = PengukuranListAdapter()
+                    val pengukuranListAdapter = PengukuranListAdapter()
 
-                val concatAdapter = ConcatAdapter(headerButtonAdapter, pengukuranListAdapter)
+                    val concatAdapter = ConcatAdapter(headerButtonAdapter, pengukuranListAdapter)
 
-                binding.pengukuranList.adapter = concatAdapter
+                    binding.pengukuranList.adapter = concatAdapter
 
-                pengukuranListAdapter.submitList(list)
+                    pengukuranListAdapter.submitList(list)
 
-                binding.loadingSpinner.visibility = View.GONE
+                    binding.loadingSpinner.visibility = View.GONE
+                })
             })
         })
     }

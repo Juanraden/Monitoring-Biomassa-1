@@ -166,6 +166,8 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
 
             kerambaList = it.keys.toList()
 
+            val kerambaidList = kerambaList.map {keramba -> keramba.kerambaid }
+
             val kerambaAdapter =
                 ArrayAdapter(
                     requireContext(),
@@ -177,6 +179,16 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
 
             binding.kerambaDropdown.adapter = kerambaAdapter
 
+            if (this@BottomSheetPengukuran.arguments != null){
+                val kerambaid = this@BottomSheetPengukuran.arguments!!.getInt("kerambaid")
+
+                if (kerambaid > 0){
+                    val index = kerambaidList.indexOf(kerambaid)
+
+                    binding.kerambaDropdown.setSelection(index)
+                }
+            }
+
             binding.kerambaDropdown.onItemSelectedListener = object :
 
                 AdapterView.OnItemSelectedListener {
@@ -184,6 +196,8 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
                     val keramba = kerambaList[pos]
 
                     biotaList = mapKerambatoBiota[keramba]!!
+
+                    val biotaidList = biotaList.map {biota-> biota.biotaid }
 
                     val biotaAdapter = ArrayAdapter(
                         requireContext(),
@@ -194,6 +208,14 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
                     biotaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
                     binding.biotaDropdown.adapter = biotaAdapter
+
+                    if (this@BottomSheetPengukuran.arguments != null) {
+                        val biotaid = this@BottomSheetPengukuran.arguments!!.getInt("biotaid")
+
+                        val index = biotaidList.indexOf(biotaid)
+
+                        binding.biotaDropdown.setSelection(index)
+                    }
 
                     binding.biotaDropdown.onItemSelectedListener = this@BottomSheetPengukuran
                 }

@@ -1,5 +1,6 @@
 package com.kedaireka.monitoring_biomassa.ui.summary
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -16,6 +18,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.PengukuranDomain
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaInfoBinding
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetBiota
@@ -34,7 +37,7 @@ class BiotaInfoFragment : Fragment() {
 
     private val pengukuranViewModel by activityViewModels<PengukuranViewModel>()
 
-    private var listPanjang = ArrayList<PengukuranDomain>()
+    private var listData = ArrayList<PengukuranDomain>()
 
     private lateinit var binding: FragmentBiotaInfoBinding
 
@@ -85,84 +88,115 @@ class BiotaInfoFragment : Fragment() {
     private fun setupLineChart(biotaid: Int) {
         pengukuranViewModel.getAll(biotaid).observe(viewLifecycleOwner, { list ->
 
-            listPanjang.clear()
+            listData.clear()
 
             if (list.isEmpty()) {
-                binding.chartCard.visibility = View.GONE
+                binding.panjangChartCard.visibility = View.GONE
+
+                binding.bobotChartCard.visibility = View.GONE
             } else {
-                binding.chartCard.visibility = View.VISIBLE
+                binding.panjangChartCard.visibility = View.VISIBLE
+
+                binding.bobotChartCard.visibility = View.VISIBLE
 
                 if (list.size > 4) {
-                    listPanjang.addAll(list.slice(0..3).reversed())
+                    listData.addAll(list.slice(0..3).reversed())
                 } else {
-                    listPanjang.addAll(list.reversed())
+                    listData.addAll(list.reversed())
                 }
 
-                binding.bobotChart.apply {
-                    axisLeft.setDrawGridLines(false)
+                initChart(binding.panjangChart, listData)
 
-                    axisRight.isEnabled = false
-
-                    description.isEnabled = false
-
-                    val xAxis: XAxis = this.xAxis
-
-                    xAxis.setDrawGridLines(false)
-
-                    xAxis.setDrawAxisLine(false)
-
-                    legend.isEnabled = true
-
-                    legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
-
-                    legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-
-                    legend.orientation = Legend.LegendOrientation.HORIZONTAL
-
-                    legend.setDrawInside(false)
-
-                    animateX(1500, Easing.EaseInSine)
-
-                    xAxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE
-
-                    xAxis.valueFormatter = object : IndexAxisValueFormatter() {
-                        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                            val index = value.toInt()
-
-                            return if (index < listPanjang.size) {
-                                SimpleDateFormat("d MMM")
-                                    .format(listPanjang[index].tanggal_ukur).toString()
-                            } else {
-                                ""
-                            }
-                        }
-                    }
-
-                    xAxis.setDrawLabels(true)
-
-                    //don't change this value
-                    xAxis.granularity = if (list.size == 1)list.minOf { it.panjang }.toFloat() else 1F
-
-                    val entries: ArrayList<Entry> = ArrayList()
-
-                    for (i in listPanjang.indices) {
-                        val panjang = listPanjang[i]
-
-                        entries.add(Entry(i.toFloat(), panjang.panjang.toFloat()))
-                    }
-
-                    val lineDataSet = LineDataSet(entries, "Panjang Biota")
-
-                    val data = LineData(lineDataSet)
-
-                    this.data = data
-
-                    this.invalidate()
-                }
+                initChart(binding.bobotChart, listData)
             }
         })
+    }
 
 
+    private fun initChart(chart: LineChart, list: List<PengukuranDomain>) {
+        chart.apply {
+            axisLeft.setDrawGridLines(false)
+
+            axisRight.isEnabled = false
+
+            description.isEnabled = false
+
+            val xAxis: XAxis = this.xAxis
+
+            xAxis.setDrawGridLines(false)
+
+            xAxis.setDrawAxisLine(false)
+
+            legend.isEnabled = true
+
+            legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+
+            legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+
+            legend.orientation = Legend.LegendOrientation.HORIZONTAL
+
+            legend.setDrawInside(false)
+
+            animateX(1500, Easing.EaseInSine)
+
+            xAxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE
+
+            xAxis.valueFormatter = object : IndexAxisValueFormatter() {
+                @SuppressLint("SimpleDateFormat")
+                override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                    val index = value.toInt()
+
+                    return if (index < list.size) {
+                        SimpleDateFormat("d MMM")
+                            .format(list[index].tanggal_ukur).toString()
+                    } else {
+                        ""
+                    }
+                }
+            }
+
+            xAxis.setDrawLabels(true)
+
+            val entries: ArrayList<Entry> = ArrayList()
+
+            when (chart.id) {
+                R.id.panjang_chart -> {
+                    xAxis.granularity = list.maxOf { it.panjang }.toFloat()
+
+                    for (i in list.indices) {
+                        val panjang = list[i]
+
+                        entries.add(Entry(i.toFloat(), panjang.panjang.toFloat()))
+
+                        val lineDataSet = LineDataSet(entries, "Panjang Biota")
+
+                        val data = LineData(lineDataSet)
+
+                        this.data = data
+
+                        this.invalidate()
+                    }
+                }
+
+                R.id.bobot_chart -> {
+                    xAxis.granularity = list.maxOf { it.bobot }.toFloat()
+
+                    for (i in list.indices) {
+                        val bobot = list[i]
+
+                        entries.add(Entry(i.toFloat(), bobot.bobot.toFloat()))
+
+                        val lineDataSet = LineDataSet(entries, "Bobot Biota")
+
+                        val data = LineData(lineDataSet)
+
+                        this.data = data
+
+                        this.invalidate()
+                    }
+                }
+            }
+        }
     }
 
     private fun onEditBiota(kerambaid: Int, biotaid: Int) {

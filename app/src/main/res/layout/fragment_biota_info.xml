@@ -23,7 +23,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/chart_card">
+                app:layout_constraintBottom_toTopOf="@id/panjang_chart_card">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -36,7 +36,8 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_baseline_edit_24" />
+                        app:srcCompat="@drawable/ic_baseline_edit_24"
+                        tools:ignore="ContentDescription" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/jenis_biota_tv"
@@ -113,7 +114,35 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/chart_card"
+                android:id="@+id/panjang_chart_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/layout_padding"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="@dimen/layout_padding"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toTopOf="@id/bobot_chart_card"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/info_biota_card">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/panjang_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/bobot_chart_card"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/layout_padding"
@@ -123,7 +152,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/info_biota_card">
+                app:layout_constraintTop_toBottomOf="@+id/panjang_chart_card">
 
                 <LinearLayout
                     android:layout_width="match_parent"

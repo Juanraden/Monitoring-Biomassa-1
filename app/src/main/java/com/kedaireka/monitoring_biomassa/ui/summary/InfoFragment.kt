@@ -81,7 +81,7 @@ class InfoFragment : Fragment() {
 
             biotaViewModel.getAllBiota(id).observe(viewLifecycleOwner, { list ->
 
-                if (list.isEmpty()){
+                if (list.isEmpty()) {
                     binding.chartCard.visibility = View.GONE
                 } else {
                     binding.chartCard.visibility = View.VISIBLE
