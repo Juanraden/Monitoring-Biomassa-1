@@ -1,14 +1,12 @@
 package com.kedaireka.monitoring_biomassa.ui.summary
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
-import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PengukuranListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaDataBinding
@@ -23,7 +21,7 @@ class BiotaDataFragment : Fragment() {
 
     private val biotaViewModel by activityViewModels<BiotaViewModel>()
 
-    private val pengukuranViewModel by viewModels<PengukuranViewModel>()
+    private val pengukuranViewModel by activityViewModels<PengukuranViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
