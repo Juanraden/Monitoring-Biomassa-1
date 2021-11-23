@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Transformations
 import androidx.recyclerview.widget.ConcatAdapter
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PengukuranListAdapter
@@ -40,40 +41,37 @@ class BiotaDataFragment : Fragment() {
     }
 
     private fun setupPengukuranList() {
-        biotaViewModel.loadedBiotaid.observe(viewLifecycleOwner, { biotaid ->
+        val bottomSheetPengukuran = BottomSheetPengukuran()
 
-            biotaViewModel.loadBiotaData(biotaid).observe(viewLifecycleOwner, { biota ->
-                val bundle = Bundle()
-                bundle.putInt("biotaid", biota.biotaid)
-                bundle.putInt("kerambaid", biota.kerambaid)
+        Transformations.switchMap(biotaViewModel.loadedBiotaid) { biotaid ->
+            biotaViewModel.loadBiotaData(biotaid)
+        }.observe(viewLifecycleOwner, { biota ->
+            val bundle = Bundle()
+            bundle.putInt("biotaid", biota.biotaid)
+            bundle.putInt("kerambaid", biota.kerambaid)
 
-                pengukuranViewModel.getAll(biotaid).observe(viewLifecycleOwner, { list ->
-                    val headerButtonAdapter = HeaderButtonAdapter {
+            bottomSheetPengukuran.arguments = bundle
+        })
 
-                        if (childFragmentManager.findFragmentByTag("BottomSheetPengukuran") == null) {
+        Transformations.switchMap(biotaViewModel.loadedBiotaid) { biotaid ->
+            pengukuranViewModel.getAll(biotaid)
+        }.observe(viewLifecycleOwner, { list ->
 
-                            val bottomSheetPengukuran = BottomSheetPengukuran()
+            val headerButtonAdapter = HeaderButtonAdapter {
+                if (childFragmentManager.findFragmentByTag("BottomSheetPengukuran") == null) {
+                    bottomSheetPengukuran.show(childFragmentManager, "BottomSheetPengukuran")
+                }
+            }
 
-                            bottomSheetPengukuran.arguments = bundle
+            val pengukuranListAdapter = PengukuranListAdapter()
 
-                            bottomSheetPengukuran.show(
-                                childFragmentManager,
-                                "BottomSheetPengukuran"
-                            )
-                        }
-                    }
+            val concatAdapter = ConcatAdapter(headerButtonAdapter, pengukuranListAdapter)
 
-                    val pengukuranListAdapter = PengukuranListAdapter()
+            binding.pengukuranList.adapter = concatAdapter
 
-                    val concatAdapter = ConcatAdapter(headerButtonAdapter, pengukuranListAdapter)
+            pengukuranListAdapter.submitList(list)
 
-                    binding.pengukuranList.adapter = concatAdapter
-
-                    pengukuranListAdapter.submitList(list)
-
-                    binding.loadingSpinner.visibility = View.GONE
-                })
-            })
+            binding.loadingSpinner.visibility = View.GONE
         })
     }
 }

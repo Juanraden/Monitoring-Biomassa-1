@@ -48,15 +48,17 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupNavigation()
+
         kerambaListAdapter = KerambaListAdapter {
             navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment())
 
             kerambaViewModel.setKerambaId(it.kerambaid)
         }
 
-        setupNavigation()
-
         setupKerambaList()
+
+        setupQuerySearch()
 
         setupToolbarSearch()
     }
@@ -71,9 +73,17 @@ class HomeFragment : Fragment() {
 
             binding.loadingSpinner.visibility = View.GONE
 
-            kerambaViewModel.querySearch.observe(viewLifecycleOwner, {query->
+            val pendingQuery = kerambaViewModel.querySearch.value
+
+            if (pendingQuery != null){
+                kerambaListAdapter.filter.filter(pendingQuery)
+            }
+        })
+    }
+
+    private fun setupQuerySearch() {
+        kerambaViewModel.querySearch.observe(viewLifecycleOwner, {query->
                 kerambaListAdapter.filter.filter(query)
-            })
         })
     }
 
@@ -84,7 +94,9 @@ class HomeFragment : Fragment() {
         val search = binding.toolbarFragment.menu.findItem(R.id.appSearchBar)
 
         val searchView = search.actionView as SearchView
+
         searchView.queryHint = "Nama Keramba"
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false

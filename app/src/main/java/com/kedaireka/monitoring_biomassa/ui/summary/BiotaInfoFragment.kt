@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.animation.Easing
@@ -19,6 +20,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.kedaireka.monitoring_biomassa.R
+import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.PengukuranDomain
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaInfoBinding
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetBiota
@@ -62,54 +64,57 @@ class BiotaInfoFragment : Fragment() {
     }
 
     private fun setupFragment() {
-        biotaViewModel.loadedBiotaid.observe(viewLifecycleOwner, { biotaid ->
-            biotaViewModel.loadBiotaData(biotaid).observe(viewLifecycleOwner, { biota ->
-                with(binding) {
-                    jenisBiotaTv.text = biota.jenis_biota
+        Transformations.switchMap(biotaViewModel.loadedBiotaid){ biotaid ->
+            biotaViewModel.loadBiotaData(biotaid)
+        }.observe(viewLifecycleOwner, { biota -> bind(biota) })
 
-                    bobotBibitTv.text = biota.bobot.toString()
-
-                    ukuranBibitTv.text = biota.panjang.toString()
-
-                    jumlahBibitTv.text = biota.jumlah_bibit.toString()
-
-                    tanggalTebarTv.text = convertLongToDateString(biota.tanggal_tebar)
-                }
-            })
-
-            kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, { kerambaid ->
-                binding.editBtn.setOnClickListener { onEditBiota(kerambaid, biotaid) }
-            })
-
-            setupLineChart(biotaid)
-        })
+        Transformations.switchMap(biotaViewModel.loadedBiotaid){ biotaid ->
+            pengukuranViewModel.getAll(biotaid)
+        }.observe(viewLifecycleOwner, { list -> setupLineChart(list) })
     }
 
-    private fun setupLineChart(biotaid: Int) {
-        pengukuranViewModel.getAll(biotaid).observe(viewLifecycleOwner, { list ->
+    private fun bind(biota: BiotaDomain) {
+        with(binding) {
+            jenisBiotaTv.text = biota.jenis_biota
 
-            listData.clear()
+            bobotBibitTv.text = biota.bobot.toString()
 
-            if (list.isEmpty()) {
-                binding.panjangChartCard.visibility = View.GONE
+            ukuranBibitTv.text = biota.panjang.toString()
 
-                binding.bobotChartCard.visibility = View.GONE
-            } else {
-                binding.panjangChartCard.visibility = View.VISIBLE
+            jumlahBibitTv.text = biota.jumlah_bibit.toString()
 
-                binding.bobotChartCard.visibility = View.VISIBLE
+            tanggalTebarTv.text = convertLongToDateString(biota.tanggal_tebar)
 
-                if (list.size > 4) {
-                    listData.addAll(list.slice(0..3).reversed())
-                } else {
-                    listData.addAll(list.reversed())
-                }
+            val kerambaid = kerambaViewModel.loadedKerambaid.value
 
-                initChart(binding.panjangChart, listData)
-
-                initChart(binding.bobotChart, listData)
+            if (kerambaid != null) {
+                editBtn.setOnClickListener { onEditBiota(kerambaid, biota.biotaid) }
             }
-        })
+        }
+    }
+
+    private fun setupLineChart(list: List<PengukuranDomain>) {
+        listData.clear()
+
+        if (list.isEmpty()) {
+            binding.panjangChartCard.visibility = View.GONE
+
+            binding.bobotChartCard.visibility = View.GONE
+        } else {
+            binding.panjangChartCard.visibility = View.VISIBLE
+
+            binding.bobotChartCard.visibility = View.VISIBLE
+
+            if (list.size > 4) {
+                listData.addAll(list.slice(0..3).reversed())
+            } else {
+                listData.addAll(list.reversed())
+            }
+
+            initChart(binding.panjangChart, listData)
+
+            initChart(binding.bobotChart, listData)
+        }
     }
 
 

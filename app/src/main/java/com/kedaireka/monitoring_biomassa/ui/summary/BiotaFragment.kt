@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
@@ -47,39 +48,37 @@ class BiotaFragment : Fragment() {
     }
 
     private fun setupBiotaList() {
+        Transformations.switchMap(kerambaViewModel.loadedKerambaid){kerambaid->
+            biotaViewModel.getAllBiota(kerambaid)
+        }.observe(viewLifecycleOwner, {listBiota->
+            val biotaHeaderAdapter = HeaderButtonAdapter {
+                if (childFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
+                    val bundle = Bundle()
 
-        kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, { id ->
-            biotaViewModel.getAllBiota(id).observe(viewLifecycleOwner, { listBiota ->
+                    bundle.putInt("kerambaid", id)
+                    bundle.putInt("biotaid", 0)
 
-                val biotaHeaderAdapter = HeaderButtonAdapter {
-                    if (childFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
-                        val bundle = Bundle()
+                    val bottomSheetBiota = BottomSheetBiota()
 
-                        bundle.putInt("kerambaid", id)
-                        bundle.putInt("biotaid", 0)
+                    bottomSheetBiota.arguments = bundle
 
-                        val bottomSheetBiota = BottomSheetBiota()
-
-                        bottomSheetBiota.arguments = bundle
-
-                        bottomSheetBiota.show(childFragmentManager, "BottomSheetBiota")
-                    }
+                    bottomSheetBiota.show(childFragmentManager, "BottomSheetBiota")
                 }
+            }
 
-                val biotaListAdapter = BiotaListAdapter { biota ->
-                    navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToBiotaTabFragment())
+            val biotaListAdapter = BiotaListAdapter { biota ->
+                navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToBiotaTabFragment())
 
-                    biotaViewModel.setBiotaid(biota.biotaid)
-                }
+                biotaViewModel.setBiotaid(biota.biotaid)
+            }
 
-                val concatAdapter = ConcatAdapter(biotaHeaderAdapter, biotaListAdapter)
+            val concatAdapter = ConcatAdapter(biotaHeaderAdapter, biotaListAdapter)
 
-                binding.biotaList.adapter = concatAdapter
+            binding.biotaList.adapter = concatAdapter
 
-                biotaListAdapter.submitList(listBiota)
+            biotaListAdapter.submitList(listBiota)
 
-                binding.loadingSpinner.visibility = View.GONE
-            })
+            binding.loadingSpinner.visibility = View.GONE
         })
     }
 }
