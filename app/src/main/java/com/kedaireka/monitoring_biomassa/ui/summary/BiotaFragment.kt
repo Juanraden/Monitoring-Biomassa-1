@@ -48,15 +48,17 @@ class BiotaFragment : Fragment() {
     }
 
     private fun setupBiotaList() {
-        Transformations.switchMap(kerambaViewModel.loadedKerambaid){kerambaid->
+        val bundle = Bundle()
+        Transformations.switchMap(kerambaViewModel.loadedKerambaid){ kerambaid ->
+
+            bundle.putInt("kerambaid", kerambaid)
+            bundle.putInt("biotaid", 0)
+
             biotaViewModel.getAllBiota(kerambaid)
-        }.observe(viewLifecycleOwner, {listBiota->
+
+        }.observe(viewLifecycleOwner, { listBiota ->
             val biotaHeaderAdapter = HeaderButtonAdapter {
                 if (childFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
-                    val bundle = Bundle()
-
-                    bundle.putInt("kerambaid", id)
-                    bundle.putInt("biotaid", 0)
 
                     val bottomSheetBiota = BottomSheetBiota()
 

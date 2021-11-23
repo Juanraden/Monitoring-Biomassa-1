@@ -41,16 +41,15 @@ class BiotaDataFragment : Fragment() {
     }
 
     private fun setupPengukuranList() {
-        val bottomSheetPengukuran = BottomSheetPengukuran()
+
+        val bundle = Bundle()
 
         Transformations.switchMap(biotaViewModel.loadedBiotaid) { biotaid ->
             biotaViewModel.loadBiotaData(biotaid)
         }.observe(viewLifecycleOwner, { biota ->
-            val bundle = Bundle()
+
             bundle.putInt("biotaid", biota.biotaid)
             bundle.putInt("kerambaid", biota.kerambaid)
-
-            bottomSheetPengukuran.arguments = bundle
         })
 
         Transformations.switchMap(biotaViewModel.loadedBiotaid) { biotaid ->
@@ -59,6 +58,10 @@ class BiotaDataFragment : Fragment() {
 
             val headerButtonAdapter = HeaderButtonAdapter {
                 if (childFragmentManager.findFragmentByTag("BottomSheetPengukuran") == null) {
+                    val bottomSheetPengukuran = BottomSheetPengukuran()
+
+                    bottomSheetPengukuran.arguments = bundle
+
                     bottomSheetPengukuran.show(childFragmentManager, "BottomSheetPengukuran")
                 }
             }
