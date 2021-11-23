@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -56,12 +57,12 @@ class BiotaHistoryFragment : Fragment() {
 
         binding.biotaHistoryList.adapter = biotaHistoryListAdapter
 
-        kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, {id->
-            biotaViewModel.getAllBiotaHistory(id).observe(viewLifecycleOwner, {
-                biotaHistoryListAdapter.submitList(it)
+        Transformations.switchMap(kerambaViewModel.loadedKerambaid){ kerambaid ->
+            biotaViewModel.getAllBiotaHistory(kerambaid)
+        }.observe(viewLifecycleOwner, {
+            biotaHistoryListAdapter.submitList(it)
 
-                binding.loadingSpinner.visibility = View.GONE
-            })
+            binding.loadingSpinner.visibility = View.GONE
         })
     }
 

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -73,10 +74,11 @@ class SummaryFragment : Fragment() {
             navController.navigateUp(appBarConfiguration)
         }
 
-        kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, {id->
-            kerambaViewModel.loadKerambaData(id).observe(viewLifecycleOwner, {keramba->
-                binding.toolbarFragment.title = keramba.nama_keramba
-            })
+        Transformations.switchMap(
+            kerambaViewModel.loadedKerambaid){ id ->
+            kerambaViewModel.loadKerambaData(id)
+        }.observe(viewLifecycleOwner, { keramba ->
+            binding.toolbarFragment.title = keramba.nama_keramba
         })
     }
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.animation.Easing
@@ -16,6 +17,8 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.kedaireka.monitoring_biomassa.R
+import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
+import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
 import com.kedaireka.monitoring_biomassa.databinding.FragmentInfoBinding
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetKeramba
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
@@ -53,88 +56,90 @@ class InfoFragment : Fragment() {
     }
 
     private fun setupFragment() {
-        kerambaViewModel.loadedKerambaid.observe(viewLifecycleOwner, { id ->
-            kerambaViewModel.loadKerambaData(id).observe(viewLifecycleOwner, { keramba ->
-                with(binding) {
-                    namaKerambaTv.text = keramba.nama_keramba
+        Transformations.switchMap(kerambaViewModel.loadedKerambaid){ kerambaid ->
+            kerambaViewModel.loadKerambaData(kerambaid)
+        }.observe(viewLifecycleOwner, { keramba-> bind(keramba) })
 
-                    tanggalInstallTv.text = convertLongToDateString(keramba.tanggal_install)
-
-                    ukuranKerambaTv.text =
-                        getString(R.string.meter_kubik, keramba.ukuran.toString())
-
-                    editBtn.setOnClickListener {
-                        if (childFragmentManager.findFragmentByTag("BottomSheetKeramba") == null) {
-                            val bottomSheetKeramba = BottomSheetKeramba()
-
-                            val bundle = Bundle()
-
-                            bundle.putInt("kerambaid", keramba.kerambaid)
-
-                            bottomSheetKeramba.arguments = bundle
-
-                            bottomSheetKeramba.show(childFragmentManager, "BottomSheetKeramba")
-                        }
-                    }
-                }
-            })
-
-            biotaViewModel.getAllBiota(id).observe(viewLifecycleOwner, { list ->
-
-                if (list.isEmpty()) {
-                    binding.chartCard.visibility = View.GONE
-                } else {
-                    binding.chartCard.visibility = View.VISIBLE
-
-                    val barEntries = ArrayList<PieEntry>()
-
-                    //mapping data if data is double
-                    val mappedData = mutableMapOf<String, Int>()
-
-                    list.forEach { mappedData[it.jenis_biota.lowercase()] = 0 }
-
-                    list.forEach {
-                        mappedData[it.jenis_biota.lowercase()] =
-                            mappedData[it.jenis_biota.lowercase()]!! + it.jumlah_bibit
-                    }
-
-                    mappedData.forEach { barEntries.add(PieEntry(it.value.toFloat(), it.key)) }
-
-                    val dataSet = PieDataSet(barEntries, "")
-
-                    dataSet.setDrawIcons(false)
-                    dataSet.sliceSpace = 3f
-                    dataSet.iconsOffset = MPPointF(0F, 40F)
-                    dataSet.selectionShift = 5f
-                    dataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
-
-                    val dataNow = PieData(dataSet)
-
-//                    dataNow.setValueFormatter(PercentFormatter())
-
-                    binding.biotaChart.apply {
-                        data = dataNow
-//                        setUsePercentValues(true)
-                        animateY(1400, Easing.EaseInOutQuad)
-                        setDrawEntryLabels(false)
-                        holeRadius = 58f
-                        description.text = ""
-
-                        transparentCircleRadius = 61f
-                        isDrawHoleEnabled = true
-                        setHoleColor(Color.WHITE)
-                        centerText = "Komposisi Biota"
-
-                        invalidate()
-                    }
-                }
-            })
-        })
+        Transformations.switchMap(kerambaViewModel.loadedKerambaid){ kerambaid ->
+            biotaViewModel.getAllBiota(kerambaid)
+        }.observe(viewLifecycleOwner, { list -> initBiotaChart(list) })
 
         binding.biotaHistoryBtn.setOnClickListener {
             navController.navigate(
                 SummaryFragmentDirections.actionSummaryFragmentToBiotaHistoryFragment()
             )
+        }
+    }
+
+    private fun bind(keramba: KerambaDomain) {
+        with(binding) {
+            namaKerambaTv.text = keramba.nama_keramba
+
+            tanggalInstallTv.text = convertLongToDateString(keramba.tanggal_install)
+
+            ukuranKerambaTv.text =
+                getString(R.string.meter_kubik, keramba.ukuran.toString())
+
+            editBtn.setOnClickListener {
+                if (childFragmentManager.findFragmentByTag("BottomSheetKeramba") == null) {
+                    val bottomSheetKeramba = BottomSheetKeramba()
+
+                    val bundle = Bundle()
+
+                    bundle.putInt("kerambaid", keramba.kerambaid)
+
+                    bottomSheetKeramba.arguments = bundle
+
+                    bottomSheetKeramba.show(childFragmentManager, "BottomSheetKeramba")
+                }
+            }
+        }
+    }
+
+    private fun initBiotaChart(list: List<BiotaDomain>) {
+        if (list.isEmpty()) {
+            binding.chartCard.visibility = View.GONE
+        } else {
+            binding.chartCard.visibility = View.VISIBLE
+
+            val barEntries = ArrayList<PieEntry>()
+
+            //mapping data if data is double
+            val mappedData = mutableMapOf<String, Int>()
+
+            list.forEach { mappedData[it.jenis_biota.lowercase()] = 0 }
+
+            list.forEach {
+                mappedData[it.jenis_biota.lowercase()] =
+                    mappedData[it.jenis_biota.lowercase()]!! + it.jumlah_bibit
+            }
+
+            mappedData.forEach { barEntries.add(PieEntry(it.value.toFloat(), it.key)) }
+
+            val dataSet = PieDataSet(barEntries, "")
+
+            dataSet.setDrawIcons(false)
+            dataSet.sliceSpace = 3f
+            dataSet.iconsOffset = MPPointF(0F, 40F)
+            dataSet.selectionShift = 5f
+            dataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
+
+            val dataNow = PieData(dataSet)
+
+            binding.biotaChart.apply {
+                data = dataNow
+                animateY(1400, Easing.EaseInOutQuad)
+                setDrawEntryLabels(false)
+                holeRadius = 58f
+                description.text = ""
+
+                transparentCircleRadius = 61f
+                isDrawHoleEnabled = true
+                setHoleColor(Color.WHITE)
+                centerText = "Komposisi Biota"
+
+                invalidate()
+            }
         }
     }
 }

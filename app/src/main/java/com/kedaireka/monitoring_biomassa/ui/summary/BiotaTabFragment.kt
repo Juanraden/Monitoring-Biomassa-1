@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -70,10 +71,10 @@ class BiotaTabFragment : Fragment() {
             navController.navigateUp(appBarConfiguration)
         }
 
-        biotaViewModel.loadedBiotaid.observe(viewLifecycleOwner, {id->
-            biotaViewModel.loadBiotaData(id).observe(viewLifecycleOwner, {biota->
-                binding.toolbarFragment.title = biota.jenis_biota
-            })
+        Transformations.switchMap(biotaViewModel.loadedBiotaid){ biotaid ->
+            biotaViewModel.loadBiotaData(biotaid)
+        }.observe(viewLifecycleOwner, {biota->
+            binding.toolbarFragment.title = biota.jenis_biota
         })
     }
 }
