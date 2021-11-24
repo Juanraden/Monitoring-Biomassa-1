@@ -166,39 +166,41 @@ class BiotaInfoFragment : Fragment() {
 
             when (chart.id) {
                 R.id.panjang_chart -> {
-                    xAxis.granularity = list.maxOf { it.panjang }.toFloat()
+
+                    //TODO: Set value for xAxis.granularity
+//                    xAxis.granularity = list.maxOf { it.panjang }.toFloat()
 
                     for (i in list.indices) {
                         val panjang = list[i]
 
                         entries.add(Entry(i.toFloat(), panjang.panjang.toFloat()))
-
-                        val lineDataSet = LineDataSet(entries, "Panjang Biota")
-
-                        val data = LineData(lineDataSet)
-
-                        this.data = data
-
-                        this.invalidate()
                     }
+
+                    val lineDataSet = LineDataSet(entries, "Panjang Biota")
+
+                    val data = LineData(lineDataSet)
+
+                    this.data = data
+
+                    this.invalidate()
                 }
 
                 R.id.bobot_chart -> {
-                    xAxis.granularity = list.maxOf { it.bobot }.toFloat()
+//                    xAxis.granularity = list.maxOf { it.bobot }.toFloat()
 
                     for (i in list.indices) {
                         val bobot = list[i]
 
                         entries.add(Entry(i.toFloat(), bobot.bobot.toFloat()))
-
-                        val lineDataSet = LineDataSet(entries, "Bobot Biota")
-
-                        val data = LineData(lineDataSet)
-
-                        this.data = data
-
-                        this.invalidate()
                     }
+
+                    val lineDataSet = LineDataSet(entries, "Bobot Biota")
+
+                    val data = LineData(lineDataSet)
+
+                    this.data = data
+
+                    this.invalidate()
                 }
             }
         }
