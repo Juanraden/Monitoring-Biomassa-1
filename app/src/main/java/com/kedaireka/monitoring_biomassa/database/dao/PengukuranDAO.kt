@@ -16,6 +16,6 @@ interface PengukuranDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(listPengukuran: List<Pengukuran>)
 
-    @Query("SELECT * FROM pengukuran WHERE biotaid =:biotaid ORDER BY tanggal_ukur DESC LIMIT 10")
-    fun getAll(biotaid: Int): Flow<List<Pengukuran>>
+    @Query("SELECT * FROM pengukuran WHERE biota_id =:biota_id ORDER BY tanggal_ukur DESC LIMIT 10")
+    fun getAll(biota_id: Int): Flow<List<Pengukuran>>
 }

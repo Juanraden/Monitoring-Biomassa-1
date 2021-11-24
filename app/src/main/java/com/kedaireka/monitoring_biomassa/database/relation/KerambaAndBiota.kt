@@ -8,8 +8,8 @@ import com.kedaireka.monitoring_biomassa.database.entity.Keramba
 data class KerambaAndBiota(
     @Embedded val keramba: Keramba,
     @Relation(
-        parentColumn = "kerambaid",
-        entityColumn = "kerambaid"
+        parentColumn = "keramba_id",
+        entityColumn = "keramba_id"
     )
     val biotaList: List<Biota>
     )

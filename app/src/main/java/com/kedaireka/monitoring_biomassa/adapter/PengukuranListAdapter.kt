@@ -45,7 +45,7 @@ class PengukuranListAdapter : ListAdapter<PengukuranDomain, PengukuranListAdapte
             oldItem: PengukuranDomain,
             newItem: PengukuranDomain
         ): Boolean {
-            return oldItem.pengukuranid == oldItem.pengukuranid
+            return oldItem.pengukuran_id == oldItem.pengukuran_id
         }
 
         override fun areContentsTheSame(

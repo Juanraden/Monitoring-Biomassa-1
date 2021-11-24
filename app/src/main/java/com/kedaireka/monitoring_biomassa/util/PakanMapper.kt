@@ -7,14 +7,14 @@ import javax.inject.Inject
 class PakanMapper @Inject constructor(): EntityMapper<Pakan, PakanDomain> {
     override fun mapFromEntity(entity: Pakan): PakanDomain {
         return PakanDomain(
-            pakanid = entity.pakanid,
+            pakan_id = entity.pakan_id,
             jenis_pakan = entity.jenis_pakan
         )
     }
 
     override fun mapToEntity(target: PakanDomain): Pakan {
         return Pakan(
-            pakanid = target.pakanid,
+            pakan_id = target.pakan_id,
             jenis_pakan = target.jenis_pakan
         )
     }

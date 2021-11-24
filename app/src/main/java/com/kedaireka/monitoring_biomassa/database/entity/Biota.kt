@@ -10,21 +10,21 @@ import androidx.room.PrimaryKey
     tableName = "biota",
     foreignKeys= [ForeignKey(
         entity = Keramba::class,
-        parentColumns = arrayOf("kerambaid"),
-        childColumns = arrayOf("kerambaid"),
+        parentColumns = arrayOf("keramba_id"),
+        childColumns = arrayOf("keramba_id"),
         onDelete = CASCADE,
         onUpdate = CASCADE
     )],
-    indices = [Index("kerambaid")]
+    indices = [Index("keramba_id")]
 )
 data class Biota constructor(
     @PrimaryKey(autoGenerate = true)
-    val biotaid: Int = 0,
+    val biota_id: Int = 0,
     val jenis_biota: String,
     val bobot: Double,
     val panjang: Double,
     val jumlah_bibit: Int,
     val tanggal_tebar: Long,
     val tanggal_panen: Long = 0,
-    val kerambaid: Int,
+    val keramba_id: Int,
 )

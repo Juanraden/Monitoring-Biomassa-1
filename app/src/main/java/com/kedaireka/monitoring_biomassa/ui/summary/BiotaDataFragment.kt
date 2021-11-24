@@ -44,16 +44,16 @@ class BiotaDataFragment : Fragment() {
 
         val bundle = Bundle()
 
-        Transformations.switchMap(biotaViewModel.loadedBiotaid) { biotaid ->
-            biotaViewModel.loadBiotaData(biotaid)
+        Transformations.switchMap(biotaViewModel.loadedBiotaId) { biota_id ->
+            biotaViewModel.loadBiotaData(biota_id)
         }.observe(viewLifecycleOwner, { biota ->
 
-            bundle.putInt("biotaid", biota.biotaid)
-            bundle.putInt("kerambaid", biota.kerambaid)
+            bundle.putInt("biota_id", biota.biota_id)
+            bundle.putInt("keramba_id", biota.keramba_id)
         })
 
-        Transformations.switchMap(biotaViewModel.loadedBiotaid) { biotaid ->
-            pengukuranViewModel.getAll(biotaid)
+        Transformations.switchMap(biotaViewModel.loadedBiotaId) { biota_id ->
+            pengukuranViewModel.getAll(biota_id)
         }.observe(viewLifecycleOwner, { list ->
 
             val headerButtonAdapter = HeaderButtonAdapter {

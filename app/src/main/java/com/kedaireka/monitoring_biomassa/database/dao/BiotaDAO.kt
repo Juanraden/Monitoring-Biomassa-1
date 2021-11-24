@@ -15,12 +15,12 @@ interface BiotaDAO {
     @Update
     suspend fun updateOne(biota: Biota)
 
-    @Query("SELECT * FROM biota WHERE tanggal_panen = 0 AND kerambaid =:id")
+    @Query("SELECT * FROM biota WHERE tanggal_panen = 0 AND keramba_id =:id")
     fun getAll(id: Int): Flow<List<Biota>>
 
-    @Query("SELECT * FROM biota WHERE tanggal_panen > 0 AND kerambaid =:id")
+    @Query("SELECT * FROM biota WHERE tanggal_panen > 0 AND keramba_id =:id")
     fun getAllHistory(id: Int): Flow<List<Biota>>
 
-    @Query("SELECT * FROM biota WHERE biotaid =:id")
+    @Query("SELECT * FROM biota WHERE biota_id =:id")
     fun getById(id: Int): Flow<Biota>
 }

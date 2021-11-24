@@ -64,12 +64,12 @@ class BiotaInfoFragment : Fragment() {
     }
 
     private fun setupFragment() {
-        Transformations.switchMap(biotaViewModel.loadedBiotaid){ biotaid ->
-            biotaViewModel.loadBiotaData(biotaid)
+        Transformations.switchMap(biotaViewModel.loadedBiotaId){ biota_id ->
+            biotaViewModel.loadBiotaData(biota_id)
         }.observe(viewLifecycleOwner, { biota -> bind(biota) })
 
-        Transformations.switchMap(biotaViewModel.loadedBiotaid){ biotaid ->
-            pengukuranViewModel.getAll(biotaid)
+        Transformations.switchMap(biotaViewModel.loadedBiotaId){ biota_id ->
+            pengukuranViewModel.getAll(biota_id)
         }.observe(viewLifecycleOwner, { list -> setupLineChart(list) })
     }
 
@@ -85,10 +85,10 @@ class BiotaInfoFragment : Fragment() {
 
             tanggalTebarTv.text = convertLongToDateString(biota.tanggal_tebar)
 
-            val kerambaid = kerambaViewModel.loadedKerambaid.value
+            val keramba_id = kerambaViewModel.loadedKerambaId.value
 
-            if (kerambaid != null) {
-                editBtn.setOnClickListener { onEditBiota(kerambaid, biota.biotaid) }
+            if (keramba_id != null) {
+                editBtn.setOnClickListener { onEditBiota(keramba_id, biota.biota_id) }
             }
         }
     }
@@ -206,14 +206,14 @@ class BiotaInfoFragment : Fragment() {
         }
     }
 
-    private fun onEditBiota(kerambaid: Int, biotaid: Int) {
+    private fun onEditBiota(keramba_id: Int, biota_id: Int) {
         if (childFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
 
             val bundle = Bundle()
 
             bundle.apply {
-                putInt("kerambaid", kerambaid)
-                putInt("biotaid", biotaid)
+                putInt("keramba_id", keramba_id)
+                putInt("biota_id", biota_id)
             }
 
             val bottomSheetBiota = BottomSheetBiota()

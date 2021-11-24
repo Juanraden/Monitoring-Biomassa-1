@@ -1,6 +1,6 @@
 package com.kedaireka.monitoring_biomassa.data
 
-import com.kedaireka.monitoring_biomassa.data.model.LoggedInUser
+import com.kedaireka.monitoring_biomassa.data.domain.LoggedInUser
 import javax.inject.Inject
 
 /**

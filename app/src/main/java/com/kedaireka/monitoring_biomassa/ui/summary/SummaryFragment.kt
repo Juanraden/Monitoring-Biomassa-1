@@ -75,7 +75,7 @@ class SummaryFragment : Fragment() {
         }
 
         Transformations.switchMap(
-            kerambaViewModel.loadedKerambaid){ id ->
+            kerambaViewModel.loadedKerambaId){ id ->
             kerambaViewModel.loadKerambaData(id)
         }.observe(viewLifecycleOwner, { keramba ->
             binding.toolbarFragment.title = keramba.nama_keramba

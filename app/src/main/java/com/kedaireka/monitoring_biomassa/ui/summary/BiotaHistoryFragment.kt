@@ -57,8 +57,8 @@ class BiotaHistoryFragment : Fragment() {
 
         binding.biotaHistoryList.adapter = biotaHistoryListAdapter
 
-        Transformations.switchMap(kerambaViewModel.loadedKerambaid){ kerambaid ->
-            biotaViewModel.getAllBiotaHistory(kerambaid)
+        Transformations.switchMap(kerambaViewModel.loadedKerambaId){ keramba_id ->
+            biotaViewModel.getAllBiotaHistory(keramba_id)
         }.observe(viewLifecycleOwner, {
             biotaHistoryListAdapter.submitList(it)
 

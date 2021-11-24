@@ -54,7 +54,7 @@ class KerambaListAdapter(
 
     object DiffCallBack: DiffUtil.ItemCallback<KerambaDomain>() {
         override fun areItemsTheSame(oldItem: KerambaDomain, newItem: KerambaDomain): Boolean {
-            return oldItem.kerambaid == newItem.kerambaid
+            return oldItem.keramba_id == newItem.keramba_id
         }
 
         override fun areContentsTheSame(oldItem: KerambaDomain, newItem: KerambaDomain): Boolean {

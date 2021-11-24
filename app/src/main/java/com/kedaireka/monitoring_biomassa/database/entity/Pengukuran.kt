@@ -10,16 +10,16 @@ import androidx.room.PrimaryKey
     tableName = "pengukuran",
     foreignKeys = [ForeignKey(
         entity = Biota::class,
-        parentColumns = arrayOf("biotaid"),
-        childColumns = arrayOf("biotaid"),
+        parentColumns = arrayOf("biota_id"),
+        childColumns = arrayOf("biota_id"),
         onDelete = CASCADE,
         onUpdate = CASCADE
     )],
-    indices = [Index("biotaid")]
+    indices = [Index("biota_id")]
 )
 data class Pengukuran(
     @PrimaryKey(autoGenerate = true)
-    val pengukuranid: Int = 0,
+    val pengukuran_id: Int = 0,
 
     val panjang: Double,
 
@@ -27,5 +27,5 @@ data class Pengukuran(
 
     val tanggal_ukur: Long,
 
-    val biotaid: Int
+    val biota_id: Int
 )

@@ -49,12 +49,12 @@ class BiotaFragment : Fragment() {
 
     private fun setupBiotaList() {
         val bundle = Bundle()
-        Transformations.switchMap(kerambaViewModel.loadedKerambaid){ kerambaid ->
+        Transformations.switchMap(kerambaViewModel.loadedKerambaId){ keramba_id ->
 
-            bundle.putInt("kerambaid", kerambaid)
-            bundle.putInt("biotaid", 0)
+            bundle.putInt("keramba_id", keramba_id)
+            bundle.putInt("biota_id", 0)
 
-            biotaViewModel.getAllBiota(kerambaid)
+            biotaViewModel.getAllBiota(keramba_id)
 
         }.observe(viewLifecycleOwner, { listBiota ->
             val biotaHeaderAdapter = HeaderButtonAdapter {
@@ -71,7 +71,7 @@ class BiotaFragment : Fragment() {
             val biotaListAdapter = BiotaListAdapter { biota ->
                 navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToBiotaTabFragment())
 
-                biotaViewModel.setBiotaid(biota.biotaid)
+                biotaViewModel.setBiotaId(biota.biota_id)
             }
 
             val concatAdapter = ConcatAdapter(biotaHeaderAdapter, biotaListAdapter)

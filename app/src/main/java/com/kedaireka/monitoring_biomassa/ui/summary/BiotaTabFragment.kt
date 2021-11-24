@@ -71,8 +71,8 @@ class BiotaTabFragment : Fragment() {
             navController.navigateUp(appBarConfiguration)
         }
 
-        Transformations.switchMap(biotaViewModel.loadedBiotaid){ biotaid ->
-            biotaViewModel.loadBiotaData(biotaid)
+        Transformations.switchMap(biotaViewModel.loadedBiotaId){ biota_id ->
+            biotaViewModel.loadBiotaData(biota_id)
         }.observe(viewLifecycleOwner, {biota->
             binding.toolbarFragment.title = biota.jenis_biota
         })

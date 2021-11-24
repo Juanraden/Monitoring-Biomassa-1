@@ -15,7 +15,7 @@ import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 class BiotaHistoryListAdapter: ListAdapter<BiotaDomain, BiotaHistoryListAdapter.ViewHolder>(DiffCallBack) {
     object DiffCallBack: DiffUtil.ItemCallback<BiotaDomain>() {
         override fun areItemsTheSame(oldItem: BiotaDomain, newItem: BiotaDomain): Boolean {
-            return oldItem.biotaid == newItem.biotaid
+            return oldItem.biota_id == newItem.biota_id
         }
 
         override fun areContentsTheSame(oldItem: BiotaDomain, newItem: BiotaDomain): Boolean {

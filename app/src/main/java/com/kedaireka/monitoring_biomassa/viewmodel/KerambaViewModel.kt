@@ -19,8 +19,8 @@ class KerambaViewModel @Inject constructor(
     private val kerambaMapper: EntityMapper<Keramba, KerambaDomain>,
     private val biotaMapper: EntityMapper<Biota,BiotaDomain>
 ): ViewModel() {
-    private val _loadedKerambaid = MutableLiveData<Int>()
-    val loadedKerambaid: LiveData<Int> = _loadedKerambaid
+    private val _loadedKerambaId = MutableLiveData<Int>()
+    val loadedKerambaId: LiveData<Int> = _loadedKerambaId
 
     private val _tanggalInstall = MutableLiveData<Long>()
     val tanggalInstall: LiveData<Long> = _tanggalInstall
@@ -29,7 +29,7 @@ class KerambaViewModel @Inject constructor(
     val querySearch: LiveData<String> = _querySearch
 
     fun setKerambaId(id: Int){
-        _loadedKerambaid.value = id
+        _loadedKerambaId.value = id
     }
 
     fun getAllKeramba(): LiveData<List<KerambaDomain>> = Transformations.map(kerambaDAO.getAll().asLiveData()){list->
@@ -72,7 +72,7 @@ class KerambaViewModel @Inject constructor(
             withContext(Dispatchers.IO){
                 kerambaDAO.updateOne(
                     Keramba(
-                        kerambaid = id,
+                        keramba_id = id,
                         nama_keramba = nama,
                         ukuran = ukuran.toDouble(),
                         tanggal_install = _tanggalInstall.value!!
