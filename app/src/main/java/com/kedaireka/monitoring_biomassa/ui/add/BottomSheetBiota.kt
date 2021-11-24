@@ -68,6 +68,8 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
 
     private fun bind(biotaDomain: BiotaDomain){
         binding.apply {
+            titleTv.text = biotaDomain.jenis_biota
+
             jenisBiotaEt.setText(biotaDomain.jenis_biota, TextView.BufferType.SPANNABLE)
 
             bobotBibitEt.setText(biotaDomain.bobot.toString(), TextView.BufferType.SPANNABLE)
@@ -77,6 +79,8 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
             jumlahBibitEt.setText(biotaDomain.jumlah_bibit.toString(), TextView.BufferType.SPANNABLE)
 
             biotaViewModel.onSelectDateTime(biotaDomain.tanggal_tebar)
+
+            saveBiotaBtn.text = getString(R.string.edit_biota)
         }
     }
 
