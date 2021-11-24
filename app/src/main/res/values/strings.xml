@@ -61,4 +61,5 @@
     <string name="tanggal_pengukuran">Tanggal pengukuran: %1$s</string>
     <string name="tanggal_ukur_biota">Tanggal Pengukuran</string>
     <string name="tambah_data_biota">Tambah Data Biota</string>
+    <string name="edit_biota">Edit Biota</string>
 </resources>
