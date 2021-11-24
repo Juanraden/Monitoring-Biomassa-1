@@ -19,15 +19,15 @@ class PengukuranViewModel @Inject constructor(
     private val _selectedTanggalUkur = MutableLiveData<Long>()
     val selectedTanggalUkur: LiveData<Long> = _selectedTanggalUkur
 
-    private val _selectedBiotaid = MutableLiveData<Int>()
-    val selectedBiotaid: LiveData<Int> = _selectedBiotaid
+    private val _selectedBiotaId = MutableLiveData<Int>()
+    val selectedBiotaId: LiveData<Int> = _selectedBiotaId
 
-    fun getAll(biotaid: Int): LiveData<List<PengukuranDomain>> = Transformations.map(pengukuranDAO.getAll(biotaid).asLiveData()){list->
+    fun getAll(biota_id: Int): LiveData<List<PengukuranDomain>> = Transformations.map(pengukuranDAO.getAll(biota_id).asLiveData()){list->
         list.map { pengukuranMapper.mapFromEntity(it) }
     }
 
-    fun selectBiotaId(biotaid: Int){
-        _selectedBiotaid.value = biotaid
+    fun selectBiotaId(biota_id: Int){
+        _selectedBiotaId.value = biota_id
     }
 
     fun onSelectDateTime(dateTime: Long) {
@@ -35,7 +35,7 @@ class PengukuranViewModel @Inject constructor(
 
 
     fun isEntryValid(panjang: String, bobot: String): Boolean{
-        return !(panjang.isBlank() || bobot.isBlank() || _selectedBiotaid.value == null || _selectedTanggalUkur.value == null)
+        return !(panjang.isBlank() || bobot.isBlank() || _selectedBiotaId.value == null || _selectedTanggalUkur.value == null)
     }
 
     fun insertPengukuran(panjang: String, bobot: String){
@@ -46,7 +46,7 @@ class PengukuranViewModel @Inject constructor(
                         panjang = panjang.toDouble(),
                         bobot =  bobot.toDouble(),
                         tanggal_ukur = _selectedTanggalUkur.value!!,
-                        biotaid = _selectedBiotaid.value!!
+                        biota_id = _selectedBiotaId.value!!
                     )
                 )
             }

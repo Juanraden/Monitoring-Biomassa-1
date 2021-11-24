@@ -166,7 +166,7 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
 
             kerambaList = it.keys.toList()
 
-            val kerambaidList = kerambaList.map {keramba -> keramba.kerambaid }
+            val keramba_idList = kerambaList.map {keramba -> keramba.keramba_id }
 
             val kerambaAdapter =
                 ArrayAdapter(
@@ -180,10 +180,10 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
             binding.kerambaDropdown.adapter = kerambaAdapter
 
             if (this@BottomSheetPengukuran.arguments != null){
-                val kerambaid = this@BottomSheetPengukuran.arguments!!.getInt("kerambaid")
+                val keramba_id = this@BottomSheetPengukuran.arguments!!.getInt("keramba_id")
 
-                if (kerambaid > 0){
-                    val index = kerambaidList.indexOf(kerambaid)
+                if (keramba_id > 0){
+                    val index = keramba_idList.indexOf(keramba_id)
 
                     binding.kerambaDropdown.setSelection(index)
                 }
@@ -197,7 +197,7 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
 
                     biotaList = mapKerambatoBiota[keramba]!!
 
-                    val biotaidList = biotaList.map {biota-> biota.biotaid }
+                    val biota_idList = biotaList.map {biota-> biota.biota_id }
 
                     val biotaAdapter = ArrayAdapter(
                         requireContext(),
@@ -210,9 +210,9 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
                     binding.biotaDropdown.adapter = biotaAdapter
 
                     if (this@BottomSheetPengukuran.arguments != null) {
-                        val biotaid = this@BottomSheetPengukuran.arguments!!.getInt("biotaid")
+                        val biota_id = this@BottomSheetPengukuran.arguments!!.getInt("biota_id")
 
-                        val index = biotaidList.indexOf(biotaid)
+                        val index = biota_idList.indexOf(biota_id)
 
                         binding.biotaDropdown.setSelection(index)
                     }
@@ -228,7 +228,7 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
     override fun onItemSelected(parent: AdapterView<*>, p1: View?, pos: Int, p3: Long) {
         val biota = biotaList[pos]
 
-        pengukuranViewModel.selectBiotaId(biota.biotaid)
+        pengukuranViewModel.selectBiotaId(biota.biota_id)
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {}

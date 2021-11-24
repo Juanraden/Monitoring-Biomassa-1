@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
         kerambaListAdapter = KerambaListAdapter {
             navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment())
 
-            kerambaViewModel.setKerambaId(it.kerambaid)
+            kerambaViewModel.setKerambaId(it.keramba_id)
         }
 
         setupKerambaList()

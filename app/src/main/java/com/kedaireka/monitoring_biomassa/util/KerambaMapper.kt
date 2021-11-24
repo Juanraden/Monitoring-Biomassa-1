@@ -7,7 +7,7 @@ import javax.inject.Inject
 class KerambaMapper @Inject constructor(): EntityMapper<Keramba, KerambaDomain> {
     override fun mapFromEntity(entity: Keramba): KerambaDomain {
         return KerambaDomain(
-            kerambaid = entity.kerambaid,
+            keramba_id = entity.keramba_id,
             nama_keramba = entity.nama_keramba,
             ukuran = entity.ukuran,
             tanggal_install = entity.tanggal_install
@@ -16,7 +16,7 @@ class KerambaMapper @Inject constructor(): EntityMapper<Keramba, KerambaDomain> 
 
     override fun mapToEntity(target: KerambaDomain): Keramba {
         return Keramba(
-            kerambaid = target.kerambaid,
+            keramba_id = target.keramba_id,
             nama_keramba = target.nama_keramba,
             ukuran = target.ukuran,
             tanggal_install = target.tanggal_install

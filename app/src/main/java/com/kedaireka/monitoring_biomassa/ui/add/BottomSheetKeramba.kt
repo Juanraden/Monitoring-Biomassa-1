@@ -48,7 +48,7 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
         binding.ivClose.setOnClickListener { dismiss() }
 
         if (this.arguments != null) {
-            val id = arguments!!.getInt("kerambaid")
+            val id = arguments!!.getInt("keramba_id")
 
             kerambaViewModel.loadKerambaData(id)
                 .observe(viewLifecycleOwner, { bind(kerambaDomain = it) })
@@ -120,7 +120,7 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
             ) {
                 if (this@BottomSheetKeramba.arguments != null) {
                     updateKeramba(
-                        arguments!!.getInt("kerambaid"),
+                        arguments!!.getInt("keramba_id"),
                         namaKerambaEt.text.toString().trim(),
                         ukuranKerambaEt.text.toString()
                     )

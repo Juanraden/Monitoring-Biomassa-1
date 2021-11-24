@@ -16,8 +16,8 @@ class BiotaViewModel @Inject constructor(
     private val biotaDao: BiotaDAO,
     private val biotaMapper: EntityMapper<Biota, BiotaDomain>): ViewModel() {
 
-    private val _loadedBiotaid = MutableLiveData<Int>()
-    val loadedBiotaid: LiveData<Int> = _loadedBiotaid
+    private val _loadedBiotaId = MutableLiveData<Int>()
+    val loadedBiotaId: LiveData<Int> = _loadedBiotaId
 
     private val _selectedKerambaId = MutableLiveData<Int>()
 
@@ -28,8 +28,8 @@ class BiotaViewModel @Inject constructor(
         return Transformations.map(biotaDao.getById(id).asLiveData()){biotaMapper.mapFromEntity(it)}
     }
 
-    fun setBiotaid(id: Int){
-        _loadedBiotaid.value = id
+    fun setBiotaId(id: Int){
+        _loadedBiotaId.value = id
     }
 
     fun getAllBiota(id: Int): LiveData<List<BiotaDomain>> = Transformations.map(biotaDao.getAll(id).asLiveData()){list->
@@ -40,7 +40,7 @@ class BiotaViewModel @Inject constructor(
         list.map { biotaMapper.mapFromEntity(it) }
     }
 
-    fun selectKerambaId(id: Int){
+    fun selectkerambaId(id: Int){
         _selectedKerambaId.value = id
     }
 
@@ -57,7 +57,7 @@ class BiotaViewModel @Inject constructor(
             withContext(Dispatchers.IO){
                 biotaDao.insert(
                     Biota(
-                        kerambaid = _selectedKerambaId.value!!,
+                        keramba_id = _selectedKerambaId.value!!,
                         jenis_biota = jenis,
                         bobot = bobot.toDouble(),
                         panjang = panjang.toDouble(),
@@ -69,18 +69,18 @@ class BiotaViewModel @Inject constructor(
         }
     }
 
-    fun updateBiota(biotaid: Int, jenis: String, bobot: String, panjang: String, jumlah: String){
+    fun updateBiota(biota_id: Int, jenis: String, bobot: String, panjang: String, jumlah: String){
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 biotaDao.updateOne(
                     Biota(
-                        biotaid = biotaid,
+                        biota_id = biota_id,
                         jenis_biota = jenis,
                         bobot = bobot.toDouble(),
                         panjang = panjang.toDouble(),
                         jumlah_bibit = jumlah.toInt(),
                         tanggal_tebar = _selectedTanggalTebar.value!!,
-                        kerambaid = _selectedKerambaId.value!!
+                        keramba_id = _selectedKerambaId.value!!
                     )
                 )
             }

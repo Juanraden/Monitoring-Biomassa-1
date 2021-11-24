@@ -56,12 +56,12 @@ class InfoFragment : Fragment() {
     }
 
     private fun setupFragment() {
-        Transformations.switchMap(kerambaViewModel.loadedKerambaid){ kerambaid ->
-            kerambaViewModel.loadKerambaData(kerambaid)
+        Transformations.switchMap(kerambaViewModel.loadedKerambaId){ keramba_id ->
+            kerambaViewModel.loadKerambaData(keramba_id)
         }.observe(viewLifecycleOwner, { keramba-> bind(keramba) })
 
-        Transformations.switchMap(kerambaViewModel.loadedKerambaid){ kerambaid ->
-            biotaViewModel.getAllBiota(kerambaid)
+        Transformations.switchMap(kerambaViewModel.loadedKerambaId){ keramba_id ->
+            biotaViewModel.getAllBiota(keramba_id)
         }.observe(viewLifecycleOwner, { list -> initBiotaChart(list) })
 
         binding.biotaHistoryBtn.setOnClickListener {
@@ -86,7 +86,7 @@ class InfoFragment : Fragment() {
 
                     val bundle = Bundle()
 
-                    bundle.putInt("kerambaid", keramba.kerambaid)
+                    bundle.putInt("keramba_id", keramba.keramba_id)
 
                     bottomSheetKeramba.arguments = bundle
 

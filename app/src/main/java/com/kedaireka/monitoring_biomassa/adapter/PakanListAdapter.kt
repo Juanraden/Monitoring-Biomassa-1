@@ -37,7 +37,7 @@ class PakanListAdapter : ListAdapter<PakanDomain, PakanListAdapter.ViewHolder>(D
 
     object DiffCallBack: DiffUtil.ItemCallback<PakanDomain>() {
         override fun areItemsTheSame(oldItem: PakanDomain, newItem: PakanDomain): Boolean {
-            return oldItem.pakanid == newItem.pakanid
+            return oldItem.pakan_id == newItem.pakan_id
         }
 
         override fun areContentsTheSame(oldItem: PakanDomain, newItem: PakanDomain): Boolean {

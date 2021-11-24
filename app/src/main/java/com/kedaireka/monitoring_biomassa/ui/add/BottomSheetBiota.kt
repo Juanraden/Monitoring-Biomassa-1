@@ -56,10 +56,10 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         setupDropdown()
 
         if (this@BottomSheetBiota.arguments != null) {
-            val biotaid: Int = this@BottomSheetBiota.arguments!!.getInt("biotaid")
+            val biota_id: Int = this@BottomSheetBiota.arguments!!.getInt("biota_id")
 
-            if (biotaid > 0){
-                biotaViewModel.loadBiotaData(biotaid).observe(viewLifecycleOwner, { bind(it) })
+            if (biota_id > 0){
+                biotaViewModel.loadBiotaData(biota_id).observe(viewLifecycleOwner, { bind(it) })
             }
         }
 
@@ -160,11 +160,11 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                 )
             ) {
                 if (this@BottomSheetBiota.arguments != null) {
-                    val biotaid: Int = this@BottomSheetBiota.arguments!!.getInt("biotaid")
+                    val biota_id: Int = this@BottomSheetBiota.arguments!!.getInt("biota_id")
 
-                    if (biotaid > 0){
+                    if (biota_id > 0){
                         biotaViewModel.updateBiota(
-                            biotaid,
+                            biota_id,
                             jenisBiotaEt.text.toString().trim(),
                             bobotBibitEt.text.toString(),
                             panjangBibitEt.text.toString(),
@@ -227,7 +227,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
     private fun setupDropdown() {
         kerambaViewModel.getAllKeramba().observe(viewLifecycleOwner, { listKeramba ->
 
-            mapKeramba = listKeramba.map { keramba -> keramba.nama_keramba to keramba.kerambaid }.toMap()
+            mapKeramba = listKeramba.map { keramba -> keramba.nama_keramba to keramba.keramba_id }.toMap()
 
             val kerambaList = mapKeramba.keys.toList()
 
@@ -239,11 +239,11 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
             binding.kerambaDropdown.adapter = arrayAdapter
 
             if (this@BottomSheetBiota.arguments != null) {
-                val kerambaid: Int = this@BottomSheetBiota.arguments!!.getInt("kerambaid")
+                val keramba_id: Int = this@BottomSheetBiota.arguments!!.getInt("keramba_id")
 
-                val kerambaidList: List<Int> = mapKeramba.values.toList()
+                val keramba_idList: List<Int> = mapKeramba.values.toList()
 
-                val index: Int = kerambaidList.indexOf(kerambaid)
+                val index: Int = keramba_idList.indexOf(keramba_id)
 
                 binding.kerambaDropdown.setSelection(index)
 
@@ -257,7 +257,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         val namaKeramba = parent.getItemAtPosition(pos)
 
         if (namaKeramba != null) {
-            biotaViewModel.selectKerambaId(mapKeramba[namaKeramba]!!)
+            biotaViewModel.selectkerambaId(mapKeramba[namaKeramba]!!)
         }
     }
 

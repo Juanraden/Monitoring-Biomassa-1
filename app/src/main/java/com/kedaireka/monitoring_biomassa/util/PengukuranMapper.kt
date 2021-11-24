@@ -7,21 +7,21 @@ import javax.inject.Inject
 class PengukuranMapper @Inject constructor(): EntityMapper<Pengukuran, PengukuranDomain> {
     override fun mapFromEntity(entity: Pengukuran): PengukuranDomain {
         return PengukuranDomain(
-            pengukuranid = entity.pengukuranid,
+            pengukuran_id = entity.pengukuran_id,
             panjang = entity.panjang,
             bobot = entity.bobot,
             tanggal_ukur = entity.tanggal_ukur,
-            biotaid = entity.biotaid
+            biota_id = entity.biota_id
         )
     }
 
     override fun mapToEntity(target: PengukuranDomain): Pengukuran {
         return Pengukuran(
-            pengukuranid = target.pengukuranid,
+            pengukuran_id = target.pengukuran_id,
             panjang = target.panjang,
             bobot = target.bobot,
             tanggal_ukur = target.tanggal_ukur,
-            biotaid = target.biotaid
+            biota_id = target.biota_id
         )
     }
 }

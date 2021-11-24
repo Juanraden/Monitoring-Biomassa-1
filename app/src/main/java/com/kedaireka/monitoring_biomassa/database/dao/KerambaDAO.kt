@@ -19,7 +19,7 @@ interface KerambaDAO {
     @Query("SELECT * FROM keramba ORDER BY tanggal_install")
     fun getAll(): Flow<List<Keramba>>
 
-    @Query("SELECT * FROM keramba WHERE kerambaid = :id")
+    @Query("SELECT * FROM keramba WHERE keramba_id = :id")
     fun getById(id: Int): Flow<Keramba>
 
     @Transaction
