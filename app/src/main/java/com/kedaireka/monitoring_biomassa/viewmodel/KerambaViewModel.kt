@@ -6,6 +6,7 @@ import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Biota
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
+import com.kedaireka.monitoring_biomassa.repository.KerambaRepository
 import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class KerambaViewModel @Inject constructor(
     private val kerambaDAO: KerambaDAO,
     private val kerambaMapper: EntityMapper<Keramba, KerambaDomain>,
-    private val biotaMapper: EntityMapper<Biota,BiotaDomain>
+    private val biotaMapper: EntityMapper<Biota,BiotaDomain>,
+    private val repository: KerambaRepository
 ): ViewModel() {
     private val _loadedKerambaId = MutableLiveData<Int>()
     val loadedKerambaId: LiveData<Int> = _loadedKerambaId
@@ -32,9 +34,7 @@ class KerambaViewModel @Inject constructor(
         _loadedKerambaId.value = id
     }
 
-    fun getAllKeramba(): LiveData<List<KerambaDomain>> = Transformations.map(kerambaDAO.getAll().asLiveData()){list->
-        list.map { kerambaMapper.mapFromEntity(it) }
-    }
+    fun getAllKeramba(): LiveData<List<KerambaDomain>> = repository.kerambaList
 
     fun setQuerySearch(query: String){
         _querySearch.value = query
@@ -87,6 +87,12 @@ class KerambaViewModel @Inject constructor(
             listKerambaAndBiota.map {
                 kerambaMapper.mapFromEntity(it.keramba) to it.biotaList.map {biota-> biotaMapper.mapFromEntity(biota) }
             }.toMap()
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            repository.refreshKeramba()
         }
     }
 }
