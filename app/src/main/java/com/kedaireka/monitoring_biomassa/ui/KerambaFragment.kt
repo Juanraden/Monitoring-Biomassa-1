@@ -62,9 +62,9 @@ class KerambaFragment : Fragment() {
         kerambaViewModel.getAllKeramba().observe(viewLifecycleOwner, {
             it.let {
                 kerambaListAdapter.setData(it)
-            }
 
-            binding.loadingSpinner.visibility = View.GONE
+                binding.loadingSpinner.visibility = View.GONE
+            }
 
             val pendingQuery = kerambaViewModel.querySearch.value
 
