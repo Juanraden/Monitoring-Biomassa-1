@@ -8,5 +8,7 @@ data class Pakan(
     @PrimaryKey(autoGenerate = true)
     val pakan_id: Int = 0,
 
-    val jenis_pakan: String
+    val jenis_pakan: String,
+
+    val deskripsi: String
 )

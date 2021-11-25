@@ -20,9 +20,9 @@ class PakanViewModel @Inject constructor(
         list.map { pakanMapper.mapFromEntity(it) }
     }
 
-    fun insertPakan(jenis_pakan: String){
+    fun insertPakan(jenis_pakan: String, deskripsi: String = ""){
         viewModelScope.launch {
-            withContext(Dispatchers.IO){ pakanDAO.insertOne(Pakan(jenis_pakan = jenis_pakan)) }
+            withContext(Dispatchers.IO){ pakanDAO.insertOne(Pakan(jenis_pakan = jenis_pakan, deskripsi = deskripsi)) }
         }
     }
 
