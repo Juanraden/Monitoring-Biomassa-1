@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface MonitoringService {
 
-    @GET("api/v1/keramba")
+    @GET("keramba")
     fun getKerambaListAsync(): Deferred<KerambaContainer>
 }

@@ -27,7 +27,7 @@ object RetrofitModule {
     @Provides
     fun provideRetrofit(moshi: Moshi): Retrofit.Builder {
         return Retrofit.Builder()
-            .baseUrl("https://web-biomassa.000webhostapp.com/")
+            .baseUrl("https://web-biomassa.000webhostapp.com/api/v1/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
     }
