@@ -89,10 +89,9 @@ class KerambaViewModel @Inject constructor(
             }.toMap()
         }
     }
-
-    init {
-        viewModelScope.launch {
-            repository.refreshKeramba()
-        }
-    }
+//    init {
+//        viewModelScope.launch {
+//            repository.refreshKeramba()
+//        }
+//    }
 }

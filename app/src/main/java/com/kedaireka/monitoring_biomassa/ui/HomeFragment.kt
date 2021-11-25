@@ -12,10 +12,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.HomeFragmentTabAdapter
-import com.kedaireka.monitoring_biomassa.adapter.KerambaListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentHomeBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,8 +29,6 @@ class HomeFragment : Fragment() {
     private lateinit var navController: NavController
 
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
-
-    private lateinit var kerambaListAdapter: KerambaListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,38 +52,23 @@ class HomeFragment : Fragment() {
 
         setupTabLayout()
 
-        kerambaListAdapter = KerambaListAdapter {
-            navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment())
-
-            kerambaViewModel.setKerambaId(it.keramba_id)
-        }
-
-        setupQuerySearch()
-
         setupToolbarSearch()
     }
 
-    private fun setupTabLayout(){
+    private fun setupTabLayout() {
         val tabAdapter = HomeFragmentTabAdapter(this)
 
         with(binding) {
             pager.adapter = tabAdapter
 
-            TabLayoutMediator(tabLayout, pager){tab, position->
-                when(position){
+            TabLayoutMediator(tabLayout, pager) { tab, position ->
+                when (position) {
                     0 -> tab.text = getString(R.string.keramba)
                     1 -> tab.text = getString(R.string.jenis_pakan)
                 }
             }.attach()
         }
     }
-
-    private fun setupQuerySearch() {
-        kerambaViewModel.querySearch.observe(viewLifecycleOwner, {query->
-                kerambaListAdapter.filter.filter(query)
-        })
-    }
-
 
     private fun setupToolbarSearch() {
         binding.toolbarFragment.inflateMenu(R.menu.search_menu)
@@ -104,6 +87,16 @@ class HomeFragment : Fragment() {
             override fun onQueryTextChange(newText: String): Boolean {
                 kerambaViewModel.setQuerySearch(newText)
                 return true
+            }
+        })
+
+        binding.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                when (position) {
+                    0 -> search.isVisible = true
+                    1 -> search.isVisible = false
+                }
             }
         })
     }
