@@ -7,7 +7,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FeedingDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOne(feeding: Feeding)
+    suspend fun insertAll(listFeeding: List<Feeding>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOne(feeding: Feeding)
 
     @Update
     suspend fun updateOne(feeding: Feeding)
