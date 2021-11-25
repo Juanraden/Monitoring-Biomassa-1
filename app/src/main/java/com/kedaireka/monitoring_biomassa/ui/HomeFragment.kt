@@ -12,7 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.tabs.TabLayoutMediator
 import com.kedaireka.monitoring_biomassa.R
+import com.kedaireka.monitoring_biomassa.adapter.HomeFragmentTabAdapter
 import com.kedaireka.monitoring_biomassa.adapter.KerambaListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentHomeBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
@@ -50,35 +52,32 @@ class HomeFragment : Fragment() {
 
         setupNavigation()
 
+        setupTabLayout()
+
         kerambaListAdapter = KerambaListAdapter {
             navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment())
 
             kerambaViewModel.setKerambaId(it.keramba_id)
         }
 
-        setupKerambaList()
-
         setupQuerySearch()
 
         setupToolbarSearch()
     }
 
-    private fun setupKerambaList() {
-        binding.kerambaList.adapter = kerambaListAdapter
+    private fun setupTabLayout(){
+        val tabAdapter = HomeFragmentTabAdapter(this)
 
-        kerambaViewModel.getAllKeramba().observe(viewLifecycleOwner, {
-            it.let {
-                kerambaListAdapter.setData(it)
-            }
+        with(binding) {
+            pager.adapter = tabAdapter
 
-            binding.loadingSpinner.visibility = View.GONE
-
-            val pendingQuery = kerambaViewModel.querySearch.value
-
-            if (pendingQuery != null){
-                kerambaListAdapter.filter.filter(pendingQuery)
-            }
-        })
+            TabLayoutMediator(tabLayout, pager){tab, position->
+                when(position){
+                    0 -> tab.text = getString(R.string.keramba)
+                    1 -> tab.text = getString(R.string.jenis_pakan)
+                }
+            }.attach()
+        }
     }
 
     private fun setupQuerySearch() {
