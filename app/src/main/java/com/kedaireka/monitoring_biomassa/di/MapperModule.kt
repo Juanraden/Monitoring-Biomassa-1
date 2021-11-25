@@ -2,6 +2,15 @@ package com.kedaireka.monitoring_biomassa.di
 
 import com.kedaireka.monitoring_biomassa.data.domain.*
 import com.kedaireka.monitoring_biomassa.database.entity.*
+import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
+import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
+import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
+import com.kedaireka.monitoring_biomassa.data.domain.PengukuranDomain
+import com.kedaireka.monitoring_biomassa.data.network.KerambaNetwork
+import com.kedaireka.monitoring_biomassa.database.entity.Biota
+import com.kedaireka.monitoring_biomassa.database.entity.Keramba
+import com.kedaireka.monitoring_biomassa.database.entity.Pakan
+import com.kedaireka.monitoring_biomassa.database.entity.Pengukuran
 import com.kedaireka.monitoring_biomassa.util.*
 import dagger.Binds
 import dagger.Module
@@ -41,4 +50,9 @@ abstract class MapperModule {
     abstract fun bindFeedingDetailMapper(
         feedingDetailMapper: FeedingDetailMapper
     ): EntityMapper<FeedingDetail, FeedingDetailDomain>
+  
+    @Binds
+    abstract fun bindKerambaNetworkMapper(
+        kerambaNetworkMapper: KerambaNetworkMapper
+    ): EntityMapper<KerambaNetwork, Keramba>
 }

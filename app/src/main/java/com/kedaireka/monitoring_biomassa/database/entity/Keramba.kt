@@ -9,5 +9,5 @@ data class Keramba constructor(
     val keramba_id: Int = 0,
     val nama_keramba: String,
     val ukuran: Double,
-    val tanggal_install: Long,
+    val tanggal_install: Long = 0,
 )

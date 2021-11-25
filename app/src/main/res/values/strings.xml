@@ -62,4 +62,6 @@
     <string name="tanggal_ukur_biota">Tanggal Pengukuran</string>
     <string name="tambah_data_biota">Tambah Data Biota</string>
     <string name="edit_biota">Edit Biota</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>
