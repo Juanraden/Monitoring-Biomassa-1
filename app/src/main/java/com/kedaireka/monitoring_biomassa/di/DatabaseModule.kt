@@ -3,10 +3,7 @@ package com.kedaireka.monitoring_biomassa.di
 import android.content.Context
 import androidx.room.Room
 import com.kedaireka.monitoring_biomassa.database.DatabaseBiomassa
-import com.kedaireka.monitoring_biomassa.database.dao.BiotaDAO
-import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
-import com.kedaireka.monitoring_biomassa.database.dao.PakanDAO
-import com.kedaireka.monitoring_biomassa.database.dao.PengukuranDAO
+import com.kedaireka.monitoring_biomassa.database.dao.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,5 +49,17 @@ object DatabaseModule {
     @Provides
     fun providePengukuranDao(databaseBiomassa: DatabaseBiomassa): PengukuranDAO{
         return databaseBiomassa.pengukuranDAO()
+    }
+
+    @Singleton
+    @Provides
+    fun provideFeedingDao(databaseBiomassa: DatabaseBiomassa): FeedingDAO {
+        return databaseBiomassa.feedingDAO()
+    }
+
+    @Singleton
+    @Provides
+    fun provideFeedingDetailDao(databaseBiomassa: DatabaseBiomassa): FeedingDetailDAO {
+        return databaseBiomassa.feedingDetailDAO()
     }
 }
