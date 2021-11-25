@@ -12,7 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.ConcatAdapter
 import com.kedaireka.monitoring_biomassa.R
+import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PakanListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentAddPakanBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
@@ -43,8 +45,6 @@ class AddPakanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupNavigation()
-
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
 
@@ -57,35 +57,16 @@ class AddPakanFragment : Fragment() {
     private fun setupPakanList() {
         val pakanListAdapter = PakanListAdapter()
 
-        binding.pakanList.adapter = pakanListAdapter
+        val pakanHeaderAdapter = HeaderButtonAdapter{}
+
+        val concatAdapter = ConcatAdapter(pakanHeaderAdapter, pakanListAdapter)
+
+        binding.pakanList.adapter = concatAdapter
 
         pakanViewModel.getAll().observe(viewLifecycleOwner, {
             pakanListAdapter.submitList(it)
 
             binding.loadingSpinner.visibility = View.GONE
         })
-    }
-
-    private fun setupNavigation() {
-
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment,R.id.settingsFragment))
-
-        binding.toolbarFragment.setupWithNavController(navController, appBarConfiguration)
-
-        binding.toolbarFragment.setNavigationOnClickListener {
-            navController.navigateUp(appBarConfiguration)
-        }
-    }
-
-    private fun isEntryValid(jenis_pakan: String): Boolean = pakanViewModel.isEntryValid(jenis_pakan)
-
-    fun insertPakan(){
-        if (isEntryValid(binding.jenisPakanEt.text.toString().trim())){
-            pakanViewModel.insertPakan(binding.jenisPakanEt.text.toString().trim())
-        } else {
-            if (TextUtils.isEmpty(binding.jenisPakanEt.text)){
-                binding.jenisPakanEt.error = "Jenis pakan harus diisi!"
-            }
-        }
     }
 }
