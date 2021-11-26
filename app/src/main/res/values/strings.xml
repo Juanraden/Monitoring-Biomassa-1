@@ -64,4 +64,6 @@
     <string name="edit_biota">Edit Biota</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="nama_pakan">Nama Pakan</string>
+    <string name="deskripsi">Deskripsi</string>
 </resources>
