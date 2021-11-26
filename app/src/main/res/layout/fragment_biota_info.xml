@@ -20,10 +20,10 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="@dimen/layout_padding"
                 android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toTopOf="@id/panjang_chart_card"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/panjang_chart_card">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -121,6 +121,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="@dimen/layout_padding"
                 android:layout_marginBottom="5dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/bobot_chart_card"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -149,6 +150,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="@dimen/layout_padding"
                 android:layout_marginBottom="5dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
