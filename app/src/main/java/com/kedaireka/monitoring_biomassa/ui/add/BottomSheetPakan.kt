@@ -104,7 +104,7 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
             ) {
                 pakanViewModel.insertPakan(
                     namaPakanEt.text.toString().trim(),
-                    deskripsiPakanEt.text.toString()
+                    deskripsiPakanEt.text.toString().trim()
                 )
 
                 dismiss()
