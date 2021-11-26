@@ -1,4 +1,4 @@
-package com.kedaireka.monitoring_biomassa.ui.login
+package com.kedaireka.monitoring_biomassa.data.network
 
 /**
  * Authentication result : success (user details) or error message.
