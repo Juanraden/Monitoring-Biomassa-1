@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupWithNavController
-import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.KerambaListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentKerambaBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
@@ -70,6 +66,14 @@ class KerambaFragment : Fragment() {
 
             if (pendingQuery != null){
                 kerambaListAdapter.filter.filter(pendingQuery)
+            }
+        })
+
+        kerambaViewModel.exception.observe(viewLifecycleOwner, {
+            if(it != "") {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+
+                kerambaViewModel.doneToastException()
             }
         })
     }
