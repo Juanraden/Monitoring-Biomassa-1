@@ -55,9 +55,19 @@ class AddPakanFragment : Fragment() {
     }
 
     private fun setupPakanList() {
+        val bundle = Bundle()
         val pakanListAdapter = PakanListAdapter()
 
-        val pakanHeaderAdapter = HeaderButtonAdapter{}
+        val pakanHeaderAdapter = HeaderButtonAdapter{
+            if (childFragmentManager.findFragmentByTag("BottomSheetPakan") == null) {
+
+                val bottomSheetPakan = BottomSheetPakan()
+
+                bottomSheetPakan.arguments = bundle
+
+                bottomSheetPakan.show(childFragmentManager, "BottomSheetBiota")
+            }
+        }
 
         val concatAdapter = ConcatAdapter(pakanHeaderAdapter, pakanListAdapter)
 
