@@ -13,13 +13,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.kedaireka.monitoring_biomassa.R
+import com.kedaireka.monitoring_biomassa.data.network.LoggedInUserView
 import com.kedaireka.monitoring_biomassa.databinding.FragmentLoginBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
-
     private val loginViewModel by viewModels<LoginViewModel>()
     private lateinit var binding: FragmentLoginBinding
     private lateinit var navController: NavController
@@ -51,6 +51,8 @@ class LoginFragment : Fragment() {
                 loginResult ?: return@Observer
                 loginResult.error?.let {
                     showLoginFailed(it)
+
+                    loadingProgressBar.visibility = View.GONE
                 }
                 loginResult.success?.let {
                     updateUiWithUser(it)
