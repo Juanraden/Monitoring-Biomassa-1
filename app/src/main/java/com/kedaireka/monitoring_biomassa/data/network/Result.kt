@@ -1,4 +1,4 @@
-package com.kedaireka.monitoring_biomassa.data
+package com.kedaireka.monitoring_biomassa.data.network
 
 /**
  * A generic class that holds a value with its loading status.

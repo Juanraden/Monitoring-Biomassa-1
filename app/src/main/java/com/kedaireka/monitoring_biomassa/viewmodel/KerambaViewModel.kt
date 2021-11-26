@@ -30,6 +30,9 @@ class KerambaViewModel @Inject constructor(
     private val _querySearch = MutableLiveData<String>()
     val querySearch: LiveData<String> = _querySearch
 
+    private val _exception = MutableLiveData<String>()
+    val exception: LiveData<String> = _exception
+
     fun setKerambaId(id: Int){
         _loadedKerambaId.value = id
     }
@@ -38,6 +41,10 @@ class KerambaViewModel @Inject constructor(
 
     fun setQuerySearch(query: String){
         _querySearch.value = query
+    }
+
+    fun doneToastException() {
+        _exception.value = ""
     }
 
     fun loadKerambaData(id: Int): LiveData<KerambaDomain>{
@@ -89,9 +96,18 @@ class KerambaViewModel @Inject constructor(
             }.toMap()
         }
     }
+
+    private fun fetchKeramba(){
+        viewModelScope.launch {
+            try {
+                repository.refreshKeramba()
+            } catch (e: Exception){
+                _exception.value = e.message
+            }
+        }
+    }
+
 //    init {
-//        viewModelScope.launch {
-//            repository.refreshKeramba()
-//        }
+//        fetchKeramba()
 //    }
 }

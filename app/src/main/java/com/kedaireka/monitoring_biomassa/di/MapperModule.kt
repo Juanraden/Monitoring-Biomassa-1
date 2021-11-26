@@ -54,5 +54,5 @@ abstract class MapperModule {
     @Binds
     abstract fun bindKerambaNetworkMapper(
         kerambaNetworkMapper: KerambaNetworkMapper
-    ): EntityMapper<KerambaNetwork, Keramba>
+    ): EntityMapper<KerambaNetwork, KerambaDomain>
 }

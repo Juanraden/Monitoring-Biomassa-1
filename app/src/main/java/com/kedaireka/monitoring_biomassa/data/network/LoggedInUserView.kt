@@ -1,4 +1,4 @@
-package com.kedaireka.monitoring_biomassa.ui.login
+package com.kedaireka.monitoring_biomassa.data.network
 
 /**
  * User details post authentication that is exposed to the UI
