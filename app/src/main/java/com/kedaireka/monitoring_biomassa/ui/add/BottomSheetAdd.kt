@@ -29,6 +29,12 @@ class BottomSheetAdd: BottomSheetDialogFragment() {
             }
         }
 
+        binding.addPakanBtn.setOnClickListener {
+            if (childFragmentManager.findFragmentByTag("BottomSheetPakan") == null) {
+                BottomSheetPakan().show(childFragmentManager, "BottomSheetPakan")
+            }
+        }
+
         binding.addBiotaBtn.setOnClickListener {
             if (childFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
                 BottomSheetBiota().show(childFragmentManager, "BottomSheetBiota")
