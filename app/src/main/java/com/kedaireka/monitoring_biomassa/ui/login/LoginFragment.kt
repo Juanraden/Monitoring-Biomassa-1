@@ -1,10 +1,12 @@
 package com.kedaireka.monitoring_biomassa.ui.login
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
@@ -73,10 +75,13 @@ class LoginFragment : Fragment() {
 
         loginButton.setOnClickListener {
             loadingProgressBar.visibility = View.VISIBLE
+
             loginViewModel.login(
                 usernameEditText.text.toString(),
                 passwordEditText.text.toString()
             )
+
+            hideKeyBoard()
         }
     }
 
@@ -90,5 +95,13 @@ class LoginFragment : Fragment() {
     private fun showLoginFailed(@StringRes errorString: Int) {
         val appContext = context?.applicationContext ?: return
         Toast.makeText(appContext, errorString, Toast.LENGTH_LONG).show()
+    }
+    private fun hideKeyBoard() {
+        if (activity!!.currentFocus == null) {
+            return
+        }
+        val inputMethodManager =
+            activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(activity!!.currentFocus!!.windowToken, 0)
     }
 }
