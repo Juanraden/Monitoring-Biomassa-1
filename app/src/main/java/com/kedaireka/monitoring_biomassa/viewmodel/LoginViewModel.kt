@@ -21,30 +21,30 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
 
     fun login(username: String, password: String) {
         // can be launched in a separate asynchronous job
-//        viewModelScope.launch {
-//            try {
-//                val result = loginRepository.loginUser(username, password)
-//
-//                if (result is Result.Success) {
-//                    _loginResult.value =
-//                        LoginResult(success = LoggedInUserView(displayName = result.data.username))
-//                } else {
-//                    _loginResult.value = LoginResult(error = R.string.invalid_input)
-//                }
-//            } catch (e: Exception){
-//                _loginResult.value = LoginResult(error = R.string.login_failed)
-//            }
-//        }
-        _loginResult.value =
-            LoginResult(success = LoggedInUserView(displayName = "Robertus Agung"))
+        viewModelScope.launch {
+            try {
+                val result = loginRepository.loginUser(username, password)
+
+                if (result is Result.Success) {
+                    _loginResult.value =
+                        LoginResult(success = LoggedInUserView(displayName = result.data.username))
+                } else {
+                    _loginResult.value = LoginResult(error = R.string.invalid_input)
+                }
+            } catch (e: Exception){
+                _loginResult.value = LoginResult(error = R.string.login_failed)
+            }
+        }
+//        _loginResult.value =
+//            LoginResult(success = LoggedInUserView(displayName = "Robertus Agung"))
     }
 
-//    init {
-//        val checkLoggedIn = loginRepository.isUserLoggedIn()
-//
-//        if (checkLoggedIn is Result.Success) {
-//            _loginResult.value =
-//                LoginResult(success = LoggedInUserView(displayName = checkLoggedIn.data.username))
-//        }
-//    }
+    init {
+        val checkLoggedIn = loginRepository.isUserLoggedIn()
+
+        if (checkLoggedIn is Result.Success) {
+            _loginResult.value =
+                LoginResult(success = LoggedInUserView(displayName = checkLoggedIn.data.username))
+        }
+    }
 }
