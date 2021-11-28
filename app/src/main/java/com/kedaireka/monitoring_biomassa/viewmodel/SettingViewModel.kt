@@ -17,7 +17,9 @@ class SettingViewModel @Inject constructor(
     private val pakanDAO: PakanDAO,
     private val loginRepository: LoginRepository
 ): ViewModel() {
-    fun logOut(): Boolean{
+    fun logOut(){
+        loginRepository.logOutUser()
+
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 kerambaDAO.deleteAllKeramba()
@@ -25,7 +27,5 @@ class SettingViewModel @Inject constructor(
                 pakanDAO.deleteAllPakan()
             }
         }
-
-        return loginRepository.logOutUser()
     }
 }
