@@ -3,8 +3,8 @@ package com.kedaireka.monitoring_biomassa.repository
 import android.content.SharedPreferences
 import com.kedaireka.monitoring_biomassa.data.network.LoggedInUser
 import com.kedaireka.monitoring_biomassa.data.network.LoginContainer
-import com.kedaireka.monitoring_biomassa.service.MonitoringService
 import com.kedaireka.monitoring_biomassa.data.network.Result
+import com.kedaireka.monitoring_biomassa.service.MonitoringService
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,29 +19,11 @@ class LoginRepository @Inject constructor(
     private val monitoringService: MonitoringService,
     private val sharedPreferences: SharedPreferences
 ) {
-
-    // in-memory cache of the loggedInUser object
-    var user: LoggedInUser? = null
-        private set
-
-    val isLoggedIn: Boolean
-        get() = user != null
-
-    init {
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
-        user = null
-    }
-
-    fun logout() {
-        user = null
-//        dataSource.logout()
-    }
-
     suspend fun loginUser(username: String, password: String): Result<LoggedInUser> {
-        val response: Response<LoginContainer> = monitoringService.loginUserAsync(username, password).await()
+        val response: Response<LoginContainer> =
+            monitoringService.loginUserAsync(username, password).await()
 
-        return if (response.code() == 200){
+        return if (response.code() == 200) {
             val loggedInUser: LoggedInUser = response.body()!!.data[0]
 
             setLoggedInUser(loggedInUser)
@@ -57,38 +39,31 @@ class LoginRepository @Inject constructor(
         val userId = sharedPreferences.getString("user_id", "")
         val username = sharedPreferences.getString("username", "")
 
-        return if (!(token.isNullOrBlank() || userId.isNullOrBlank() || username.isNullOrBlank())){
+        return if (!(token.isNullOrBlank() || userId.isNullOrBlank() || username.isNullOrBlank())) {
             Result.Success(
                 LoggedInUser(
                     token, username, userId
-                ))
+                )
+            )
         } else {
             Result.Error(Exception(""))
         }
     }
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
-        logout()
+        sharedPreferences.edit()
 
-        this.user = loggedInUser
+            .putString("token", loggedInUser.token)
 
-        with(sharedPreferences.edit()){
-            clear()
+            .putString("user_id", loggedInUser.user_id)
 
-            putString("token", loggedInUser.token)
+            .putString("username", loggedInUser.username)
 
-            putString("user_id", loggedInUser.user_id)
-
-            putString("username", loggedInUser.username)
-
-            commit()
-        }
+            .apply()
         // @see https://developer.android.com/training/articles/keystore
     }
 
-    fun logOutUser(): Boolean{
-        logout()
-
-        return sharedPreferences.edit().clear().commit()
+    fun logOutUser(){
+        sharedPreferences.edit().clear().apply()
     }
 }
