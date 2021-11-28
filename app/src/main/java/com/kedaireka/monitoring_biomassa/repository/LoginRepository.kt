@@ -7,12 +7,14 @@ import com.kedaireka.monitoring_biomassa.service.MonitoringService
 import com.kedaireka.monitoring_biomassa.data.network.Result
 import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Class that requests authentication and user information from the remote data source and
  * maintains an in-memory cache of login status and user credentials information.
  */
 
+@Singleton
 class LoginRepository @Inject constructor(
     private val monitoringService: MonitoringService,
     private val sharedPreferences: SharedPreferences
@@ -37,7 +39,7 @@ class LoginRepository @Inject constructor(
     }
 
     suspend fun loginUser(username: String, password: String): Result<LoggedInUser> {
-        val response: Response<LoginContainer> = monitoringService.loginUser(username, password).await()
+        val response: Response<LoginContainer> = monitoringService.loginUserAsync(username, password).await()
 
         return if (response.code() == 200){
             val loggedInUser: LoggedInUser = response.body()!!.data[0]
@@ -66,17 +68,27 @@ class LoginRepository @Inject constructor(
     }
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
+        logout()
+
         this.user = loggedInUser
 
         with(sharedPreferences.edit()){
+            clear()
+
             putString("token", loggedInUser.token)
 
             putString("user_id", loggedInUser.user_id)
 
             putString("username", loggedInUser.username)
 
-            apply()
+            commit()
         }
         // @see https://developer.android.com/training/articles/keystore
+    }
+
+    fun logOutUser(): Boolean{
+        logout()
+
+        return sharedPreferences.edit().clear().commit()
     }
 }
