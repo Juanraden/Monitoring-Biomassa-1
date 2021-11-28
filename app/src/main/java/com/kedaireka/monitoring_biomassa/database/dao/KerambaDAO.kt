@@ -25,4 +25,7 @@ interface KerambaDAO {
     @Transaction
     @Query("SELECT * FROM keramba")
     fun getKerambaAndBiota(): Flow<List<KerambaAndBiota>>
+
+    @Query("DELETE FROM keramba")
+    suspend fun deleteAllKeramba()
 }
