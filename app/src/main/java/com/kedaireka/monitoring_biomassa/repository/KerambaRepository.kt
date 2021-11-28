@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class KerambaRepository @Inject constructor(
     private val kerambaDAO: KerambaDAO,
-    sharedPreferences: SharedPreferences,
+    private val sharedPreferences: SharedPreferences,
     private val monitoringService: MonitoringService,
     private val kerambaMapper: EntityMapper<Keramba, KerambaDomain>,
     private val kerambaNetworkMapper: EntityMapper<KerambaNetwork, KerambaDomain>
@@ -30,12 +30,11 @@ class KerambaRepository @Inject constructor(
             list.map { kerambaMapper.mapFromEntity(it) }
         }
 
-    private val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
-
-    private val token: String = sharedPreferences.getString("token", null) ?: ""
-
     @SuppressLint("SimpleDateFormat")
     suspend fun refreshKeramba() {
+        val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
+
+        val token: String = sharedPreferences.getString("token", null) ?: ""
 
         withContext(Dispatchers.IO) {
             val response: Response<KerambaContainer> =
@@ -61,6 +60,10 @@ class KerambaRepository @Inject constructor(
     }
 
     suspend fun addKeramba(keramba: KerambaDomain) {
+        val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
+
+        val token: String = sharedPreferences.getString("token", null) ?: ""
+
         val kerambaNetwork: KerambaNetwork = kerambaNetworkMapper.mapToEntity(keramba)
 
         val data = mutableMapOf<String, String>()
