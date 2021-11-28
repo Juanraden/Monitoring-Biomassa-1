@@ -1,8 +1,6 @@
 package com.kedaireka.monitoring_biomassa.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,11 +45,33 @@ class KerambaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         kerambaViewModel.fetchKeramba()
 
-        kerambaListAdapter = KerambaListAdapter {
-            navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment())
+        kerambaListAdapter = KerambaListAdapter(
+            // clickListener
+            {
+                navController.navigate(HomeFragmentDirections.actionHomeFragmentToSummaryFragment())
 
-            kerambaViewModel.setKerambaId(it.keramba_id)
-        }
+                kerambaViewModel.setKerambaId(it.keramba_id)
+            },
+
+            // longClickListener
+            {
+                if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
+                        "BottomSheetAction"
+                    ) == null
+                ) {
+                    val bundle = Bundle()
+
+                    bundle.putInt("keramba_id", it.keramba_id)
+
+                    val bottomSheetAction = BottomSheetAction()
+
+                    bottomSheetAction.arguments = bundle
+
+                    bottomSheetAction.show(childFragmentManager, "BottomSheetAction")
+                }
+                true
+            }
+        )
 
         setupKerambaList()
 
@@ -76,12 +96,12 @@ class KerambaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         kerambaViewModel.requestGetResult.observe(viewLifecycleOwner, { result ->
             when (result) {
                 is NetworkResult.Loading -> {
-                    if (!binding.swipeRefresh.isRefreshing){
+                    if (!binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = true
                     }
                 }
                 is NetworkResult.Loaded -> {
-                    if (binding.swipeRefresh.isRefreshing){
+                    if (binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = false
                     }
                 }
@@ -92,7 +112,7 @@ class KerambaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         kerambaViewModel.doneToastException()
                     }
 
-                    if (binding.swipeRefresh.isRefreshing){
+                    if (binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = false
                     }
                 }
