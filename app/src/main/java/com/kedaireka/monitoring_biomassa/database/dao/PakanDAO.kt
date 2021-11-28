@@ -18,4 +18,7 @@ interface PakanDAO {
 
     @Query("SELECT * FROm pakan")
     fun getAll(): Flow<List<Pakan>>
+
+    @Query("DELETE FROM pakan")
+    suspend fun deleteAllPakan()
 }

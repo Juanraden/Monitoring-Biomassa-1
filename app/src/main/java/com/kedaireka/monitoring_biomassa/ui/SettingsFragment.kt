@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -16,9 +17,14 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.databinding.FragmentSettingsBinding
+import com.kedaireka.monitoring_biomassa.viewmodel.SettingViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class SettingsFragment : Fragment(){
+@AndroidEntryPoint
+class SettingsFragment : Fragment() {
     private lateinit var binding: FragmentSettingsBinding
+
+    private val settingViewModel by viewModels<SettingViewModel>()
 
     private val _fragmentTag = "Setting_Fragment"
 
@@ -47,8 +53,8 @@ class SettingsFragment : Fragment(){
         setupNavigation()
     }
 
-    fun launchUri(view: View){
-        when (view.id){
+    fun launchUri(view: View) {
+        when (view.id) {
             R.id.about_tv -> {
                 Log.i(_fragmentTag, "About KJABB CLicked")
             }
@@ -56,16 +62,19 @@ class SettingsFragment : Fragment(){
                 Log.i(_fragmentTag, "Website Monitoring CLicked")
             }
             R.id.sosmed_tv -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/cemebsakedaireka/"))
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://www.instagram.com/cemebsakedaireka/")
+                )
                 startActivity(intent)
             }
             R.id.logout_button -> {
+                settingViewModel.logOut()
                 val host = NavHostFragment.create(R.navigation.nav_graph)
-                val vr = activity?.supportFragmentManager?.beginTransaction()
-                vr?.replace(R.id.nav_host_fragment, host)
-                vr?.setPrimaryNavigationFragment(host)
-                vr?.commit()
-
+                val fragmentTransaction = activity?.supportFragmentManager?.beginTransaction()
+                fragmentTransaction?.replace(R.id.nav_host_fragment, host)
+                fragmentTransaction?.setPrimaryNavigationFragment(host)
+                fragmentTransaction?.commit()
             }
             else -> {
                 Log.i(_fragmentTag, "none")
@@ -73,8 +82,9 @@ class SettingsFragment : Fragment(){
         }
     }
 
-    private fun setupNavigation(){
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment,R.id.settingsFragment))
+    private fun setupNavigation() {
+        val appBarConfiguration =
+            AppBarConfiguration(setOf(R.id.homeFragment, R.id.settingsFragment))
 
         binding.toolbarFragment.setupWithNavController(navController, appBarConfiguration)
 

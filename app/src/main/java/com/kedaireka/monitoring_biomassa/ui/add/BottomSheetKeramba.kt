@@ -12,11 +12,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
+import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetKerambaBinding
 import com.kedaireka.monitoring_biomassa.ui.DatePickerFragment
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
@@ -26,7 +29,7 @@ import java.util.*
 
 @AndroidEntryPoint
 class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateSetListener {
-    private val kerambaViewModel by viewModels<KerambaViewModel>()
+    private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
     private lateinit var binding: BottomSheetKerambaBinding
 
@@ -130,7 +133,6 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
                         ukuranKerambaEt.text.toString()
                     )
                 }
-                dismiss()
             } else {
                 if (TextUtils.isEmpty(namaKerambaEt.text)) {
                     namaKerambaEt.error = "Nama keramba harus diisi!"
@@ -175,6 +177,26 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
 
                 binding.tanggalInstallEt.error = null
             } else binding.tanggalInstallEt.setText("")
+        })
+
+        kerambaViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
+            when (result) {
+                is NetworkResult.Loading -> {
+                }
+                is NetworkResult.Loaded -> {
+
+                    kerambaViewModel.fetchKeramba()
+
+                    this.dismiss()
+                }
+                is NetworkResult.Error -> {
+                    if (result.message != "") {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+
+                        kerambaViewModel.doneToastException()
+                    }
+                }
+            }
         })
     }
 

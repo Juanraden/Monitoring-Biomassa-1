@@ -3,6 +3,7 @@ package com.kedaireka.monitoring_biomassa.viewmodel
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
+import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Biota
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
@@ -30,8 +31,11 @@ class KerambaViewModel @Inject constructor(
     private val _querySearch = MutableLiveData<String>()
     val querySearch: LiveData<String> = _querySearch
 
-    private val _exception = MutableLiveData<String>()
-    val exception: LiveData<String> = _exception
+    private val _requestGetResult = MutableLiveData<NetworkResult>()
+    val requestGetResult: LiveData<NetworkResult> = _requestGetResult
+
+    private val _requestPostAddResult = MutableLiveData<NetworkResult>()
+    val requestPostAddResult: LiveData<NetworkResult> = _requestPostAddResult
 
     fun setKerambaId(id: Int){
         _loadedKerambaId.value = id
@@ -44,7 +48,7 @@ class KerambaViewModel @Inject constructor(
     }
 
     fun doneToastException() {
-        _exception.value = ""
+        _requestGetResult.value = NetworkResult.Error("")
     }
 
     fun loadKerambaData(id: Int): LiveData<KerambaDomain>{
@@ -61,15 +65,27 @@ class KerambaViewModel @Inject constructor(
     }
 
     fun insertKeramba(nama: String, ukuran: String){
+//        viewModelScope.launch {
+//            withContext(Dispatchers.IO){
+//                kerambaDAO.insertOne(
+//                    Keramba(
+//                        nama_keramba = nama,
+//                        ukuran = ukuran.toDouble(),
+//                        tanggal_install = _tanggalInstall.value!!
+//                    )
+//                )
+//            }
+//        }
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
-                kerambaDAO.insertOne(
-                    Keramba(
-                        nama_keramba = nama,
-                        ukuran = ukuran.toDouble(),
-                        tanggal_install = _tanggalInstall.value!!
-                    )
-                )
+            _requestPostAddResult.value = NetworkResult.Loading()
+
+            try {
+                repository.addKeramba(
+                    KerambaDomain(keramba_id = 0, nama_keramba = nama, ukuran = ukuran.toDouble(), tanggal_install = _tanggalInstall.value!!))
+
+                _requestPostAddResult.value = NetworkResult.Loaded()
+            }catch (e: Exception){
+                _requestPostAddResult.value = NetworkResult.Error(e.message.toString())
             }
         }
     }
@@ -97,17 +113,18 @@ class KerambaViewModel @Inject constructor(
         }
     }
 
-    private fun fetchKeramba(){
+    fun fetchKeramba(){
+        _requestGetResult.value = NetworkResult.Loading()
+
         viewModelScope.launch {
             try {
                 repository.refreshKeramba()
+
+                _requestGetResult.value = NetworkResult.Loaded()
+
             } catch (e: Exception){
-                _exception.value = e.message
+                _requestGetResult.value = NetworkResult.Error(e.message.toString())
             }
         }
     }
-
-//    init {
-//        fetchKeramba()
-//    }
 }

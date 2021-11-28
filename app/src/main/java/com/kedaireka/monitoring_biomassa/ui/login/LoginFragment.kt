@@ -55,6 +55,10 @@ class LoginFragment : Fragment() {
                     showLoginFailed(it)
 
                     loadingProgressBar.visibility = View.GONE
+
+                    if (!loginButton.isEnabled){
+                        loginButton.isEnabled = true
+                    }
                 }
                 loginResult.success?.let {
                     updateUiWithUser(it)
@@ -74,6 +78,8 @@ class LoginFragment : Fragment() {
         }
 
         loginButton.setOnClickListener {
+            loginButton.isEnabled = false
+
             loadingProgressBar.visibility = View.VISIBLE
 
             loginViewModel.login(
