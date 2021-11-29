@@ -30,7 +30,7 @@ class BottomSheetAction: BottomSheetDialogFragment() {
     }
 
     fun showBottomSheetEditKeramba(){
-        if (childFragmentManager.findFragmentByTag("BottomSheetKeramba") == null) {
+        if (requireActivity().supportFragmentManager.findFragmentByTag("BottomSheetKeramba") == null) {
             if (this.arguments != null) {
                 val bottomSheetKeramba = BottomSheetKeramba()
 
@@ -42,8 +42,10 @@ class BottomSheetAction: BottomSheetDialogFragment() {
 
                 bottomSheetKeramba.arguments = bundle
 
-                bottomSheetKeramba.show(childFragmentManager, "BottomSheetKeramba")
+                bottomSheetKeramba.show(requireActivity().supportFragmentManager, "BottomSheetKeramba")
             }
+
+            this@BottomSheetAction.dismiss()
         }
     }
 }

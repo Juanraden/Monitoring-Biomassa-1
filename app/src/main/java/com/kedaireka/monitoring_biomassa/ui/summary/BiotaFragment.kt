@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.BiotaListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaBinding
+import com.kedaireka.monitoring_biomassa.ui.BottomSheetAction
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetBiota
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
@@ -49,7 +50,7 @@ class BiotaFragment : Fragment() {
 
     private fun setupBiotaList() {
         val bundle = Bundle()
-        Transformations.switchMap(kerambaViewModel.loadedKerambaId){ keramba_id ->
+        Transformations.switchMap(kerambaViewModel.loadedKerambaId) { keramba_id ->
 
             bundle.putInt("keramba_id", keramba_id)
             bundle.putInt("biota_id", 0)
@@ -68,11 +69,24 @@ class BiotaFragment : Fragment() {
                 }
             }
 
-            val biotaListAdapter = BiotaListAdapter { biota ->
-                navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToBiotaTabFragment())
+            val biotaListAdapter = BiotaListAdapter(
+                { biota ->
+                    navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToBiotaTabFragment())
 
-                biotaViewModel.setBiotaId(biota.biota_id)
-            }
+                    biotaViewModel.setBiotaId(biota.biota_id)
+                },
+                {
+                    if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
+                            "BottomSheetAction"
+                        ) == null
+                    ) {
+
+                        val bottomSheetAction = BottomSheetAction()
+
+                        bottomSheetAction.show(childFragmentManager, "BottomSheetAction")
+                    }
+                    true
+                })
 
             val concatAdapter = ConcatAdapter(biotaHeaderAdapter, biotaListAdapter)
 
