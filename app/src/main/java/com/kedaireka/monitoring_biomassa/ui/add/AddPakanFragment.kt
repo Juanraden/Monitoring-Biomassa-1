@@ -17,6 +17,7 @@ import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PakanListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentAddPakanBinding
+import com.kedaireka.monitoring_biomassa.ui.BottomSheetAction
 import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,9 +56,20 @@ class AddPakanFragment : Fragment() {
     }
 
     private fun setupPakanList() {
-        val pakanListAdapter = PakanListAdapter()
+        val pakanListAdapter = PakanListAdapter {
+            if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
+                    "BottomSheetAction"
+                ) == null
+            ) {
 
-        val pakanHeaderAdapter = HeaderButtonAdapter{
+                val bottomSheetAction = BottomSheetAction()
+
+                bottomSheetAction.show(childFragmentManager, "BottomSheetAction")
+            }
+            true
+        }
+
+        val pakanHeaderAdapter = HeaderButtonAdapter {
             if (childFragmentManager.findFragmentByTag("BottomSheetPakan") == null) {
 
                 val bottomSheetPakan = BottomSheetPakan()

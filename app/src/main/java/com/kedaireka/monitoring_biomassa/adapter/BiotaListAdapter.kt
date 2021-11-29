@@ -11,7 +11,8 @@ import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.databinding.ListBiotaBinding
 
 class BiotaListAdapter(
-    val clickListener: (obj: BiotaDomain) -> Unit
+    val clickListener: (obj: BiotaDomain) -> Unit,
+    val longClickListener: (obj: BiotaDomain) -> Boolean
 ): ListAdapter<BiotaDomain, BiotaListAdapter.ViewHolder>(DiffCallBack) {
     object DiffCallBack: DiffUtil.ItemCallback<BiotaDomain>() {
         override fun areItemsTheSame(oldItem: BiotaDomain, newItem: BiotaDomain): Boolean {
@@ -47,6 +48,8 @@ class BiotaListAdapter(
                 jumlahBibitTv.text = biotaDomain.jumlah_bibit.toString()
 
                 biotaCard.setOnClickListener { clickListener(biotaDomain) }
+
+                biotaCard.setOnLongClickListener { longClickListener(biotaDomain) }
             }
 
             binding.executePendingBindings()

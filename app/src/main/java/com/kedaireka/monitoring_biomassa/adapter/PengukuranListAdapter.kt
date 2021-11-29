@@ -12,7 +12,9 @@ import com.kedaireka.monitoring_biomassa.data.domain.PengukuranDomain
 import com.kedaireka.monitoring_biomassa.databinding.ListPengukuranBinding
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 
-class PengukuranListAdapter : ListAdapter<PengukuranDomain, PengukuranListAdapter.ViewHolder>(DiffCallBack) {
+class PengukuranListAdapter(
+    val longClickListener: (obj: PengukuranDomain) -> Boolean
+) : ListAdapter<PengukuranDomain, PengukuranListAdapter.ViewHolder>(DiffCallBack) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val withDataBinding: ListPengukuranBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
@@ -36,6 +38,8 @@ class PengukuranListAdapter : ListAdapter<PengukuranDomain, PengukuranListAdapte
                 ukuranBiotaTv.text = pengukuran.panjang.toString()
 
                 tanggalUkurTv.text = context.getString(R.string.tanggal_pengukuran, convertLongToDateString(pengukuran.tanggal_ukur))
+
+                pengukuranCard.setOnLongClickListener { longClickListener(pengukuran) }
             }
         }
     }

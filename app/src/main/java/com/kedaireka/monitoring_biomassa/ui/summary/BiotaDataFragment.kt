@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PengukuranListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaDataBinding
+import com.kedaireka.monitoring_biomassa.ui.BottomSheetAction
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPengukuran
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.PengukuranViewModel
@@ -66,7 +67,18 @@ class BiotaDataFragment : Fragment() {
                 }
             }
 
-            val pengukuranListAdapter = PengukuranListAdapter()
+            val pengukuranListAdapter = PengukuranListAdapter {
+                if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
+                        "BottomSheetAction"
+                    ) == null
+                ) {
+
+                    val bottomSheetAction = BottomSheetAction()
+
+                    bottomSheetAction.show(childFragmentManager, "BottomSheetAction")
+                }
+                true
+            }
 
             val concatAdapter = ConcatAdapter(headerButtonAdapter, pengukuranListAdapter)
 

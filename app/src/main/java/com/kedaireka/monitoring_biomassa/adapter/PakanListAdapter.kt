@@ -10,7 +10,9 @@ import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
 import com.kedaireka.monitoring_biomassa.databinding.ListPakanBinding
 
-class PakanListAdapter : ListAdapter<PakanDomain, PakanListAdapter.ViewHolder>(DiffCallBack){
+class PakanListAdapter(
+    val longClickListener: (obj: PakanDomain) -> Boolean
+) : ListAdapter<PakanDomain, PakanListAdapter.ViewHolder>(DiffCallBack){
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -26,10 +28,12 @@ class PakanListAdapter : ListAdapter<PakanDomain, PakanListAdapter.ViewHolder>(D
         return ViewHolder(withDataBinding)
     }
 
-    class ViewHolder(val binding: ListPakanBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: ListPakanBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(pakan: PakanDomain){
             with(binding){
                 jenisPakanTv.text = pakan.jenis_pakan
+
+                pakanCard.setOnLongClickListener { longClickListener(pakan) }
             }
         }
 
