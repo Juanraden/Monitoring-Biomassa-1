@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.asLiveData
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
-import com.kedaireka.monitoring_biomassa.data.network.KerambaContainer
+import com.kedaireka.monitoring_biomassa.data.network.container.KerambaContainer
 import com.kedaireka.monitoring_biomassa.data.network.KerambaNetwork
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba

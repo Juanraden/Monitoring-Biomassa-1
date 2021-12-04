@@ -1,5 +1,6 @@
-package com.kedaireka.monitoring_biomassa.data.network
+package com.kedaireka.monitoring_biomassa.data.network.container
 
+import com.kedaireka.monitoring_biomassa.data.network.KerambaNetwork
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)

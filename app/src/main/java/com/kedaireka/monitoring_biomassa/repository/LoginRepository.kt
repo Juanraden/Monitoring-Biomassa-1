@@ -2,7 +2,7 @@ package com.kedaireka.monitoring_biomassa.repository
 
 import android.content.SharedPreferences
 import com.kedaireka.monitoring_biomassa.data.network.LoggedInUser
-import com.kedaireka.monitoring_biomassa.data.network.LoginContainer
+import com.kedaireka.monitoring_biomassa.data.network.container.LoginContainer
 import com.kedaireka.monitoring_biomassa.data.network.Result
 import com.kedaireka.monitoring_biomassa.service.MonitoringService
 import retrofit2.Response
