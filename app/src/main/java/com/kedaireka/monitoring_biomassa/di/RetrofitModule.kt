@@ -26,25 +26,14 @@ object RetrofitModule {
             .build()
     }
 
+
+    //TODO: DELETE WHEN DEPLOY APK
     @Singleton
     @Provides
     fun providesOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         val client: OkHttpClient.Builder = OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                val original = chain.request()
-
-                val request = original.newBuilder()
-//                    .header("User-Agent", "PostmanRuntime/7.28.3")
-//                    .header("Accept", "*/*")
-//                    .header("Accept-Encoding", "gzip, deflate, br")
-//                    .header("Connection", "keep-alive")
-//                    .header("api-key", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IidhZG1pbicnMjEyMzJmMjk3YTU3YTVhNzQzODk0YTBlNGE4MDFmYzMnIn0.nwRSoKhCeArz7xie5hD26SyWjX0qqUZY6_IV3AkXvi0")
-                    .build()
-
-                chain.proceed(request)
-            }
             .addInterceptor(interceptor)
 
         return client.build()
