@@ -1,4 +1,4 @@
-package com.kedaireka.monitoring_biomassa.data.network
+package com.kedaireka.monitoring_biomassa.data.network.container
 
 abstract class BaseContainer<T>{
     abstract val status: Boolean
