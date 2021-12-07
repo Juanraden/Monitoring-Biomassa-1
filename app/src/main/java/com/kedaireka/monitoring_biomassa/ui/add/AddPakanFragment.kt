@@ -1,23 +1,19 @@
 package com.kedaireka.monitoring_biomassa.ui.add
 
 import android.os.Bundle
-import android.text.TextUtils
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.ConcatAdapter
-import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PakanListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentAddPakanBinding
 import com.kedaireka.monitoring_biomassa.ui.BottomSheetAction
+import com.kedaireka.monitoring_biomassa.ui.HomeFragmentDirections
 import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,6 +25,8 @@ class AddPakanFragment : Fragment() {
     private lateinit var binding: FragmentAddPakanBinding
 
     private lateinit var navController: NavController
+
+    private lateinit var pakanListAdapter: PakanListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,18 +54,33 @@ class AddPakanFragment : Fragment() {
     }
 
     private fun setupPakanList() {
-        val pakanListAdapter = PakanListAdapter {
-            if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
-                    "BottomSheetAction"
-                ) == null
-            ) {
+        pakanListAdapter = PakanListAdapter(
+            // clickListener
+            {
+                navController.navigate(HomeFragmentDirections.actionHomeFragmentToAddPakanInfoFragment())
 
-                val bottomSheetAction = BottomSheetAction()
+                pakanViewModel.setPakanId(it.pakan_id)
+            },
 
-                bottomSheetAction.show(childFragmentManager, "BottomSheetAction")
+            // longClickListener
+            {
+                if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
+                        "BottomSheetAction"
+                    ) == null
+                ) {
+                    val bundle = Bundle()
+
+                    bundle.putInt("pakan_id", it.pakan_id)
+
+                    val bottomSheetAction = BottomSheetAction()
+
+                    bottomSheetAction.arguments = bundle
+
+                    bottomSheetAction.show(childFragmentManager, "BottomSheetAction")
+                }
+                true
             }
-            true
-        }
+        )
 
         val pakanHeaderAdapter = HeaderButtonAdapter {
             if (childFragmentManager.findFragmentByTag("BottomSheetPakan") == null) {

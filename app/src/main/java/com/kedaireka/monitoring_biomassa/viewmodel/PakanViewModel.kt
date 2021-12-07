@@ -16,8 +16,21 @@ class PakanViewModel @Inject constructor(
     private val pakanDAO: PakanDAO,
     private val pakanMapper: EntityMapper<Pakan, PakanDomain>
 ): ViewModel() {
+    private val _loadedPakanId = MutableLiveData<Int>()
+    val loadedPakanId: LiveData<Int> = _loadedPakanId
+
     fun getAll(): LiveData<List<PakanDomain>> = Transformations.map(pakanDAO.getAll().asLiveData()){list->
         list.map { pakanMapper.mapFromEntity(it) }
+    }
+
+    fun setPakanId(id: Int){
+        _loadedPakanId.value = id
+    }
+
+    fun loadPakanData(id: Int): LiveData<PakanDomain>{
+        return Transformations.map(pakanDAO.getById(id).asLiveData()){
+            pakanMapper.mapFromEntity(it)
+        }
     }
 
     fun insertPakan(jenis_pakan: String, deskripsi: String = ""){
@@ -26,5 +39,21 @@ class PakanViewModel @Inject constructor(
         }
     }
 
-    fun isEntryValid(jenis_pakan: String): Boolean = jenis_pakan.isNotBlank()
+    fun updatePakan(id: Int, nama: String, deskripsi: String){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                pakanDAO.updateOne(
+                    Pakan(
+                        pakan_id = id,
+                        jenis_pakan = nama,
+                        deskripsi = deskripsi
+                    )
+                )
+            }
+        }
+    }
+
+    fun isEntryValid(jenis_pakan: String, deskripsi: String): Boolean {
+        return (jenis_pakan.isNotBlank() || deskripsi.isNotBlank())
+    }
 }
