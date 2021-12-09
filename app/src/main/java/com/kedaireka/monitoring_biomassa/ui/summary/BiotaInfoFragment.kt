@@ -83,7 +83,7 @@ class BiotaInfoFragment : Fragment() {
 
             jumlahBibitTv.text = biota.jumlah_bibit.toString()
 
-            tanggalTebarTv.text = convertLongToDateString(biota.tanggal_tebar)
+            tanggalTebarTv.text = convertLongToDateString(biota.tanggal_tebar, "EEEE dd-MMM-yyyy")
 
             val keramba_id = kerambaViewModel.loadedKerambaId.value
 
