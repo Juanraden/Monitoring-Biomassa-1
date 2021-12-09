@@ -50,7 +50,7 @@ class BiotaHistoryListAdapter: ListAdapter<BiotaDomain, BiotaHistoryListAdapter.
 
                 ukuranBiotaTv.text = context.getString(R.string.bobot_satuan, biotaDomain.bobot.toString())
 
-                tanggalPanenTv.text = context.getString(R.string.tanggal_panen, convertLongToDateString(biotaDomain.tanggal_panen))
+                tanggalPanenTv.text = context.getString(R.string.tanggal_panen, convertLongToDateString(biotaDomain.tanggal_panen, "EEEE dd-MMM-yyyy"))
             }
 
             binding.executePendingBindings()

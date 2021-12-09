@@ -170,7 +170,7 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
         kerambaViewModel.tanggalInstall.observe(viewLifecycleOwner, {
             if (it > 0) {
                 binding.tanggalInstallEt.setText(
-                    convertLongToDateString(it),
+                    convertLongToDateString(it, "EEEE dd-MMM-yyyy"),
                     TextView.BufferType.EDITABLE
                 )
 

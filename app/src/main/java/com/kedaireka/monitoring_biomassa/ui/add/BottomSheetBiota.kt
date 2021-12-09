@@ -141,7 +141,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         biotaViewModel.selectedTanggalTebar.observe(viewLifecycleOwner, {
             if (it > 0) {
                 binding.tanggalTebarEt.setText(
-                    convertLongToDateString(it),
+                    convertLongToDateString(it, "EEEE dd-MMM-yyyy"),
                     TextView.BufferType.EDITABLE
                 )
 

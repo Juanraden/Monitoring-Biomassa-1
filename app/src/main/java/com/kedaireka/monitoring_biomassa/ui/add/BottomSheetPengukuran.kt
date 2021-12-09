@@ -151,7 +151,7 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
         pengukuranViewModel.selectedTanggalUkur.observe(viewLifecycleOwner, {
             if (it > 0) {
                 binding.tanggalUkurEt.setText(
-                    convertLongToDateString(it),
+                    convertLongToDateString(it, "EEEE dd-MMM-yyyy"),
                     TextView.BufferType.EDITABLE
                 )
 

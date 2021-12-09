@@ -1,21 +1,20 @@
 package com.kedaireka.monitoring_biomassa.repository
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.asLiveData
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
-import com.kedaireka.monitoring_biomassa.data.network.container.KerambaContainer
 import com.kedaireka.monitoring_biomassa.data.network.KerambaNetwork
+import com.kedaireka.monitoring_biomassa.data.network.container.KerambaContainer
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
 import com.kedaireka.monitoring_biomassa.service.MonitoringService
 import com.kedaireka.monitoring_biomassa.util.EntityMapper
+import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
-import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 class KerambaRepository @Inject constructor(
@@ -30,7 +29,6 @@ class KerambaRepository @Inject constructor(
             list.map { kerambaMapper.mapFromEntity(it) }
         }
 
-    @SuppressLint("SimpleDateFormat")
     suspend fun refreshKeramba() {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
@@ -49,7 +47,7 @@ class KerambaRepository @Inject constructor(
                         keramba_id = target.keramba_id.toInt(),
                         nama_keramba = target.nama,
                         ukuran = target.ukuran.toDouble(),
-                        tanggal_install = SimpleDateFormat("yyyy-MM-dd").parse(target.tanggal_install)!!.time
+                        tanggal_install = convertStringToDateLong(target.tanggal_install, "yyyy-MM-dd")
                     )
                 }.toList()
                 kerambaDAO.insertAll(listKeramba)

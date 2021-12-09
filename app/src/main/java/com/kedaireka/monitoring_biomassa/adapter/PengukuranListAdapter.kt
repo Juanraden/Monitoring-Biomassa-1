@@ -37,7 +37,7 @@ class PengukuranListAdapter(
 
                 ukuranBiotaTv.text = pengukuran.panjang.toString()
 
-                tanggalUkurTv.text = context.getString(R.string.tanggal_pengukuran, convertLongToDateString(pengukuran.tanggal_ukur))
+                tanggalUkurTv.text = context.getString(R.string.tanggal_pengukuran, convertLongToDateString(pengukuran.tanggal_ukur, "EEEE dd-MMM-yyyy"))
 
                 pengukuranCard.setOnLongClickListener { longClickListener(pengukuran) }
             }
