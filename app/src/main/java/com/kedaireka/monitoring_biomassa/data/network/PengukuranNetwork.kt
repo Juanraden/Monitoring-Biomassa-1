@@ -9,5 +9,4 @@ data class PengukuranNetwork(
     val bobot: String,
     val tanggal_ukur: String,
     val biota_id: String,
-    val user_id: String
 )

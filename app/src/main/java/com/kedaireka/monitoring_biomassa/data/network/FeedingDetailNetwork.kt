@@ -4,8 +4,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class FeedingDetailNetwork(
-    val feeding_id: Int,
-    val ukuran_tebar: Double,
-    val jam_feeding: Long,
-    val pakan_id: Int,
+    val feeding_id: String,
+    val ukuran_tebar: String,
+    val jam_feeding: String,
+    val pakan_id: String,
 )
