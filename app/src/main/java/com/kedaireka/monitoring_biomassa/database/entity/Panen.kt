@@ -2,6 +2,7 @@ package com.kedaireka.monitoring_biomassa.database.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 
@@ -18,11 +19,12 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = Biota::class,
             parentColumns = arrayOf("biota_id"),
-            childColumns = arrayOf("keramba_id"),
+            childColumns = arrayOf("biota_id"),
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index("keramba_id"), Index("biota_id")]
 )
 data class Panen(
     @PrimaryKey(autoGenerate = true)
