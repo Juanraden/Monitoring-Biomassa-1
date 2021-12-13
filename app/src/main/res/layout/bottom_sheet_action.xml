@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/layout_padding"
+        android:paddingStart="@dimen/layout_padding"
         android:paddingTop="@dimen/layout_padding"
         android:paddingBottom="48dp">
 

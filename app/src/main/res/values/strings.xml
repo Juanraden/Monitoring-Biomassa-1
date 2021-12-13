@@ -67,6 +67,4 @@
     <string name="delete">Delete</string>
     <string name="nama_pakan">Nama Pakan</string>
     <string name="deskripsi">Deskripsi</string>
-    <string name="update_pakan">Update Pakan</string>
-    <string name="edit_pakan">Edit Pakan</string>
 </resources>

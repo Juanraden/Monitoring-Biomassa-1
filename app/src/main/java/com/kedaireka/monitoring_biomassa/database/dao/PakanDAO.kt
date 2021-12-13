@@ -1,6 +1,9 @@
 package com.kedaireka.monitoring_biomassa.database.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.kedaireka.monitoring_biomassa.database.entity.Pakan
 import kotlinx.coroutines.flow.Flow
 
@@ -8,19 +11,13 @@ import kotlinx.coroutines.flow.Flow
 interface PakanDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOne(pakan: Pakan)
+    fun insertOne(pakan: Pakan)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(listPakan: List<Pakan>)
-
-    @Update
-    suspend fun updateOne(pakan: Pakan)
+    fun insertAll(listPakan: List<Pakan>)
 
     @Query("SELECT * FROm pakan")
     fun getAll(): Flow<List<Pakan>>
-
-    @Query("SELECT * FROM pakan WHERE pakan_id = :id")
-    fun getById(id: Int): Flow<Pakan>
 
     @Query("DELETE FROM pakan")
     suspend fun deleteAllPakan()

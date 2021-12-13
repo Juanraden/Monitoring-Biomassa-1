@@ -14,8 +14,8 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kedaireka.monitoring_biomassa.R
-import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetPakanBinding
+import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,13 +41,6 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
         binding.bottomSheetPakan = this@BottomSheetPakan
 
         binding.ivClose.setOnClickListener { dismiss() }
-
-        if (this.arguments != null) {
-            val id = arguments!!.getInt("pakan_id")
-
-            pakanViewModel.loadPakanData(id)
-                .observe(viewLifecycleOwner, { bind(pakanDomain = it) })
-        }
     }
 
     override fun onStart() {
@@ -107,21 +100,12 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
         binding.apply {
             if (isEntryValid(
                     namaPakanEt.text.toString().trim(),
-                    deskripsiPakanEt.text.toString().trim()
                 )
             ) {
-                if (this@BottomSheetPakan.arguments != null) {
-                    updatePakan(
-                        arguments!!.getInt("pakan_id"),
-                        namaPakanEt.text.toString().trim(),
-                        deskripsiPakanEt.text.toString().trim()
-                    )
-                } else {
-                    insertPakan(
-                        namaPakanEt.text.toString().trim(),
-                        deskripsiPakanEt.text.toString().trim()
-                    )
-                }
+                pakanViewModel.insertPakan(
+                    namaPakanEt.text.toString().trim(),
+                    deskripsiPakanEt.text.toString().trim()
+                )
 
                 dismiss()
             } else {
@@ -132,27 +116,7 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
         }
     }
 
-    private fun updatePakan(id: Int, nama_pakan: String, deskripsi: String) {
-        pakanViewModel.updatePakan(id, nama_pakan, deskripsi)
-    }
-
-    private fun insertPakan(nama: String, deskripsi: String) {
-        pakanViewModel.insertPakan(nama, deskripsi)
-    }
-
-    private fun bind(pakanDomain: PakanDomain) {
-        binding.apply {
-            titleTv.text = getString(R.string.edit_pakan)
-
-            namaPakanEt.setText(pakanDomain.jenis_pakan, TextView.BufferType.SPANNABLE)
-
-            deskripsiPakanEt.setText(pakanDomain.deskripsi, TextView.BufferType.SPANNABLE)
-
-            savePakanBtn.text = getString(R.string.update_pakan)
-        }
-    }
-
-    private fun isEntryValid(jenis_pakan: String, deskripsi: String): Boolean {
-        return pakanViewModel.isEntryValid(jenis_pakan, deskripsi)
+    private fun isEntryValid(jenis_pakan: String): Boolean {
+        return pakanViewModel.isEntryValid(jenis_pakan)
     }
 }

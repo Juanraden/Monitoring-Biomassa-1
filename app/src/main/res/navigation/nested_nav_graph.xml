@@ -11,9 +11,6 @@
             android:id="@+id/action_homeFragment_to_summaryFragment"
             app:destination="@id/summaryFragment" >
         </action>
-        <action
-            android:id="@+id/action_homeFragment_to_addPakanInfoFragment"
-            app:destination="@id/addPakanInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -39,8 +36,4 @@
         android:id="@+id/biotaTabFragment"
         android:name="com.kedaireka.monitoring_biomassa.ui.summary.BiotaTabFragment"
         android:label="Biota Summary" />
-    <fragment
-        android:id="@+id/addPakanInfoFragment"
-        android:name="com.kedaireka.monitoring_biomassa.ui.AddPakanInfoFragment"
-        android:label="AddPakanInfoFragment" />
 </navigation>

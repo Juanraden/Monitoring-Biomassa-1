@@ -11,7 +11,6 @@ import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
 import com.kedaireka.monitoring_biomassa.databinding.ListPakanBinding
 
 class PakanListAdapter(
-    val clickListener: (obj: PakanDomain) -> Unit,
     val longClickListener: (obj: PakanDomain) -> Boolean
 ) : ListAdapter<PakanDomain, PakanListAdapter.ViewHolder>(DiffCallBack){
 
@@ -33,8 +32,6 @@ class PakanListAdapter(
         fun bind(pakan: PakanDomain){
             with(binding){
                 jenisPakanTv.text = pakan.jenis_pakan
-
-                pakanCard.setOnClickListener { clickListener(pakan) }
 
                 pakanCard.setOnLongClickListener { longClickListener(pakan) }
             }
