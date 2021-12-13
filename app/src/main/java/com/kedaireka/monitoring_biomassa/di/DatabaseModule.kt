@@ -62,4 +62,10 @@ object DatabaseModule {
     fun provideFeedingDetailDao(databaseBiomassa: DatabaseBiomassa): FeedingDetailDAO {
         return databaseBiomassa.feedingDetailDAO()
     }
+
+    @Singleton
+    @Provides
+    fun providePanenDao(databaseBiomassa: DatabaseBiomassa): PanenDAO {
+        return databaseBiomassa.panenDAO()
+    }
 }

@@ -12,4 +12,4 @@ data class KerambaAndBiota(
         entityColumn = "keramba_id"
     )
     val biotaList: List<Biota>
-    )
+)

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PengukuranListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaDataBinding
-import com.kedaireka.monitoring_biomassa.ui.BottomSheetAction
+import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetAction
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPengukuran
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.PengukuranViewModel

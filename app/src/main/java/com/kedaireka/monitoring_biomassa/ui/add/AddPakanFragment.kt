@@ -1,7 +1,6 @@
 package com.kedaireka.monitoring_biomassa.ui.add
 
 import android.os.Bundle
-import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,15 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.ConcatAdapter
-import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PakanListAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentAddPakanBinding
-import com.kedaireka.monitoring_biomassa.ui.BottomSheetAction
+import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetAction
 import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

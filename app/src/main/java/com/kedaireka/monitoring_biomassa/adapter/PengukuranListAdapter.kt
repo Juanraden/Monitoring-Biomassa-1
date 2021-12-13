@@ -30,17 +30,23 @@ class PengukuranListAdapter(
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(val binding: ListPengukuranBinding, val context: Context): RecyclerView.ViewHolder(binding.root) {
-        fun bind(pengukuran: PengukuranDomain){
-            with(binding){
+    inner class ViewHolder(val binding: ListPengukuranBinding, val context: Context) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(pengukuran: PengukuranDomain) {
+            with(binding) {
                 bobotBiotaTv.text = pengukuran.bobot.toString()
 
                 ukuranBiotaTv.text = pengukuran.panjang.toString()
 
-                tanggalUkurTv.text = context.getString(R.string.tanggal_pengukuran, convertLongToDateString(pengukuran.tanggal_ukur, "EEEE dd-MMM-yyyy"))
+                tanggalUkurTv.text = context.getString(
+                    R.string.tanggal_pengukuran,
+                    convertLongToDateString(pengukuran.tanggal_ukur, "EEEE dd-MMM-yyyy")
+                )
 
                 pengukuranCard.setOnLongClickListener { longClickListener(pengukuran) }
             }
+
+            binding.executePendingBindings()
         }
     }
 
