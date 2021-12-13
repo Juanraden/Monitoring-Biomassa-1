@@ -67,4 +67,9 @@
     <string name="delete">Delete</string>
     <string name="nama_pakan">Nama Pakan</string>
     <string name="deskripsi">Deskripsi</string>
+    <string name="tambah_data_panen">Tambah Data Panen</string>
+    <string name="tanggal_panen_biota">Tanggal Panen Biota</string>
+    <string name="jumlah_gagal_panen_ekor">Jumlah Gagal Panen (ekor)</string>
+    <string name="jumlah_panen">Jumlah Panen (ekor)</string>
+    <string name="banyaknya_biota">%1$s Biota</string>
 </resources>
