@@ -1,10 +1,14 @@
 package com.kedaireka.monitoring_biomassa.util
 
-import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
+import java.util.*
 
-@SuppressLint("SimpleDateFormat")
-fun convertLongToDateString(systemTime: Long): String {
-    return SimpleDateFormat("EEEE dd-MMM-yyyy")
+fun convertLongToDateString(systemTime: Long, pattern: String): String {
+    return SimpleDateFormat(pattern, Locale.getDefault())
         .format(systemTime).toString()
+}
+
+fun convertStringToDateLong(systemTime: String, pattern: String): Long {
+    return SimpleDateFormat(pattern, Locale.getDefault())
+        .parse(systemTime)!!.time
 }

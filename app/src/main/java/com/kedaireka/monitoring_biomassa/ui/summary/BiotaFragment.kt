@@ -10,10 +10,10 @@ import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
-import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.BiotaListAdapter
+import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaBinding
-import com.kedaireka.monitoring_biomassa.ui.BottomSheetAction
+import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetActionBiota
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetBiota
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
@@ -33,7 +33,7 @@ class BiotaFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentBiotaBinding.inflate(inflater, container, false)
 
@@ -75,15 +75,25 @@ class BiotaFragment : Fragment() {
 
                     biotaViewModel.setBiotaId(biota.biota_id)
                 },
+
+                //long click listener
                 {
                     if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
-                            "BottomSheetAction"
+                            "BottomSheetActionBiota"
                         ) == null
                     ) {
 
-                        val bottomSheetAction = BottomSheetAction()
+                        val bottomSheetAction = BottomSheetActionBiota()
 
-                        bottomSheetAction.show(childFragmentManager, "BottomSheetAction")
+                        val args = Bundle()
+
+                        args.putInt("keramba_id", it.keramba_id)
+
+                        args.putInt("biota_id", it.biota_id)
+
+                        bottomSheetAction.arguments = args
+
+                        bottomSheetAction.show(childFragmentManager, "BottomSheetActionBiota")
                     }
                     true
                 })

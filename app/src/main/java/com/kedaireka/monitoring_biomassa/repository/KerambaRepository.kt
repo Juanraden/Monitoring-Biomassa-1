@@ -1,21 +1,20 @@
 package com.kedaireka.monitoring_biomassa.repository
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.asLiveData
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
-import com.kedaireka.monitoring_biomassa.data.network.container.KerambaContainer
 import com.kedaireka.monitoring_biomassa.data.network.KerambaNetwork
+import com.kedaireka.monitoring_biomassa.data.network.container.KerambaContainer
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
 import com.kedaireka.monitoring_biomassa.service.MonitoringService
 import com.kedaireka.monitoring_biomassa.util.EntityMapper
+import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
-import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 class KerambaRepository @Inject constructor(
@@ -30,7 +29,6 @@ class KerambaRepository @Inject constructor(
             list.map { kerambaMapper.mapFromEntity(it) }
         }
 
-    @SuppressLint("SimpleDateFormat")
     suspend fun refreshKeramba() {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
@@ -49,12 +47,23 @@ class KerambaRepository @Inject constructor(
                         keramba_id = target.keramba_id.toInt(),
                         nama_keramba = target.nama,
                         ukuran = target.ukuran.toDouble(),
-                        tanggal_install = SimpleDateFormat("yyyy-MM-dd").parse(target.tanggal_install)!!.time
+                        tanggal_install = convertStringToDateLong(
+                            target.tanggal_install,
+                            "yyyy-MM-dd"
+                        )
                     )
                 }.toList()
+
+                if (kerambaDAO.getKerambaCount() > listKeramba.size){
+                    kerambaDAO.deleteAllKeramba()
+                }
+
                 kerambaDAO.insertAll(listKeramba)
+
             } else {
-                throw Exception(response.body()!!.message)
+                if (response.body() != null) {
+                    throw Exception(response.body()!!.message)
+                }
             }
         }
     }
@@ -76,9 +85,48 @@ class KerambaRepository @Inject constructor(
 
         data["user_id"] = userId.toString()
 
-        val response: Response<KerambaContainer> = monitoringService.addKerambaAsync(token,data).await()
+        val response: Response<KerambaContainer> =
+            monitoringService.addKerambaAsync(token, data).await()
 
-        if (response.code() != 201){
+        if (response.code() != 201) {
+            throw Exception(response.body()!!.message)
+        }
+    }
+
+    suspend fun updateKeramba(keramba: KerambaDomain){
+        val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
+
+        val token: String = sharedPreferences.getString("token", null) ?: ""
+
+        val kerambaNetwork: KerambaNetwork = kerambaNetworkMapper.mapToEntity(keramba)
+
+        val data = mutableMapOf<String, String>()
+
+        data["nama"] = kerambaNetwork.nama
+
+        data["ukuran"] = kerambaNetwork.ukuran
+
+        data["tanggal_install"] = kerambaNetwork.tanggal_install
+
+        data["user_id"] = userId.toString()
+
+        val response: Response<KerambaContainer> =
+            monitoringService.updateKerambaAsync(token, data).await()
+
+        if (response.code() != 201) {
+            throw Exception(response.body()!!.message)
+        }
+    }
+
+    suspend fun deleteKeramba(kerambaId: Int){
+        val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
+
+        val token: String = sharedPreferences.getString("token", null) ?: ""
+
+        val response: Response<KerambaContainer> =
+            monitoringService.deleteKerambaAsync(token, userId, kerambaId).await()
+
+        if (response.code() != 200) {
             throw Exception(response.body()!!.message)
         }
     }

@@ -1,15 +1,15 @@
 package com.kedaireka.monitoring_biomassa.ui.add
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -17,29 +17,24 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
-import com.kedaireka.monitoring_biomassa.databinding.BottomSheetPengukuranBinding
-import com.kedaireka.monitoring_biomassa.ui.DatePickerFragment
-import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
+import com.kedaireka.monitoring_biomassa.databinding.BottomSheetPanenBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
-import com.kedaireka.monitoring_biomassa.viewmodel.PengukuranViewModel
+import com.kedaireka.monitoring_biomassa.viewmodel.PanenViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
-class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSelectedListener,
-    DatePickerDialog.OnDateSetListener {
+class BottomSheetPanen: BottomSheetDialogFragment(), AdapterView.OnItemSelectedListener {
+    private lateinit var binding: BottomSheetPanenBinding
+
+    private val panenViewModel by viewModels<PanenViewModel>()
 
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
-
-    private val pengukuranViewModel by viewModels<PengukuranViewModel>()
 
     private lateinit var mapKerambatoBiota: Map<KerambaDomain, List<BiotaDomain>>
 
     private lateinit var kerambaList: List<KerambaDomain>
 
     private lateinit var biotaList: List<BiotaDomain>
-
-    private lateinit var binding: BottomSheetPengukuranBinding
 
     override fun onStart() {
         super.onStart()
@@ -76,67 +71,18 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = BottomSheetPengukuranBinding.inflate(inflater)
+    ): View? {
 
+        binding = BottomSheetPanenBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.bottomSheetPengukuran = this@BottomSheetPengukuran
-
         binding.ivClose.setOnClickListener { dismiss() }
 
         setupDropdown()
-
-        setupObserver()
-    }
-
-    private fun isEntryValid(panjang: String, bobot: String): Boolean =
-        pengukuranViewModel.isEntryValid(panjang, bobot)
-
-    fun savePengukuran() {
-        binding.apply {
-            if (isEntryValid(
-                    panjangBiotaEt.text.toString(),
-                    bobotBiotaEt.text.toString()
-                )
-            ) {
-                pengukuranViewModel.insertPengukuran(
-                    panjangBiotaEt.text.toString(),
-                    bobotBiotaEt.text.toString()
-                )
-
-                dismiss()
-            } else {
-                if (TextUtils.isEmpty(bobotBiotaEt.text)) {
-                    bobotBiotaEt.error = "Bobot biota harus diisi!"
-                }
-
-                if (TextUtils.isEmpty(panjangBiotaEt.text)) {
-                    panjangBiotaEt.error = "Panjang biota harus diisi!"
-                }
-
-                if (TextUtils.isEmpty(tanggalUkurEt.text)) {
-                    tanggalUkurEt.error = "Tanggal pengukuran harus diisi!"
-                }
-            }
-        }
-    }
-
-    private fun setupObserver() {
-        pengukuranViewModel.selectedTanggalUkur.observe(viewLifecycleOwner, {
-            if (it > 0) {
-                binding.tanggalUkurEt.setText(
-                    convertLongToDateString(it, "EEEE dd-MMM-yyyy"),
-                    TextView.BufferType.EDITABLE
-                )
-
-                binding.tanggalUkurEt.error = null
-            } else binding.tanggalUkurEt.setText("")
-        })
     }
 
     private fun setupDropdown() {
@@ -158,8 +104,8 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
 
             binding.kerambaDropdown.adapter = kerambaAdapter
 
-            if (this@BottomSheetPengukuran.arguments != null){
-                val kerambaId = this@BottomSheetPengukuran.arguments!!.getInt("keramba_id")
+            if (this@BottomSheetPanen.arguments != null){
+                val kerambaId = this@BottomSheetPanen.arguments!!.getInt("keramba_id")
 
                 if (kerambaId > 0){
                     val index = kerambaIdlist.indexOf(kerambaId)
@@ -176,8 +122,6 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
 
                     biotaList = mapKerambatoBiota[keramba]!!
 
-                    val biotaIdlist = biotaList.map { biota-> biota.biota_id }
-
                     val biotaAdapter = ArrayAdapter(
                         requireContext(),
                         android.R.layout.simple_spinner_item,
@@ -188,15 +132,8 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
 
                     binding.biotaDropdown.adapter = biotaAdapter
 
-                    if (this@BottomSheetPengukuran.arguments != null) {
-                        val biotaId = this@BottomSheetPengukuran.arguments!!.getInt("biota_id")
 
-                        val index = biotaIdlist.indexOf(biotaId)
-
-                        binding.biotaDropdown.setSelection(index)
-                    }
-
-                    binding.biotaDropdown.onItemSelectedListener = this@BottomSheetPengukuran
+                    binding.biotaDropdown.onItemSelectedListener = this@BottomSheetPanen
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -206,22 +143,7 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
 
     override fun onItemSelected(parent: AdapterView<*>, p1: View?, pos: Int, p3: Long) {
         val biota = biotaList[pos]
-
-        pengukuranViewModel.selectBiotaId(biota.biota_id)
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {}
-
-    fun showDatePicker() {
-        if (childFragmentManager.findFragmentByTag("DatePicker") == null) {
-            DatePickerFragment.create().show(childFragmentManager, "DatePicker")
-        }
-    }
-
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        val selectedDate: Calendar = Calendar.getInstance()
-        selectedDate.set(year, month, dayOfMonth)
-
-        pengukuranViewModel.onSelectDateTime(selectedDate.timeInMillis)
-    }
 }

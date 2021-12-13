@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kedaireka.monitoring_biomassa.adapter.KerambaListAdapter
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentKerambaBinding
+import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetActionKeramba
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,7 +30,7 @@ class KerambaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentKerambaBinding.inflate(inflater, container, false)
 
@@ -43,8 +44,6 @@ class KerambaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        kerambaViewModel.fetchKeramba()
-
         kerambaListAdapter = KerambaListAdapter(
             // clickListener
             {
@@ -56,18 +55,18 @@ class KerambaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             // longClickListener
             {
                 if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
-                        "BottomSheetAction"
+                        "BottomSheetActionKeramba"
                     ) == null
                 ) {
                     val bundle = Bundle()
 
                     bundle.putInt("keramba_id", it.keramba_id)
 
-                    val bottomSheetAction = BottomSheetAction()
+                    val bottomSheetAction = BottomSheetActionKeramba()
 
                     bottomSheetAction.arguments = bundle
 
-                    bottomSheetAction.show(childFragmentManager, "BottomSheetAction")
+                    bottomSheetAction.show(childFragmentManager, "BottomSheetActionKeramba")
                 }
                 true
             }
@@ -104,6 +103,8 @@ class KerambaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     if (binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = false
                     }
+
+                    binding.kerambaList.visibility = View.VISIBLE
                 }
                 is NetworkResult.Error -> {
                     if (result.message != "") {

@@ -1,5 +1,6 @@
 package com.kedaireka.monitoring_biomassa.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
@@ -24,9 +25,6 @@ class KerambaViewModel @Inject constructor(
 ): ViewModel() {
     private val _loadedKerambaId = MutableLiveData<Int>()
     val loadedKerambaId: LiveData<Int> = _loadedKerambaId
-
-    private val _tanggalInstall = MutableLiveData<Long>()
-    val tanggalInstall: LiveData<Long> = _tanggalInstall
 
     private val _querySearch = MutableLiveData<String>()
     val querySearch: LiveData<String> = _querySearch
@@ -57,31 +55,17 @@ class KerambaViewModel @Inject constructor(
         }
     }
 
-    fun onSelectDateTime(dateTime: Long) {
-        _tanggalInstall.value = dateTime }
-
-    fun isEntryValid(jenis: String, ukuran: String): Boolean {
-        return !(jenis.isBlank() || ukuran.isBlank() || tanggalInstall.value == null)
+    fun isEntryValid(jenis: String, ukuran: String, tanggal: Long): Boolean {
+        return !(jenis.isBlank() || ukuran.isBlank() || tanggal == 0L)
     }
 
-    fun insertKeramba(nama: String, ukuran: String){
-//        viewModelScope.launch {
-//            withContext(Dispatchers.IO){
-//                kerambaDAO.insertOne(
-//                    Keramba(
-//                        nama_keramba = nama,
-//                        ukuran = ukuran.toDouble(),
-//                        tanggal_install = _tanggalInstall.value!!
-//                    )
-//                )
-//            }
-//        }
+    fun insertKeramba(nama: String, ukuran: String, tanggal: Long){
         viewModelScope.launch {
             _requestPostAddResult.value = NetworkResult.Loading()
 
             try {
                 repository.addKeramba(
-                    KerambaDomain(keramba_id = 0, nama_keramba = nama, ukuran = ukuran.toDouble(), tanggal_install = _tanggalInstall.value!!))
+                    KerambaDomain(keramba_id = 0, nama_keramba = nama, ukuran = ukuran.toDouble(), tanggal_install = tanggal))
 
                 _requestPostAddResult.value = NetworkResult.Loaded()
             }catch (e: Exception){
@@ -90,7 +74,7 @@ class KerambaViewModel @Inject constructor(
         }
     }
 
-    fun updateKeramba(id: Int, nama: String, ukuran: String){
+    fun updateKeramba(id: Int, nama: String, ukuran: String, tanggal: Long){
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 kerambaDAO.updateOne(
@@ -98,7 +82,7 @@ class KerambaViewModel @Inject constructor(
                         keramba_id = id,
                         nama_keramba = nama,
                         ukuran = ukuran.toDouble(),
-                        tanggal_install = _tanggalInstall.value!!
+                        tanggal_install = tanggal
                     )
                 )
             }
@@ -126,5 +110,10 @@ class KerambaViewModel @Inject constructor(
                 _requestGetResult.value = NetworkResult.Error(e.message.toString())
             }
         }
+    }
+
+    init {
+        fetchKeramba()
+        Log.i("KerambaViewModel", "fetch keramba called")
     }
 }

@@ -75,7 +75,7 @@ class InfoFragment : Fragment() {
         with(binding) {
             namaKerambaTv.text = keramba.nama_keramba
 
-            tanggalInstallTv.text = convertLongToDateString(keramba.tanggal_install)
+            tanggalInstallTv.text = convertLongToDateString(keramba.tanggal_install, "EEEE dd-MMM-yyyy")
 
             ukuranKerambaTv.text =
                 getString(R.string.meter_kubik, keramba.ukuran.toString())

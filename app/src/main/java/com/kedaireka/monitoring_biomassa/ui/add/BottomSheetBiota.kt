@@ -19,6 +19,7 @@ import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetBiotaBinding
 import com.kedaireka.monitoring_biomassa.ui.DatePickerFragment
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
+import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +41,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = BottomSheetBiotaBinding.inflate(inflater)
 
         return binding.root
@@ -56,17 +57,15 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         setupDropdown()
 
         if (this@BottomSheetBiota.arguments != null) {
-            val biota_id: Int = this@BottomSheetBiota.arguments!!.getInt("biota_id")
+            val biotaId: Int = this@BottomSheetBiota.arguments!!.getInt("biota_id")
 
-            if (biota_id > 0){
-                biotaViewModel.loadBiotaData(biota_id).observe(viewLifecycleOwner, { bind(it) })
+            if (biotaId > 0) {
+                biotaViewModel.loadBiotaData(biotaId).observe(viewLifecycleOwner, { bind(it) })
             }
         }
-
-        setupObserver()
     }
 
-    private fun bind(biotaDomain: BiotaDomain){
+    private fun bind(biotaDomain: BiotaDomain) {
         binding.apply {
             titleTv.text = biotaDomain.jenis_biota
 
@@ -74,11 +73,17 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
 
             bobotBibitEt.setText(biotaDomain.bobot.toString(), TextView.BufferType.SPANNABLE)
 
-            panjangBibitEt.setText(biotaDomain.panjang.toString(),TextView.BufferType.SPANNABLE)
+            panjangBibitEt.setText(biotaDomain.panjang.toString(), TextView.BufferType.SPANNABLE)
 
-            jumlahBibitEt.setText(biotaDomain.jumlah_bibit.toString(), TextView.BufferType.SPANNABLE)
+            jumlahBibitEt.setText(
+                biotaDomain.jumlah_bibit.toString(),
+                TextView.BufferType.SPANNABLE
+            )
 
-            biotaViewModel.onSelectDateTime(biotaDomain.tanggal_tebar)
+            binding.tanggalTebarEt.setText(
+                convertLongToDateString(biotaDomain.tanggal_tebar, "EEEE dd-MMM-yyyy"),
+                TextView.BufferType.EDITABLE
+            )
 
             saveBiotaBtn.text = getString(R.string.edit_biota)
         }
@@ -94,29 +99,8 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         val behavior = BottomSheetBehavior.from(view)
 
         behavior.peekHeight = 3000
+
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                    }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {
-                    }
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                    }
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
-            }
-
-        })
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -137,18 +121,18 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         }
     }
 
-    private fun setupObserver() {
-        biotaViewModel.selectedTanggalTebar.observe(viewLifecycleOwner, {
-            if (it > 0) {
-                binding.tanggalTebarEt.setText(
-                    convertLongToDateString(it),
-                    TextView.BufferType.EDITABLE
-                )
-
-                binding.tanggalTebarEt.error = null
-            } else binding.tanggalTebarEt.setText("")
-        })
-    }
+//    private fun setupObserver() {
+//        biotaViewModel.selectedTanggalTebar.observe(viewLifecycleOwner, {
+//            if (it > 0) {
+//                binding.tanggalTebarEt.setText(
+//                    convertLongToDateString(it, "EEEE dd-MMM-yyyy"),
+//                    TextView.BufferType.EDITABLE
+//                )
+//
+//                binding.tanggalTebarEt.error = null
+//            } else binding.tanggalTebarEt.setText("")
+//        })
+//    }
 
     fun saveBiota() {
         binding.apply {
@@ -156,19 +140,32 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                     jenisBiotaEt.text.toString().trim(),
                     bobotBibitEt.text.toString(),
                     panjangBibitEt.text.toString(),
-                    jumlahBibitEt.text.toString()
+                    jumlahBibitEt.text.toString(),
+                    if (tanggalTebarEt.text.toString() != "") {
+                        convertStringToDateLong(tanggalTebarEt.text.toString(), "EEEE dd-MMM-yyyy")
+                    } else {
+                        0L
+                    }
                 )
             ) {
                 if (this@BottomSheetBiota.arguments != null) {
-                    val biota_id: Int = this@BottomSheetBiota.arguments!!.getInt("biota_id")
+                    val biotaId: Int = this@BottomSheetBiota.arguments!!.getInt("biota_id")
 
-                    if (biota_id > 0){
+                    if (biotaId > 0) {
                         biotaViewModel.updateBiota(
-                            biota_id,
+                            biotaId,
                             jenisBiotaEt.text.toString().trim(),
                             bobotBibitEt.text.toString(),
                             panjangBibitEt.text.toString(),
-                            jumlahBibitEt.text.toString()
+                            jumlahBibitEt.text.toString(),
+                            if (tanggalTebarEt.text.toString() != "") {
+                                convertStringToDateLong(
+                                    tanggalTebarEt.text.toString(),
+                                    "EEEE dd-MMM-yyyy"
+                                )
+                            } else {
+                                0L
+                            }
                         )
 
                         dismiss()
@@ -180,7 +177,12 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                     jenisBiotaEt.text.toString().trim(),
                     bobotBibitEt.text.toString(),
                     panjangBibitEt.text.toString(),
-                    jumlahBibitEt.text.toString()
+                    jumlahBibitEt.text.toString(),
+                    if (tanggalTebarEt.text.toString() != "") {
+                        convertStringToDateLong(tanggalTebarEt.text.toString(), "EEEE dd-MMM-yyyy")
+                    } else {
+                        0L
+                    }
                 )
 
                 dismiss()
@@ -219,15 +221,17 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         jenis: String,
         bobot: String,
         panjang: String,
-        jumlah: String
+        jumlah: String,
+        tanggal: Long,
     ): Boolean {
-        return biotaViewModel.isEntryValid(jenis, bobot, panjang, jumlah)
+        return biotaViewModel.isEntryValid(jenis, bobot, panjang, jumlah, tanggal)
     }
 
     private fun setupDropdown() {
         kerambaViewModel.getAllKeramba().observe(viewLifecycleOwner, { listKeramba ->
 
-            mapKeramba = listKeramba.map { keramba -> keramba.nama_keramba to keramba.keramba_id }.toMap()
+            mapKeramba =
+                listKeramba.map { keramba -> keramba.nama_keramba to keramba.keramba_id }.toMap()
 
             val kerambaList = mapKeramba.keys.toList()
 
@@ -239,11 +243,11 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
             binding.kerambaDropdown.adapter = arrayAdapter
 
             if (this@BottomSheetBiota.arguments != null) {
-                val keramba_id: Int = this@BottomSheetBiota.arguments!!.getInt("keramba_id")
+                val kerambaId: Int = this@BottomSheetBiota.arguments!!.getInt("keramba_id")
 
-                val keramba_idList: List<Int> = mapKeramba.values.toList()
+                val kerambaIdlist: List<Int> = mapKeramba.values.toList()
 
-                val index: Int = keramba_idList.indexOf(keramba_id)
+                val index: Int = kerambaIdlist.indexOf(kerambaId)
 
                 binding.kerambaDropdown.setSelection(index)
 
@@ -267,6 +271,9 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         val selectedDate: Calendar = Calendar.getInstance()
         selectedDate.set(year, month, dayOfMonth)
 
-        biotaViewModel.onSelectDateTime(selectedDate.timeInMillis)
+        binding.tanggalTebarEt.setText(
+            convertLongToDateString(selectedDate.timeInMillis, "EEEE dd-MMM-yyyy"),
+            TextView.BufferType.EDITABLE
+        )
     }
 }

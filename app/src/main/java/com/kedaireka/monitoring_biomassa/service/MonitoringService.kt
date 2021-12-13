@@ -1,8 +1,6 @@
 package com.kedaireka.monitoring_biomassa.service
 
-import com.kedaireka.monitoring_biomassa.data.network.container.BiotaContainer
-import com.kedaireka.monitoring_biomassa.data.network.container.KerambaContainer
-import com.kedaireka.monitoring_biomassa.data.network.container.LoginContainer
+import com.kedaireka.monitoring_biomassa.data.network.container.*
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.*
@@ -17,36 +15,170 @@ interface MonitoringService {
 
     // keramba section
     @GET("keramba")
-    fun getKerambaListAsync(@Header("api-key") token: String, @Query("user_id") userId: Int): Deferred<Response<KerambaContainer>>
+    fun getKerambaListAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int
+    ): Deferred<Response<KerambaContainer>>
 
     @FormUrlEncoded
     @POST("keramba")
-    fun addKerambaAsync(@Header("api-key") token: String, @FieldMap data: Map<String, String>): Deferred<Response<KerambaContainer>>
+    fun addKerambaAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<KerambaContainer>>
 
     @FormUrlEncoded
     @POST("keramba/update")
-    fun updateKerambaAsync(@Header("api-key") token: String, @FieldMap data: Map<String, String>): Deferred<Response<KerambaContainer>>
+    fun updateKerambaAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<KerambaContainer>>
 
     @FormUrlEncoded
     @POST("keramba/delete")
-    fun deleteKerambaAsync(@Header("api-key") token: String, @Query("user_id") userId: Int, @Query("keramba_id") kerambaId: Int): Deferred<Response<KerambaContainer>>
+    fun deleteKerambaAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int,
+        @Query("keramba_id") kerambaId: Int
+    ): Deferred<Response<KerambaContainer>>
 
     // biota section
     @GET("biota")
-    fun getBiotaListAsync(@Header("api-key") token: String, @Query("user_id") userId: Int): Deferred<Response<BiotaContainer>>
+    fun getBiotaListAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int
+    ): Deferred<Response<BiotaContainer>>
 
     @GET("history")
-    fun getHistoryBiotaListAsync(@Header("api-key") token: String, @Query("user_id") userId: Int, @Query("keramba_id") kerambaId: Int): Deferred<Response<BiotaContainer>>
+    fun getHistoryBiotaListAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int,
+        @Query("keramba_id") kerambaId: Int
+    ): Deferred<Response<BiotaContainer>>
 
     @FormUrlEncoded
     @POST("biota")
-    fun addBiotaAsync(@Header("api-key") token: String, @FieldMap data: Map<String, String>): Deferred<Response<BiotaContainer>>
+    fun addBiotaAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<BiotaContainer>>
 
     @FormUrlEncoded
     @POST("biota/update")
-    fun updateBiotaAsync(@Header("api-key") token: String, @FieldMap data: Map<String, String>): Deferred<Response<BiotaContainer>>
+    fun updateBiotaAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<BiotaContainer>>
 
     @FormUrlEncoded
     @POST("biota/delete")
-    fun deleteBiotaAsync(@Header("api-key") token: String, @Query("user_id") userId: Int, @Query("biota_id") biotaId: Int): Deferred<Response<BiotaContainer>>
+    fun deleteBiotaAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int,
+        @Query("biota_id") biotaId: Int
+    ): Deferred<Response<BiotaContainer>>
+
+    // pakan section
+    @GET("pakan")
+    fun getPakanListAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int
+    ): Deferred<Response<PakanContainer>>
+
+    @FormUrlEncoded
+    @POST("pakan")
+    fun addPakanAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<PakanContainer>>
+
+    @FormUrlEncoded
+    @POST("pakan/update")
+    fun updatePakanAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<PakanContainer>>
+
+    @FormUrlEncoded
+    @POST("pakan/delete")
+    fun deletePakanAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int,
+        @Query("pakan_id") pakanId: Int
+    ): Deferred<Response<PakanContainer>>
+
+    //pengukuran section
+    @GET("pengukuran")
+    fun getPengukuranListAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int,
+        @Query("biota_id") biotaId: Int
+    ): Deferred<Response<PengukuranContainer>>
+
+    @FormUrlEncoded
+    @POST("pengukuran")
+    fun addPengukuranAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<PengukuranContainer>>
+
+    @FormUrlEncoded
+    @POST("pengukuran/update")
+    fun updatePengukuranAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<PengukuranContainer>>
+
+    @FormUrlEncoded
+    @POST("pengukuran/delete")
+    fun deletePengukuranAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int,
+        @Query("pengukuran_id") pengukuranId: Int
+    ): Deferred<Response<PengukuranContainer>>
+
+    //feeding
+    @GET("feeding")
+    fun getFeedingListAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int,
+        @Query("keramba_id") kerambaId: Int
+    ): Deferred<Response<FeedingContainer>>
+
+    @FormUrlEncoded
+    @POST("feeding")
+    fun addFeedingAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<FeedingContainer>>
+
+    @GET("feeding/detail")
+    fun getFeedingDetailListAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int,
+        @Query("keramba_id") kerambaId: Int,
+        @Query("activity_id") activityId: Int
+    ): Deferred<Response<FeedingDetailContainer>>
+
+    @FormUrlEncoded
+    @POST("feeding/detail")
+    fun addFeedingDetailAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<FeedingDetailContainer>>
+
+    //panen
+    @GET("panen")
+    fun getPanenListAsync(
+        @Header("api-key") token: String,
+        @Query("user_id") userId: Int,
+        @Query("keramba_id") kerambaId: Int
+    ): Deferred<Response<PanenContainer>>
+
+    @FormUrlEncoded
+    @POST("panen")
+    fun addPanenAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<PanenContainer>>
 }
