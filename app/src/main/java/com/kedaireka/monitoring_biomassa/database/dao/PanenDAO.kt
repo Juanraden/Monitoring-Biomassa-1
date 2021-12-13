@@ -1,10 +1,8 @@
 package com.kedaireka.monitoring_biomassa.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.kedaireka.monitoring_biomassa.database.entity.Panen
+import com.kedaireka.monitoring_biomassa.database.relation.PanenAndBiota
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -12,6 +10,7 @@ interface PanenDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(listPanen: List<Panen>)
 
+    @Transaction
     @Query("SELECT * FROM panen")
-    fun getAll(): Flow<List<Panen>>
+    fun getAllPanenAndBiota(): Flow<List<PanenAndBiota>>
 }

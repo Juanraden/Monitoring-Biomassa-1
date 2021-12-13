@@ -2,8 +2,9 @@ package com.kedaireka.monitoring_biomassa.util
 
 import com.kedaireka.monitoring_biomassa.data.domain.PanenDomain
 import com.kedaireka.monitoring_biomassa.database.entity.Panen
+import javax.inject.Inject
 
-class PanenMapper: EntityMapper<Panen, PanenDomain> {
+class PanenMapper @Inject constructor(): EntityMapper<Panen, PanenDomain> {
     override fun mapFromEntity(entity: Panen): PanenDomain {
         return PanenDomain(
             activity_id = entity.activity_id,
