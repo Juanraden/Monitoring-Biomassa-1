@@ -28,4 +28,7 @@ interface KerambaDAO {
 
     @Query("DELETE FROM keramba")
     suspend fun deleteAllKeramba()
+
+    @Query("SELECT COUNT(*) FROM keramba")
+    fun getKerambaCount(): Int
 }
