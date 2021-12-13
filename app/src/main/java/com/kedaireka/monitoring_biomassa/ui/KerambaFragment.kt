@@ -43,8 +43,6 @@ class KerambaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        kerambaViewModel.fetchKeramba()
-
         kerambaListAdapter = KerambaListAdapter(
             // clickListener
             {
