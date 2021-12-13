@@ -22,6 +22,7 @@ import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetKerambaBinding
 import com.kedaireka.monitoring_biomassa.ui.DatePickerFragment
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
+import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -36,7 +37,7 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = BottomSheetKerambaBinding.inflate(inflater)
 
         return binding.root
@@ -71,28 +72,6 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
 
         behavior.peekHeight = 3000
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                    }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {
-                    }
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                    }
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
-            }
-
-        })
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -117,19 +96,34 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
         binding.apply {
             if (isEntryValid(
                     namaKerambaEt.text.toString().trim(),
-                    ukuranKerambaEt.text.toString()
+                    ukuranKerambaEt.text.toString(),
+                    if (tanggalInstallEt.text.toString() != ""){
+                        convertStringToDateLong(tanggalInstallEt.text.toString(), "EEEE dd-MMM-yyyy")
+                    } else{
+                        0L
+                    }
                 )
             ) {
                 if (this@BottomSheetKeramba.arguments != null) {
                     updateKeramba(
                         arguments!!.getInt("keramba_id"),
                         namaKerambaEt.text.toString().trim(),
-                        ukuranKerambaEt.text.toString()
+                        ukuranKerambaEt.text.toString(),
+                        if (tanggalInstallEt.text.toString() != ""){
+                            convertStringToDateLong(tanggalInstallEt.text.toString(), "EEEE dd-MMM-yyyy")
+                        } else{
+                            0L
+                        }
                     )
                 } else {
                     insertKeramba(
                         namaKerambaEt.text.toString().trim(),
-                        ukuranKerambaEt.text.toString()
+                        ukuranKerambaEt.text.toString(),
+                        if (tanggalInstallEt.text.toString() != ""){
+                            convertStringToDateLong(tanggalInstallEt.text.toString(), "EEEE dd-MMM-yyyy")
+                        } else{
+                            0L
+                        }
                     )
                 }
             } else {
@@ -148,8 +142,8 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
         }
     }
 
-    private fun updateKeramba(id: Int, nama_keramba: String, ukuran: String) {
-        kerambaViewModel.updateKeramba(id, nama_keramba, ukuran)
+    private fun updateKeramba(id: Int, nama_keramba: String, ukuran: String, tanggal: Long) {
+        kerambaViewModel.updateKeramba(id, nama_keramba, ukuran, tanggal)
     }
 
     private fun bind(kerambaDomain: KerambaDomain) {
@@ -160,24 +154,16 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
 
             ukuranKerambaEt.setText(kerambaDomain.ukuran.toString(), TextView.BufferType.SPANNABLE)
 
-            kerambaViewModel.onSelectDateTime(kerambaDomain.tanggal_install)
+            binding.tanggalInstallEt.setText(
+                convertLongToDateString(kerambaDomain.tanggal_install, "EEEE dd-MMM-yyyy"),
+                TextView.BufferType.EDITABLE
+            )
 
             saveKerambaBtn.text = getString(R.string.update_keramba)
         }
     }
 
     private fun setupObserver() {
-        kerambaViewModel.tanggalInstall.observe(viewLifecycleOwner, {
-            if (it > 0) {
-                binding.tanggalInstallEt.setText(
-                    convertLongToDateString(it, "EEEE dd-MMM-yyyy"),
-                    TextView.BufferType.EDITABLE
-                )
-
-                binding.tanggalInstallEt.error = null
-            } else binding.tanggalInstallEt.setText("")
-        })
-
         kerambaViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
             when (result) {
                 is NetworkResult.Loading -> {
@@ -205,18 +191,21 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
         }
     }
 
-    private fun isEntryValid(nama: String, ukuran: String): Boolean {
-        return kerambaViewModel.isEntryValid(nama, ukuran)
+    private fun isEntryValid(nama: String, ukuran: String, tanggal: Long): Boolean {
+        return kerambaViewModel.isEntryValid(nama, ukuran, tanggal)
     }
 
-    private fun insertKeramba(nama: String, ukuran: String) {
-        kerambaViewModel.insertKeramba(nama, ukuran)
+    private fun insertKeramba(nama: String, ukuran: String, tanggal: Long) {
+        kerambaViewModel.insertKeramba(nama, ukuran, tanggal)
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val selectedDate: Calendar = Calendar.getInstance()
         selectedDate.set(year, month, dayOfMonth)
 
-        kerambaViewModel.onSelectDateTime(selectedDate.timeInMillis)
+        binding.tanggalInstallEt.setText(
+            convertLongToDateString(selectedDate.timeInMillis, "EEEE dd-MMM-yyyy"),
+            TextView.BufferType.EDITABLE
+        )
     }
 }

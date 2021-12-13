@@ -21,9 +21,6 @@ class BiotaViewModel @Inject constructor(
 
     private val _selectedKerambaId = MutableLiveData<Int>()
 
-    private val _selectedTanggalTebar = MutableLiveData<Long>()
-    val selectedTanggalTebar: LiveData<Long> = _selectedTanggalTebar
-
     fun loadBiotaData(id: Int): LiveData<BiotaDomain>{
         return Transformations.map(biotaDao.getById(id).asLiveData()){biotaMapper.mapFromEntity(it)}
     }
@@ -44,15 +41,11 @@ class BiotaViewModel @Inject constructor(
         _selectedKerambaId.value = id
     }
 
-    fun onSelectDateTime(date: Long){
-        _selectedTanggalTebar.value = date
+    fun isEntryValid(jenis: String, bobot: String, panjang: String, jumlah: String, tanggal: Long): Boolean {
+        return !(jenis.isBlank()|| bobot.isBlank() || panjang.isBlank() || jumlah.isBlank() || tanggal == 0L || _selectedKerambaId.value == null)
     }
 
-    fun isEntryValid(jenis: String, bobot: String, panjang: String, jumlah: String): Boolean {
-        return !(jenis.isBlank()|| bobot.isBlank() || panjang.isBlank() || jumlah.isBlank() || _selectedTanggalTebar.value == null || _selectedKerambaId.value == null)
-    }
-
-    fun insertBiota(jenis: String, bobot: String, panjang: String, jumlah: String){
+    fun insertBiota(jenis: String, bobot: String, panjang: String, jumlah: String, tanggal: Long){
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 biotaDao.insert(
@@ -62,14 +55,14 @@ class BiotaViewModel @Inject constructor(
                         bobot = bobot.toDouble(),
                         panjang = panjang.toDouble(),
                         jumlah_bibit = jumlah.toInt(),
-                        tanggal_tebar = _selectedTanggalTebar.value!!
+                        tanggal_tebar = tanggal
                     )
                 )
             }
         }
     }
 
-    fun updateBiota(biota_id: Int, jenis: String, bobot: String, panjang: String, jumlah: String){
+    fun updateBiota(biota_id: Int, jenis: String, bobot: String, panjang: String, jumlah: String, tanggal: Long){
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 biotaDao.updateOne(
@@ -79,7 +72,7 @@ class BiotaViewModel @Inject constructor(
                         bobot = bobot.toDouble(),
                         panjang = panjang.toDouble(),
                         jumlah_bibit = jumlah.toInt(),
-                        tanggal_tebar = _selectedTanggalTebar.value!!,
+                        tanggal_tebar = tanggal,
                         keramba_id = _selectedKerambaId.value!!
                     )
                 )
