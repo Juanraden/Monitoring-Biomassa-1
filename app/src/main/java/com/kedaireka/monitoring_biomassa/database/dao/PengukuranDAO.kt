@@ -16,6 +16,12 @@ interface PengukuranDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(listPengukuran: List<Pengukuran>)
 
-    @Query("SELECT * FROM pengukuran WHERE biota_id =:biota_id ORDER BY tanggal_ukur DESC LIMIT 10")
-    fun getAll(biota_id: Int): Flow<List<Pengukuran>>
+    @Query("SELECT * FROM pengukuran WHERE biota_id =:biotaId ORDER BY tanggal_ukur DESC LIMIT 10")
+    fun getAll(biotaId: Int): Flow<List<Pengukuran>>
+
+    @Query("SELECT COUNT(*) FROM pengukuran WHERE biota_id =:biotaId ORDER BY tanggal_ukur")
+    fun getPengukuranCountFromBiota(biotaId: Int): Int
+
+    @Query("DELETE FROM pengukuran WHERE biota_id =:biotaId")
+    fun deletePengukuranFromBiota(biotaId: Int)
 }

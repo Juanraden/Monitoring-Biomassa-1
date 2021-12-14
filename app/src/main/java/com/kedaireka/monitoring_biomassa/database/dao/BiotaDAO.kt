@@ -23,4 +23,10 @@ interface BiotaDAO {
 
     @Query("SELECT * FROM biota WHERE biota_id =:id")
     fun getById(id: Int): Flow<Biota>
+
+    @Query("SELECT COUNT(*) FROM biota WHERE tanggal_panen = 0 AND keramba_id =:kerambaId")
+    fun getBiotaCountFromKeramba(kerambaId: Int): Int
+
+    @Query("DELETE FROM biota WHERE keramba_id =:kerambaId")
+    fun deleteBiotaFromKeramba(kerambaId: Int)
 }
