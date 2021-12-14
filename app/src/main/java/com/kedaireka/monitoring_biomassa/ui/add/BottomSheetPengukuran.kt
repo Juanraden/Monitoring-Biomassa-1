@@ -158,56 +158,55 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
 
             binding.kerambaDropdown.adapter = kerambaAdapter
 
-            if (this@BottomSheetPengukuran.arguments != null){
+            if (this@BottomSheetPengukuran.arguments != null) {
                 val kerambaId = this@BottomSheetPengukuran.arguments!!.getInt("keramba_id")
 
-                if (kerambaId > 0){
+                if (kerambaId > 0) {
                     val index = kerambaIdlist.indexOf(kerambaId)
 
                     binding.kerambaDropdown.setSelection(index)
                 }
             }
 
-            binding.kerambaDropdown.onItemSelectedListener = object :
-
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                    val keramba = kerambaList[pos]
-
-                    biotaList = mapKerambatoBiota[keramba]!!
-
-                    val biotaIdlist = biotaList.map { biota-> biota.biota_id }
-
-                    val biotaAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item,
-                        biotaList.map { biotaDomain -> biotaDomain.jenis_biota }
-                    )
-
-                    biotaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-                    binding.biotaDropdown.adapter = biotaAdapter
-
-                    if (this@BottomSheetPengukuran.arguments != null) {
-                        val biotaId = this@BottomSheetPengukuran.arguments!!.getInt("biota_id")
-
-                        val index = biotaIdlist.indexOf(biotaId)
-
-                        binding.biotaDropdown.setSelection(index)
-                    }
-
-                    binding.biotaDropdown.onItemSelectedListener = this@BottomSheetPengukuran
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {}
-            }
+            binding.kerambaDropdown.onItemSelectedListener = this@BottomSheetPengukuran
         })
     }
 
     override fun onItemSelected(parent: AdapterView<*>, p1: View?, pos: Int, p3: Long) {
-        val biota = biotaList[pos]
+        when (parent.id) {
+            binding.kerambaDropdown.id -> {
+                val keramba = kerambaList[pos]
 
-        pengukuranViewModel.selectBiotaId(biota.biota_id)
+                biotaList = mapKerambatoBiota[keramba]!!
+
+                val biotaIdlist = biotaList.map { biota -> biota.biota_id }
+
+                val biotaAdapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    biotaList.map { biotaDomain -> biotaDomain.jenis_biota }
+                )
+
+                biotaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+                binding.biotaDropdown.adapter = biotaAdapter
+
+                if (this@BottomSheetPengukuran.arguments != null) {
+                    val biotaId = this@BottomSheetPengukuran.arguments!!.getInt("biota_id")
+
+                    val index = biotaIdlist.indexOf(biotaId)
+
+                    binding.biotaDropdown.setSelection(index)
+                }
+
+                binding.biotaDropdown.onItemSelectedListener = this@BottomSheetPengukuran
+            }
+            binding.biotaDropdown.id -> {
+                val biota = biotaList[pos]
+
+                pengukuranViewModel.selectBiotaId(biota.biota_id)
+            }
+        }
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {}
