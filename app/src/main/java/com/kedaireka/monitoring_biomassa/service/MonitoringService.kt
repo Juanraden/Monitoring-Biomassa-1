@@ -46,7 +46,8 @@ interface MonitoringService {
     @GET("biota")
     fun getBiotaListAsync(
         @Header("api-key") token: String,
-        @Query("user_id") userId: Int
+        @Query("user_id") userId: Int,
+        @Query("keramba_id") kerambaId: Int
     ): Deferred<Response<BiotaContainer>>
 
     @GET("history")
