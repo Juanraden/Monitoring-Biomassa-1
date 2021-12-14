@@ -102,6 +102,8 @@ class KerambaRepository @Inject constructor(
 
         val data = mutableMapOf<String, String>()
 
+        data["keramba_id"] = kerambaNetwork.keramba_id
+
         data["nama"] = kerambaNetwork.nama
 
         data["ukuran"] = kerambaNetwork.ukuran
