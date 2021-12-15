@@ -106,8 +106,14 @@ class PakanRepository @Inject constructor(
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
 
+        val data = mutableMapOf<String, String>()
+
+        data["user_id"] = userId.toString()
+
+        data["pakan_id"] = pakanId.toString()
+
         val response: Response<PakanContainer> =
-            monitoringService.deletePakanAsync(token, userId, pakanId).await()
+            monitoringService.deletePakanAsync(token, data).await()
 
         if (response.code() != 200) {
             throw Exception(response.body()!!.message)

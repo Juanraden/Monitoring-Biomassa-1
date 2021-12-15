@@ -87,8 +87,14 @@ class PengukuranRepository @Inject constructor(
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
 
+        val data = mutableMapOf<String, String>()
+
+        data["user_id"] = userId.toString()
+
+        data["pengukuran_id"] = pengukuranId.toString()
+
         val response: Response<PengukuranContainer> =
-            monitoringService.deletePengukuranAsync(token, userId, pengukuranId).await()
+            monitoringService.deletePengukuranAsync(token, data).await()
 
         if (response.code() != 200) {
             throw Exception(response.body()!!.message)
