@@ -21,4 +21,7 @@ interface PakanDAO {
 
     @Query("DELETE FROM pakan")
     suspend fun deleteAllPakan()
+
+    @Query("SELECT COUNT(*) FROM pakan")
+    fun getPakanCount(): Int
 }

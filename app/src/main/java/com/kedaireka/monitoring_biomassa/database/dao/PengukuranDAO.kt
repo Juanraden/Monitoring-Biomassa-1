@@ -11,11 +11,20 @@ import kotlinx.coroutines.flow.Flow
 interface PengukuranDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOne(pengukuran: Pengukuran)
+    suspend fun insertOne(pengukuran: Pengukuran)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(listPengukuran: List<Pengukuran>)
+    suspend fun insertAll(listPengukuran: List<Pengukuran>)
 
-    @Query("SELECT * FROM pengukuran WHERE biota_id =:biota_id ORDER BY tanggal_ukur DESC LIMIT 10")
-    fun getAll(biota_id: Int): Flow<List<Pengukuran>>
+    @Query("SELECT * FROM pengukuran WHERE biota_id =:biotaId ORDER BY tanggal_ukur DESC LIMIT 10")
+    fun getAll(biotaId: Int): Flow<List<Pengukuran>>
+
+    @Query("SELECT COUNT(*) FROM pengukuran WHERE biota_id =:biotaId ORDER BY tanggal_ukur")
+    fun getPengukuranCountFromBiota(biotaId: Int): Int
+
+    @Query("DELETE FROM pengukuran WHERE biota_id =:biotaId")
+    suspend fun deletePengukuranFromBiota(biotaId: Int)
+
+    @Query("DELETE FROM pengukuran WHERE pengukuran_id =:pengukuranId")
+    suspend fun deleteOne(pengukuranId: Int)
 }

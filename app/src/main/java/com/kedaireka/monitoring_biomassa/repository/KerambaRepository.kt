@@ -1,6 +1,7 @@
 package com.kedaireka.monitoring_biomassa.repository
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.asLiveData
@@ -39,7 +40,7 @@ class KerambaRepository @Inject constructor(
                 monitoringService.getKerambaListAsync(token, userId).await()
 
             if (response.code() == 200) {
-
+                Log.i("refreshKeramba","refesh completed")
                 val listKerambaNetwork: List<KerambaNetwork> = response.body()!!.data
 //
                 val listKeramba: List<Keramba> = listKerambaNetwork.map { target ->
@@ -102,6 +103,8 @@ class KerambaRepository @Inject constructor(
 
         val data = mutableMapOf<String, String>()
 
+        data["keramba_id"] = kerambaNetwork.keramba_id
+
         data["nama"] = kerambaNetwork.nama
 
         data["ukuran"] = kerambaNetwork.ukuran
@@ -113,7 +116,7 @@ class KerambaRepository @Inject constructor(
         val response: Response<KerambaContainer> =
             monitoringService.updateKerambaAsync(token, data).await()
 
-        if (response.code() != 201) {
+        if (response.code() != 200) {
             throw Exception(response.body()!!.message)
         }
     }
@@ -123,8 +126,14 @@ class KerambaRepository @Inject constructor(
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
 
+        val data = mutableMapOf<String, String>()
+
+        data["user_id"] = userId.toString()
+
+        data["keramba_id"] = kerambaId.toString()
+
         val response: Response<KerambaContainer> =
-            monitoringService.deleteKerambaAsync(token, userId, kerambaId).await()
+            monitoringService.deleteKerambaAsync(token, data).await()
 
         if (response.code() != 200) {
             throw Exception(response.body()!!.message)

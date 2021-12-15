@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Transformations
@@ -13,15 +14,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.BiotaHistoryListAdapter
+import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaHistoryBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BiotaHistoryFragment : Fragment() {
+class BiotaHistoryFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
     private val biotaViewModel by viewModels<BiotaViewModel>()
@@ -50,6 +53,8 @@ class BiotaHistoryFragment : Fragment() {
         setupNavigation()
 
         setupBiotaHistoryList()
+
+        binding.swipeRefresh.setOnRefreshListener(this)
     }
 
     private fun setupBiotaHistoryList() {
@@ -57,12 +62,42 @@ class BiotaHistoryFragment : Fragment() {
 
         binding.biotaHistoryList.adapter = biotaHistoryListAdapter
 
-        Transformations.switchMap(kerambaViewModel.loadedKerambaId){ keramba_id ->
+        Transformations.switchMap(kerambaViewModel.loadedKerambaId) { keramba_id ->
+            biotaViewModel.fetchBiotaHistory(keramba_id)
+
             biotaViewModel.getAllBiotaHistory(keramba_id)
         }.observe(viewLifecycleOwner, {
             biotaHistoryListAdapter.submitList(it)
+        })
 
-            binding.loadingSpinner.visibility = View.GONE
+        biotaViewModel.requestGetHistoryResult.observe(viewLifecycleOwner, { result ->
+            when (result) {
+                is NetworkResult.Loading -> {
+                    if (!binding.swipeRefresh.isRefreshing) {
+                        binding.swipeRefresh.isRefreshing = true
+                    }
+                }
+                is NetworkResult.Loaded -> {
+                    if (binding.swipeRefresh.isRefreshing) {
+                        binding.swipeRefresh.isRefreshing = false
+                    }
+
+                    binding.biotaHistoryList.visibility = View.VISIBLE
+                }
+                is NetworkResult.Error -> {
+                    if (result.message != "") {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+
+                        kerambaViewModel.doneToastException()
+                    }
+
+                    if (binding.swipeRefresh.isRefreshing) {
+                        binding.swipeRefresh.isRefreshing = false
+                    }
+
+                    binding.biotaHistoryList.visibility = View.VISIBLE
+                }
+            }
         })
     }
 
@@ -75,6 +110,12 @@ class BiotaHistoryFragment : Fragment() {
 
         binding.toolbarFragment.setNavigationOnClickListener {
             navController.navigateUp(appBarConfiguration)
+        }
+    }
+
+    override fun onRefresh() {
+        if (kerambaViewModel.loadedKerambaId.value != null) {
+            biotaViewModel.fetchBiotaHistory(kerambaViewModel.loadedKerambaId.value!!)
         }
     }
 }

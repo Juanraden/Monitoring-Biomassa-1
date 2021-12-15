@@ -13,4 +13,10 @@ interface PanenDAO {
     @Transaction
     @Query("SELECT * FROM panen")
     fun getAllPanenAndBiota(): Flow<List<PanenAndBiota>>
+
+    @Query("SELECT COUNT(*) FROM panen WHERE keramba_id =:kerambaId")
+    fun getPanenCountFromKeramba(kerambaId: Int): Int
+
+    @Query("DELETE FROM panen WHERE keramba_id =:kerambaId")
+    fun deletePanenFromKeramba(kerambaId: Int)
 }

@@ -2,8 +2,9 @@ package com.kedaireka.monitoring_biomassa.util
 
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.network.BiotaNetwork
+import javax.inject.Inject
 
-class BiotaNetworkMapper : EntityMapper<BiotaNetwork, BiotaDomain> {
+class BiotaNetworkMapper @Inject constructor() : EntityMapper<BiotaNetwork, BiotaDomain> {
     override fun mapFromEntity(entity: BiotaNetwork): BiotaDomain {
         return BiotaDomain(
             biota_id = entity.biota_id.toInt(),
@@ -12,7 +13,7 @@ class BiotaNetworkMapper : EntityMapper<BiotaNetwork, BiotaDomain> {
             panjang = entity.panjang.toDouble(),
             jumlah_bibit = entity.jumlah_bibit.toInt(),
             tanggal_tebar = convertStringToDateLong(entity.tanggal_tebar, "yyyy-MM-dd"),
-            tanggal_panen = convertStringToDateLong(entity.tanggal_panen, "yyyy-MM-dd"),
+            tanggal_panen = convertStringToDateLong(entity.tanggal_panen!!, "yyyy-MM-dd"),
             keramba_id = entity.keramba_id.toInt()
         )
     }

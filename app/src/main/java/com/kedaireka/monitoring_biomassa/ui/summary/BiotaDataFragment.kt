@@ -4,21 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Transformations
 import androidx.recyclerview.widget.ConcatAdapter
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PengukuranListAdapter
+import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaDataBinding
 import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetAction
+import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetActionPengukuran
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPengukuran
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.PengukuranViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BiotaDataFragment : Fragment() {
+class BiotaDataFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var binding: FragmentBiotaDataBinding
 
     private val biotaViewModel by activityViewModels<BiotaViewModel>()
@@ -28,7 +32,7 @@ class BiotaDataFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentBiotaDataBinding.inflate(inflater, container, false)
 
@@ -39,6 +43,42 @@ class BiotaDataFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupPengukuranList()
+
+        setupObserver()
+
+        binding.swipeRefresh.setOnRefreshListener(this)
+    }
+
+    private fun setupObserver() {
+        pengukuranViewModel.requestGetResult.observe(viewLifecycleOwner, { result ->
+            when (result) {
+                is NetworkResult.Loading -> {
+                    if (!binding.swipeRefresh.isRefreshing) {
+                        binding.swipeRefresh.isRefreshing = true
+                    }
+                }
+                is NetworkResult.Loaded -> {
+                    if (binding.swipeRefresh.isRefreshing) {
+                        binding.swipeRefresh.isRefreshing = false
+                    }
+
+                    binding.pengukuranList.visibility = View.VISIBLE
+                }
+                is NetworkResult.Error -> {
+                    if (result.message != "") {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+
+                        pengukuranViewModel.doneToastException()
+                    }
+
+                    if (binding.swipeRefresh.isRefreshing) {
+                        binding.swipeRefresh.isRefreshing = false
+                    }
+
+                    binding.pengukuranList.visibility = View.VISIBLE
+                }
+            }
+        })
     }
 
     private fun setupPengukuranList() {
@@ -69,13 +109,18 @@ class BiotaDataFragment : Fragment() {
 
             val pengukuranListAdapter = PengukuranListAdapter {
                 if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
-                        "BottomSheetAction"
+                        "BottomSheetActionPengukuran"
                     ) == null
                 ) {
+                    val bundle = Bundle()
 
-                    val bottomSheetAction = BottomSheetAction()
+                    bundle.putInt("pengukuran_id", it.pengukuran_id)
 
-                    bottomSheetAction.show(childFragmentManager, "BottomSheetAction")
+                    val bottomSheetAction = BottomSheetActionPengukuran()
+
+                    bottomSheetAction.arguments = bundle
+
+                    bottomSheetAction.show(childFragmentManager, "BottomSheetActionPengukuran")
                 }
                 true
             }
@@ -85,8 +130,12 @@ class BiotaDataFragment : Fragment() {
             binding.pengukuranList.adapter = concatAdapter
 
             pengukuranListAdapter.submitList(list)
-
-            binding.loadingSpinner.visibility = View.GONE
         })
+    }
+
+    override fun onRefresh() {
+        if (biotaViewModel.loadedBiotaId.value != null){
+            pengukuranViewModel.fetchPengukuran(biotaViewModel.loadedBiotaId.value!!)
+        }
     }
 }
