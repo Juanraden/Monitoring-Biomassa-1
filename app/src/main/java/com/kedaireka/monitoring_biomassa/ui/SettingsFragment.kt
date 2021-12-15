@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -17,6 +18,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.databinding.FragmentSettingsBinding
+import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.SettingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,6 +27,8 @@ class SettingsFragment : Fragment() {
     private lateinit var binding: FragmentSettingsBinding
 
     private val settingViewModel by viewModels<SettingViewModel>()
+
+    private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
     private val _fragmentTag = "Setting_Fragment"
 
@@ -70,6 +74,9 @@ class SettingsFragment : Fragment() {
             }
             R.id.logout_button -> {
                 settingViewModel.logOut()
+
+                kerambaViewModel.restartInit()
+
                 val host = NavHostFragment.create(R.navigation.nav_graph)
                 val fragmentTransaction = activity?.supportFragmentManager?.beginTransaction()
                 fragmentTransaction?.replace(R.id.nav_host_fragment, host)

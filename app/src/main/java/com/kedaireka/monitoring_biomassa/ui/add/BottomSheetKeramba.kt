@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -97,9 +98,12 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
             if (isEntryValid(
                     namaKerambaEt.text.toString().trim(),
                     ukuranKerambaEt.text.toString(),
-                    if (tanggalInstallEt.text.toString() != ""){
-                        convertStringToDateLong(tanggalInstallEt.text.toString(), "EEEE dd-MMM-yyyy")
-                    } else{
+                    if (tanggalInstallEt.text.toString() != "") {
+                        convertStringToDateLong(
+                            tanggalInstallEt.text.toString(),
+                            "EEEE dd-MMM-yyyy"
+                        )
+                    } else {
                         0L
                     }
                 )
@@ -109,9 +113,12 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
                         arguments!!.getInt("keramba_id"),
                         namaKerambaEt.text.toString().trim(),
                         ukuranKerambaEt.text.toString(),
-                        if (tanggalInstallEt.text.toString() != ""){
-                            convertStringToDateLong(tanggalInstallEt.text.toString(), "EEEE dd-MMM-yyyy")
-                        } else{
+                        if (tanggalInstallEt.text.toString() != "") {
+                            convertStringToDateLong(
+                                tanggalInstallEt.text.toString(),
+                                "EEEE dd-MMM-yyyy"
+                            )
+                        } else {
                             0L
                         }
                     )
@@ -119,9 +126,12 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
                     insertKeramba(
                         namaKerambaEt.text.toString().trim(),
                         ukuranKerambaEt.text.toString(),
-                        if (tanggalInstallEt.text.toString() != ""){
-                            convertStringToDateLong(tanggalInstallEt.text.toString(), "EEEE dd-MMM-yyyy")
-                        } else{
+                        if (tanggalInstallEt.text.toString() != "") {
+                            convertStringToDateLong(
+                                tanggalInstallEt.text.toString(),
+                                "EEEE dd-MMM-yyyy"
+                            )
+                        } else {
                             0L
                         }
                     )
@@ -171,6 +181,43 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
                 is NetworkResult.Loaded -> {
 
                     kerambaViewModel.fetchKeramba()
+
+                    kerambaViewModel.donePostAddRequest()
+
+                    this.dismiss()
+                }
+                is NetworkResult.Error -> {
+                    if (result.message != "") {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+
+                        kerambaViewModel.doneToastException()
+                    }
+                }
+            }
+        })
+
+        kerambaViewModel.requestPutUpdateResult.observe(viewLifecycleOwner, { result ->
+            when (result) {
+                is NetworkResult.Loading -> {
+                }
+                is NetworkResult.Loaded -> {
+                    if (this@BottomSheetKeramba.arguments != null) {
+                        kerambaViewModel.updateLocalKeramba(
+                            arguments!!.getInt("keramba_id"),
+                            binding.namaKerambaEt.text.toString().trim(),
+                            binding.ukuranKerambaEt.text.toString(),
+                            if (binding.tanggalInstallEt.text.toString() != "") {
+                                convertStringToDateLong(
+                                    binding.tanggalInstallEt.text.toString(),
+                                    "EEEE dd-MMM-yyyy"
+                                )
+                            } else {
+                                0L
+                            }
+                        )
+                    }
+
+                    kerambaViewModel.donePutUpdateRequest()
 
                     this.dismiss()
                 }
