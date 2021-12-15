@@ -28,5 +28,8 @@ interface BiotaDAO {
     fun getBiotaCountFromKeramba(kerambaId: Int): Int
 
     @Query("DELETE FROM biota WHERE keramba_id =:kerambaId")
-    fun deleteBiotaFromKeramba(kerambaId: Int)
+    suspend fun deleteBiotaFromKeramba(kerambaId: Int)
+
+    @Query("DELETE FROM biota WHERE biota_id =:biotaId")
+    suspend fun deleteOne(biotaId: Int)
 }

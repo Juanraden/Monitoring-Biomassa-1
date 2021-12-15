@@ -6,6 +6,7 @@ import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
 import com.kedaireka.monitoring_biomassa.data.domain.PengukuranDomain
+import com.kedaireka.monitoring_biomassa.data.network.BiotaNetwork
 import com.kedaireka.monitoring_biomassa.data.network.KerambaNetwork
 import com.kedaireka.monitoring_biomassa.database.entity.Biota
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
@@ -25,6 +26,11 @@ abstract class MapperModule {
     abstract fun bindBiotaMapper(
         biotaMapper: BiotaMapper
     ): EntityMapper<Biota, BiotaDomain>
+
+    @Binds
+    abstract fun bindBiotaNetworkMapper(
+        biotaNetworkMapper: BiotaNetworkMapper
+    ): EntityMapper<BiotaNetwork, BiotaDomain>
 
     @Binds
     abstract fun bindKerambaMapper(

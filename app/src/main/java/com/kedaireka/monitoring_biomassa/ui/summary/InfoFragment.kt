@@ -19,6 +19,7 @@ import com.github.mikephil.charting.utils.MPPointF
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
+import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentInfoBinding
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetKeramba
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
@@ -40,7 +41,7 @@ class InfoFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentInfoBinding.inflate(inflater, container, false)
 
@@ -56,13 +57,19 @@ class InfoFragment : Fragment() {
     }
 
     private fun setupFragment() {
-        Transformations.switchMap(kerambaViewModel.loadedKerambaId){ keramba_id ->
+        Transformations.switchMap(kerambaViewModel.loadedKerambaId) { keramba_id ->
             kerambaViewModel.loadKerambaData(keramba_id)
-        }.observe(viewLifecycleOwner, { keramba-> bind(keramba) })
+        }.observe(viewLifecycleOwner, { keramba -> bind(keramba) })
 
-        Transformations.switchMap(kerambaViewModel.loadedKerambaId){ keramba_id ->
+        Transformations.switchMap(kerambaViewModel.loadedKerambaId) { keramba_id ->
+
             biotaViewModel.getAllBiota(keramba_id)
-        }.observe(viewLifecycleOwner, { list -> initBiotaChart(list) })
+
+        }.observe(viewLifecycleOwner, { list ->
+            if (biotaViewModel.requestGetResult.value is NetworkResult.Loaded || biotaViewModel.requestGetResult.value is NetworkResult.Error) {
+                initBiotaChart(list)
+            }
+        })
 
         binding.biotaHistoryBtn.setOnClickListener {
             navController.navigate(
@@ -75,7 +82,8 @@ class InfoFragment : Fragment() {
         with(binding) {
             namaKerambaTv.text = keramba.nama_keramba
 
-            tanggalInstallTv.text = convertLongToDateString(keramba.tanggal_install, "EEEE dd-MMM-yyyy")
+            tanggalInstallTv.text =
+                convertLongToDateString(keramba.tanggal_install, "EEEE dd-MMM-yyyy")
 
             ukuranKerambaTv.text =
                 getString(R.string.meter_kubik, keramba.ukuran.toString())

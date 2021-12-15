@@ -1,6 +1,9 @@
 package com.kedaireka.monitoring_biomassa.repository
 
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.asLiveData
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.network.BiotaNetwork
 import com.kedaireka.monitoring_biomassa.data.network.container.BiotaContainer
@@ -18,8 +21,14 @@ class BiotaRepository @Inject constructor(
     private val biotaDAO: BiotaDAO,
     private val monitoringService: MonitoringService,
     private val sharedPreferences: SharedPreferences,
+    private val biotaMapper: EntityMapper<Biota, BiotaDomain>,
     private val biotaNetworkMapper: EntityMapper<BiotaNetwork, BiotaDomain>
 ) {
+    fun getAllBiota(id: Int): LiveData<List<BiotaDomain>> =
+        Transformations.map(biotaDAO.getAll(id).asLiveData()) { list ->
+            list.map { biotaMapper.mapFromEntity(it) }
+        }
+
     suspend fun refreshBiota(kerambaId: Int) {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
@@ -30,9 +39,10 @@ class BiotaRepository @Inject constructor(
                 monitoringService.getBiotaListAsync(token, userId, kerambaId).await()
 
             if (response.code() == 200) {
+
                 val listBiotaNetwork: List<BiotaNetwork> = response.body()!!.data
 
-                val listBiota = listBiotaNetwork.map { target ->
+                val listBiota: List<Biota> = listBiotaNetwork.map { target ->
                     Biota(
                         biota_id = target.biota_id.toInt(),
                         jenis_biota = target.jenis_biota,
@@ -40,7 +50,7 @@ class BiotaRepository @Inject constructor(
                         panjang = target.panjang.toDouble(),
                         jumlah_bibit = target.jumlah_bibit.toInt(),
                         tanggal_tebar = convertStringToDateLong(target.tanggal_tebar, "yyyy-MM-dd"),
-                        tanggal_panen = if (target.tanggal_panen != "null") {
+                        tanggal_panen = if (target.tanggal_panen != null) {
                             convertStringToDateLong(target.tanggal_panen, "yyyy-MM-dd")
                         } else {
                             0L
@@ -52,7 +62,6 @@ class BiotaRepository @Inject constructor(
                 if (biotaDAO.getBiotaCountFromKeramba(kerambaId) > listBiota.size) {
                     biotaDAO.deleteBiotaFromKeramba(kerambaId)
                 }
-
                 biotaDAO.insertAll(listBiota)
 
             } else {
@@ -83,7 +92,7 @@ class BiotaRepository @Inject constructor(
                         panjang = target.panjang.toDouble(),
                         jumlah_bibit = target.jumlah_bibit.toInt(),
                         tanggal_tebar = convertStringToDateLong(target.tanggal_tebar, "yyyy-MM-dd"),
-                        tanggal_panen = if (target.tanggal_panen != "null") {
+                        tanggal_panen = if (target.tanggal_panen != null) {
                             convertStringToDateLong(target.tanggal_panen, "yyyy-MM-dd")
                         } else {
                             0L
@@ -91,10 +100,6 @@ class BiotaRepository @Inject constructor(
                         keramba_id = target.keramba_id.toInt()
                     )
                 }.toList()
-
-                if (biotaDAO.getBiotaCountFromKeramba(kerambaId) > listBiota.size) {
-                    biotaDAO.deleteBiotaFromKeramba(kerambaId)
-                }
 
                 biotaDAO.insertAll(listBiota)
 
@@ -124,8 +129,6 @@ class BiotaRepository @Inject constructor(
         data["jumlah_bibit"] = biotaNetwork.jumlah_bibit
 
         data["tanggal_tebar"] = biotaNetwork.tanggal_tebar
-
-        data["tanggal_panen"] = biotaNetwork.tanggal_panen
 
         data["keramba_id"] = biotaNetwork.keramba_id
 
@@ -160,8 +163,6 @@ class BiotaRepository @Inject constructor(
 
         data["tanggal_tebar"] = biotaNetwork.tanggal_tebar
 
-        data["tanggal_panen"] = biotaNetwork.tanggal_panen
-
         data["keramba_id"] = biotaNetwork.keramba_id
 
         data["user_id"] = userId.toString()
@@ -179,8 +180,14 @@ class BiotaRepository @Inject constructor(
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
 
+        val data = mutableMapOf<String, String>()
+
+        data["biota_id"] = biotaId.toString()
+
+        data["user_id"] = userId.toString()
+
         val response: Response<BiotaContainer> =
-            monitoringService.deleteBiotaAsync(token, userId, biotaId).await()
+            monitoringService.deleteBiotaAsync(token, data).await()
 
         if (response.code() != 200) {
             throw Exception(response.body()!!.message)

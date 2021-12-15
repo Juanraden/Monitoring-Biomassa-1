@@ -16,12 +16,15 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.SummaryFragmentTabAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentSummaryBinding
+import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SummaryFragment : Fragment() {
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
+
+    private val biotaViewModel by activityViewModels<BiotaViewModel>()
 
     private lateinit var binding: FragmentSummaryBinding
 
@@ -46,6 +49,14 @@ class SummaryFragment : Fragment() {
         setupNavigation()
 
         setupTabLayout()
+
+        fetchBiota()
+    }
+
+    private fun fetchBiota() {
+        if (kerambaViewModel.loadedKerambaId.value != null) {
+            biotaViewModel.fetchBiota(kerambaViewModel.loadedKerambaId.value!!)
+        }
     }
 
     private fun setupTabLayout(){
