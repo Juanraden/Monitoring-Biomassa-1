@@ -11,12 +11,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
+import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetPengukuranBinding
 import com.kedaireka.monitoring_biomassa.ui.DatePickerFragment
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
@@ -31,7 +31,7 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
 
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
-    private val pengukuranViewModel by viewModels<PengukuranViewModel>()
+    private val pengukuranViewModel by activityViewModels<PengukuranViewModel>()
 
     private lateinit var mapKerambatoBiota: Map<KerambaDomain, List<BiotaDomain>>
 
@@ -94,22 +94,23 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
         setupObserver()
     }
 
-    private fun isEntryValid(panjang: String, bobot: String): Boolean =
-        pengukuranViewModel.isEntryValid(panjang, bobot)
+    private fun isEntryValid(panjang: String, bobot: String, tanggal: String): Boolean =
+        pengukuranViewModel.isEntryValid(panjang, bobot, tanggal)
 
     fun savePengukuran() {
         binding.apply {
             if (isEntryValid(
                     panjangBiotaEt.text.toString(),
-                    bobotBiotaEt.text.toString()
+                    bobotBiotaEt.text.toString(),
+                    tanggalUkurEt.text.toString()
                 )
             ) {
                 pengukuranViewModel.insertPengukuran(
                     panjangBiotaEt.text.toString(),
-                    bobotBiotaEt.text.toString()
+                    bobotBiotaEt.text.toString(),
+                    tanggalUkurEt.text.toString()
                 )
 
-                dismiss()
             } else {
                 if (TextUtils.isEmpty(bobotBiotaEt.text)) {
                     bobotBiotaEt.error = "Bobot biota harus diisi!"
@@ -127,15 +128,26 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
     }
 
     private fun setupObserver() {
-        pengukuranViewModel.selectedTanggalUkur.observe(viewLifecycleOwner, {
-            if (it > 0) {
-                binding.tanggalUkurEt.setText(
-                    convertLongToDateString(it, "EEEE dd-MMM-yyyy"),
-                    TextView.BufferType.EDITABLE
-                )
+        pengukuranViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
+            when (result) {
+                is NetworkResult.Loading -> {
+                }
+                is NetworkResult.Loaded -> {
+                    if (this@BottomSheetPengukuran.arguments != null) {
+                        val biotaId = this@BottomSheetPengukuran.arguments!!.getInt("biota_id")
 
-                binding.tanggalUkurEt.error = null
-            } else binding.tanggalUkurEt.setText("")
+                        pengukuranViewModel.fetchPengukuran(biotaId)
+
+                        pengukuranViewModel.donePostAddRequest()
+                    }
+                    this.dismiss()
+                }
+                is NetworkResult.Error -> {
+                    if (result.message != "") {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         })
     }
 
@@ -221,6 +233,9 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
         val selectedDate: Calendar = Calendar.getInstance()
         selectedDate.set(year, month, dayOfMonth)
 
-        pengukuranViewModel.onSelectDateTime(selectedDate.timeInMillis)
+        binding.tanggalUkurEt.setText(
+            convertLongToDateString(selectedDate.timeInMillis, "EEEE dd-MMM-yyyy"),
+            TextView.BufferType.EDITABLE
+        )
     }
 }
