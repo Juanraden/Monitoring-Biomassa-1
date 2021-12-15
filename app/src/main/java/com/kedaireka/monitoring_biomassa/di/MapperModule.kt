@@ -6,8 +6,7 @@ import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
 import com.kedaireka.monitoring_biomassa.data.domain.PengukuranDomain
-import com.kedaireka.monitoring_biomassa.data.network.BiotaNetwork
-import com.kedaireka.monitoring_biomassa.data.network.KerambaNetwork
+import com.kedaireka.monitoring_biomassa.data.network.*
 import com.kedaireka.monitoring_biomassa.database.entity.Biota
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
 import com.kedaireka.monitoring_biomassa.database.entity.Pakan
@@ -43,9 +42,19 @@ abstract class MapperModule {
     ): EntityMapper<Pakan, PakanDomain>
 
     @Binds
+    abstract fun bindPakanNetworkMapper(
+        pakanNetworkMapper: PakanNetworkMapper
+    ): EntityMapper<PakanNetwork, PakanDomain>
+
+    @Binds
     abstract fun bindPengukuranMapper(
         pengukuranMapper: PengukuranMapper
     ): EntityMapper<Pengukuran, PengukuranDomain>
+
+    @Binds
+    abstract fun bindPengukuranNetworkMapper(
+        pengukuranNetworkMapper: PengukuranNetworkMapper
+    ): EntityMapper<PengukuranNetwork, PengukuranDomain>
 
     @Binds
     abstract fun bindFeedingMapper(
@@ -61,4 +70,14 @@ abstract class MapperModule {
     abstract fun bindKerambaNetworkMapper(
         kerambaNetworkMapper: KerambaNetworkMapper
     ): EntityMapper<KerambaNetwork, KerambaDomain>
+
+    @Binds
+    abstract fun bindPanenMapper(
+        panenMapper: PanenMapper
+    ): EntityMapper<Panen, PanenDomain>
+
+    @Binds
+    abstract fun bindPanenNetworkMapper(
+        panenNetworkMapper: PanenNetworkMapper
+    ): EntityMapper<PanenNetwork, PanenDomain>
 }
