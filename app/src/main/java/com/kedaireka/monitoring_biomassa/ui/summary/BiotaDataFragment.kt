@@ -14,7 +14,6 @@ import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PengukuranListAdapter
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaDataBinding
-import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetAction
 import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetActionPengukuran
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPengukuran
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
@@ -94,7 +93,7 @@ class BiotaDataFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         })
 
         Transformations.switchMap(biotaViewModel.loadedBiotaId) { biota_id ->
-            pengukuranViewModel.getAll(biota_id)
+            pengukuranViewModel.getAllBiotaData(biota_id)
         }.observe(viewLifecycleOwner, { list ->
 
             val headerButtonAdapter = HeaderButtonAdapter {
@@ -112,13 +111,13 @@ class BiotaDataFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         "BottomSheetActionPengukuran"
                     ) == null
                 ) {
-                    val bundle = Bundle()
+                    val args = Bundle()
 
-                    bundle.putInt("pengukuran_id", it.pengukuran_id)
+                    args.putInt("pengukuran_id", it.pengukuran_id)
 
                     val bottomSheetAction = BottomSheetActionPengukuran()
 
-                    bottomSheetAction.arguments = bundle
+                    bottomSheetAction.arguments = args
 
                     bottomSheetAction.show(childFragmentManager, "BottomSheetActionPengukuran")
                 }
@@ -134,7 +133,7 @@ class BiotaDataFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        if (biotaViewModel.loadedBiotaId.value != null){
+        if (biotaViewModel.loadedBiotaId.value != null) {
             pengukuranViewModel.fetchPengukuran(biotaViewModel.loadedBiotaId.value!!)
         }
     }
