@@ -11,10 +11,10 @@ interface KerambaDAO {
     suspend fun insertAll(listKeramba: List<Keramba>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOne(keramba: Keramba)
+    suspend fun insertOne(keramba: Keramba)
 
     @Update
-    fun updateOne(keramba: Keramba)
+    suspend fun updateOne(keramba: Keramba)
 
     @Query("SELECT * FROM keramba ORDER BY tanggal_install")
     fun getAll(): Flow<List<Keramba>>
