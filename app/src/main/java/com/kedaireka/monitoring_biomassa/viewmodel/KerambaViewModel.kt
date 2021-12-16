@@ -164,6 +164,8 @@ class KerambaViewModel @Inject constructor(
                     biotaMapper.mapFromEntity(
                         biota
                     )
+                }.filter { biotaDomain ->
+                    biotaDomain.tanggal_panen == 0L
                 }
             }.toMap()
         }
