@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="bottomSheetPanen"
             type="com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPanen" />
@@ -204,8 +205,8 @@
                         android:enabled="true"
                         android:focusable="false"
                         android:hint="@string/tanggal_panen_biota"
-                        android:onClick="@{() -> bottomSheetPanen.showDatePicker()}"
-                        android:minHeight="48dp" />
+                        android:minHeight="48dp"
+                        android:onClick="@{() -> bottomSheetPanen.showDatePicker()}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -216,8 +217,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/layout_padding"
                     android:layout_marginEnd="@dimen/layout_padding"
+                    android:onClick="@{() -> bottomSheetPanen.savePanen()}"
                     android:text="@string/simpan" />
-
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
