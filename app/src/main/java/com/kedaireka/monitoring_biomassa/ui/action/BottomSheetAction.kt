@@ -8,7 +8,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetActionBinding
 
 open class BottomSheetAction: BottomSheetDialogFragment() {
-    private lateinit var binding: BottomSheetActionBinding
+
+    open lateinit var binding: BottomSheetActionBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,

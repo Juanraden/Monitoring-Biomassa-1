@@ -2,6 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="bottomSheetPanen"
+            type="com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPanen" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -153,7 +159,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/jumlah_panen"
                         android:importantForAutofill="no"
-                        android:inputType="numberDecimal"
+                        android:inputType="number"
                         android:minHeight="48dp"
                         android:selectAllOnFocus="true" />
 
@@ -174,7 +180,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/jumlah_gagal_panen_ekor"
                         android:importantForAutofill="no"
-                        android:inputType="numberDecimal"
+                        android:inputType="number"
                         android:minHeight="48dp"
                         android:selectAllOnFocus="true" />
 
@@ -198,6 +204,7 @@
                         android:enabled="true"
                         android:focusable="false"
                         android:hint="@string/tanggal_panen_biota"
+                        android:onClick="@{() -> bottomSheetPanen.showDatePicker()}"
                         android:minHeight="48dp" />
 
                 </com.google.android.material.textfield.TextInputLayout>

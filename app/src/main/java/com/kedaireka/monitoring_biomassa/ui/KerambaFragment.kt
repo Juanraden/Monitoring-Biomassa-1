@@ -78,6 +78,12 @@ class KerambaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun setupKerambaList() {
+        kerambaViewModel.init.observe(viewLifecycleOwner, {
+            if (it == false){
+                kerambaViewModel.startInit()
+            }
+        })
+
         binding.kerambaList.adapter = kerambaListAdapter
 
         kerambaViewModel.getAllKeramba().observe(viewLifecycleOwner, {
@@ -116,6 +122,8 @@ class KerambaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     if (binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = false
                     }
+
+                    binding.kerambaList.visibility = View.VISIBLE
                 }
             }
         })

@@ -1,6 +1,7 @@
 package com.kedaireka.monitoring_biomassa.ui.summary
 
 import android.annotation.SuppressLint
+import android.net.Network
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.PengukuranDomain
+import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaInfoBinding
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetBiota
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
@@ -64,13 +66,17 @@ class BiotaInfoFragment : Fragment() {
     }
 
     private fun setupFragment() {
-        Transformations.switchMap(biotaViewModel.loadedBiotaId){ biota_id ->
+        Transformations.switchMap(biotaViewModel.loadedBiotaId) { biota_id ->
             biotaViewModel.loadBiotaData(biota_id)
         }.observe(viewLifecycleOwner, { biota -> bind(biota) })
 
-        Transformations.switchMap(biotaViewModel.loadedBiotaId){ biota_id ->
+        Transformations.switchMap(biotaViewModel.loadedBiotaId) { biota_id ->
             pengukuranViewModel.getAll(biota_id)
-        }.observe(viewLifecycleOwner, { list -> setupLineChart(list) })
+        }.observe(viewLifecycleOwner, { list ->
+            if (pengukuranViewModel.requestGetResult.value is NetworkResult.Loaded || pengukuranViewModel.requestGetResult.value is NetworkResult.Error) {
+                setupLineChart(list)
+            }
+        })
     }
 
     private fun bind(biota: BiotaDomain) {

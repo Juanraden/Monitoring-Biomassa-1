@@ -11,11 +11,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
+import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetBiotaBinding
 import com.kedaireka.monitoring_biomassa.ui.DatePickerFragment
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
@@ -31,7 +31,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
 
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
-    private val biotaViewModel by viewModels<BiotaViewModel>()
+    private val biotaViewModel by activityViewModels<BiotaViewModel>()
 
     private lateinit var binding: BottomSheetBiotaBinding
 
@@ -63,6 +63,68 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                 biotaViewModel.loadBiotaData(biotaId).observe(viewLifecycleOwner, { bind(it) })
             }
         }
+
+        setupObserver()
+    }
+
+    private fun setupObserver() {
+        biotaViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
+            when (result) {
+                is NetworkResult.Loading -> {
+                }
+                is NetworkResult.Loaded -> {
+
+                    if (biotaViewModel.selectedKerambaId.value != null) {
+                        biotaViewModel.fetchBiota(biotaViewModel.selectedKerambaId.value!!)
+
+                        biotaViewModel.donePostAddRequest()
+                    }
+
+                    this.dismiss()
+                }
+                is NetworkResult.Error -> {
+                    if (result.message != "") {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+
+        biotaViewModel.requestPutUpdateResult.observe(viewLifecycleOwner, { result ->
+            when (result) {
+                is NetworkResult.Loading -> {
+                }
+                is NetworkResult.Loaded -> {
+                    if (this@BottomSheetBiota.arguments != null) {
+                        val biotaId: Int = this@BottomSheetBiota.arguments!!.getInt("biota_id")
+
+                        biotaViewModel.updateLocalBiota(
+                            biotaId,
+                            binding.jenisBiotaEt.text.toString().trim(),
+                            binding.bobotBibitEt.text.toString(),
+                            binding.panjangBibitEt.text.toString(),
+                            binding.jumlahBibitEt.text.toString(),
+                            if (binding.tanggalTebarEt.text.toString() != "") {
+                                convertStringToDateLong(
+                                    binding.tanggalTebarEt.text.toString(),
+                                    "EEEE dd-MMM-yyyy"
+                                )
+                            } else {
+                                0L
+                            }
+                        )
+
+                        biotaViewModel.donePutUpdateRequest()
+                    }
+                    this.dismiss()
+                }
+                is NetworkResult.Error -> {
+                    if (result.message != "") {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
     }
 
     private fun bind(biotaDomain: BiotaDomain) {
@@ -121,18 +183,6 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         }
     }
 
-//    private fun setupObserver() {
-//        biotaViewModel.selectedTanggalTebar.observe(viewLifecycleOwner, {
-//            if (it > 0) {
-//                binding.tanggalTebarEt.setText(
-//                    convertLongToDateString(it, "EEEE dd-MMM-yyyy"),
-//                    TextView.BufferType.EDITABLE
-//                )
-//
-//                binding.tanggalTebarEt.error = null
-//            } else binding.tanggalTebarEt.setText("")
-//        })
-//    }
 
     fun saveBiota() {
         binding.apply {
@@ -167,26 +217,38 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                                 0L
                             }
                         )
-
-                        dismiss()
-                        return@apply
-                    }
-                }
-
-                biotaViewModel.insertBiota(
-                    jenisBiotaEt.text.toString().trim(),
-                    bobotBibitEt.text.toString(),
-                    panjangBibitEt.text.toString(),
-                    jumlahBibitEt.text.toString(),
-                    if (tanggalTebarEt.text.toString() != "") {
-                        convertStringToDateLong(tanggalTebarEt.text.toString(), "EEEE dd-MMM-yyyy")
                     } else {
-                        0L
+                        biotaViewModel.insertBiota(
+                            jenisBiotaEt.text.toString().trim(),
+                            bobotBibitEt.text.toString(),
+                            panjangBibitEt.text.toString(),
+                            jumlahBibitEt.text.toString(),
+                            if (tanggalTebarEt.text.toString() != "") {
+                                convertStringToDateLong(
+                                    tanggalTebarEt.text.toString(),
+                                    "EEEE dd-MMM-yyyy"
+                                )
+                            } else {
+                                0L
+                            }
+                        )
                     }
-                )
-
-                dismiss()
-
+                } else {
+                    biotaViewModel.insertBiota(
+                        jenisBiotaEt.text.toString().trim(),
+                        bobotBibitEt.text.toString(),
+                        panjangBibitEt.text.toString(),
+                        jumlahBibitEt.text.toString(),
+                        if (tanggalTebarEt.text.toString() != "") {
+                            convertStringToDateLong(
+                                tanggalTebarEt.text.toString(),
+                                "EEEE dd-MMM-yyyy"
+                            )
+                        } else {
+                            0L
+                        }
+                    )
+                }
             } else {
                 if (TextUtils.isEmpty(jenisBiotaEt.text)) {
                     jenisBiotaEt.error = "Jenis biota harus diisi!"

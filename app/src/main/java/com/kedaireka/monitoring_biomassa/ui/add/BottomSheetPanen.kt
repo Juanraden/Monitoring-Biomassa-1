@@ -1,5 +1,6 @@
 package com.kedaireka.monitoring_biomassa.ui.add
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
@@ -7,9 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.FrameLayout
+import android.widget.*
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -18,12 +17,15 @@ import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetPanenBinding
+import com.kedaireka.monitoring_biomassa.ui.DatePickerFragment
+import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.PanenViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
-class BottomSheetPanen: BottomSheetDialogFragment(), AdapterView.OnItemSelectedListener {
+class BottomSheetPanen: BottomSheetDialogFragment(), AdapterView.OnItemSelectedListener, DatePickerDialog.OnDateSetListener {
     private lateinit var binding: BottomSheetPanenBinding
 
     private val panenViewModel by viewModels<PanenViewModel>()
@@ -71,7 +73,7 @@ class BottomSheetPanen: BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = BottomSheetPanenBinding.inflate(inflater)
         return binding.root
@@ -79,6 +81,8 @@ class BottomSheetPanen: BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.bottomSheetPanen = this@BottomSheetPanen
 
         binding.ivClose.setOnClickListener { dismiss() }
 
@@ -114,35 +118,61 @@ class BottomSheetPanen: BottomSheetDialogFragment(), AdapterView.OnItemSelectedL
                 }
             }
 
-            binding.kerambaDropdown.onItemSelectedListener = object :
-
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                    val keramba = kerambaList[pos]
-
-                    biotaList = mapKerambatoBiota[keramba]!!
-
-                    val biotaAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item,
-                        biotaList.map { biotaDomain -> biotaDomain.jenis_biota }
-                    )
-
-                    biotaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-                    binding.biotaDropdown.adapter = biotaAdapter
-
-
-                    binding.biotaDropdown.onItemSelectedListener = this@BottomSheetPanen
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {}
-            }
+            binding.kerambaDropdown.onItemSelectedListener = this@BottomSheetPanen
         })
     }
 
-    override fun onItemSelected(parent: AdapterView<*>, p1: View?, pos: Int, p3: Long) {
-        val biota = biotaList[pos]
+    fun showDatePicker() {
+        if (childFragmentManager.findFragmentByTag("DatePicker") == null) {
+            DatePickerFragment.create().show(childFragmentManager, "DatePicker")
+        }
+    }
+
+    private fun isEntryValid(panjang: String, bobot: String, jumlahHidup: String, jumlahMati: String, tanggal: String){
+
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        val selectedDate: Calendar = Calendar.getInstance()
+        selectedDate.set(year, month, dayOfMonth)
+
+        binding.tanggalPanenEt.setText(
+            convertLongToDateString(selectedDate.timeInMillis, "EEEE dd-MMM-yyyy"),
+            TextView.BufferType.EDITABLE
+        )
+    }
+
+
+    override fun onItemSelected(parent: AdapterView<*>, p1: View, pos: Int, p3: Long) {
+        when(parent.id){
+            binding.kerambaDropdown.id -> {
+                val keramba = kerambaList[pos]
+
+                panenViewModel.selectKeramba(keramba.keramba_id)
+
+                biotaList = mapKerambatoBiota[keramba]!!
+
+                val biotaAdapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    biotaList.map { biotaDomain -> biotaDomain.jenis_biota }
+                )
+
+                biotaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+                binding.biotaDropdown.adapter = biotaAdapter
+
+                binding.biotaDropdown.onItemSelectedListener = this@BottomSheetPanen
+            }
+
+            binding.biotaDropdown.id -> {
+                val biota = biotaList[pos]
+
+                panenViewModel.selectBiota(biota.biota_id)
+            }
+
+        }
+
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {}

@@ -17,11 +17,14 @@ import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.BiotaFragmentTabAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaTabBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
+import com.kedaireka.monitoring_biomassa.viewmodel.PengukuranViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class BiotaTabFragment : Fragment() {
     private val biotaViewModel by activityViewModels<BiotaViewModel>()
+
+    private val pengukuranViewModel by activityViewModels<PengukuranViewModel>()
 
     private lateinit var binding: FragmentBiotaTabBinding
 
@@ -45,6 +48,14 @@ class BiotaTabFragment : Fragment() {
         setupNavigation()
 
         setupTabLayout()
+
+        fetchPengukuran()
+    }
+
+    private fun fetchPengukuran(){
+        if (biotaViewModel.loadedBiotaId.value != null){
+            pengukuranViewModel.fetchPengukuran(biotaViewModel.loadedBiotaId.value!!)
+        }
     }
 
     private fun setupTabLayout() {

@@ -38,15 +38,15 @@ interface MonitoringService {
     @POST("keramba/delete")
     fun deleteKerambaAsync(
         @Header("api-key") token: String,
-        @Query("user_id") userId: Int,
-        @Query("keramba_id") kerambaId: Int
+        @FieldMap data: Map<String, String>
     ): Deferred<Response<KerambaContainer>>
 
     // biota section
     @GET("biota")
     fun getBiotaListAsync(
         @Header("api-key") token: String,
-        @Query("user_id") userId: Int
+        @Query("user_id") userId: Int,
+        @Query("keramba_id") kerambaId: Int
     ): Deferred<Response<BiotaContainer>>
 
     @GET("history")
@@ -74,8 +74,7 @@ interface MonitoringService {
     @POST("biota/delete")
     fun deleteBiotaAsync(
         @Header("api-key") token: String,
-        @Query("user_id") userId: Int,
-        @Query("biota_id") biotaId: Int
+        @FieldMap data: Map<String, String>
     ): Deferred<Response<BiotaContainer>>
 
     // pakan section
@@ -103,8 +102,7 @@ interface MonitoringService {
     @POST("pakan/delete")
     fun deletePakanAsync(
         @Header("api-key") token: String,
-        @Query("user_id") userId: Int,
-        @Query("pakan_id") pakanId: Int
+        @FieldMap data: Map<String, String>
     ): Deferred<Response<PakanContainer>>
 
     //pengukuran section
@@ -133,8 +131,7 @@ interface MonitoringService {
     @POST("pengukuran/delete")
     fun deletePengukuranAsync(
         @Header("api-key") token: String,
-        @Query("user_id") userId: Int,
-        @Query("pengukuran_id") pengukuranId: Int
+        @FieldMap data: Map<String, String>
     ): Deferred<Response<PengukuranContainer>>
 
     //feeding

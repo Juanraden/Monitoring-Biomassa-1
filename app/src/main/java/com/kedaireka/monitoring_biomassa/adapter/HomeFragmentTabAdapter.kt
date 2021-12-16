@@ -3,7 +3,7 @@ package com.kedaireka.monitoring_biomassa.adapter
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.kedaireka.monitoring_biomassa.ui.KerambaFragment
-import com.kedaireka.monitoring_biomassa.ui.add.AddPakanFragment
+import com.kedaireka.monitoring_biomassa.ui.AddPakanFragment
 
 class HomeFragmentTabAdapter constructor(fragment: Fragment): FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int =  2

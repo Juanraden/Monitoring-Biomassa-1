@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface KerambaDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(listKeramba: List<Keramba>)
+    suspend fun insertAll(listKeramba: List<Keramba>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOne(keramba: Keramba)
+    suspend fun insertOne(keramba: Keramba)
 
     @Update
-    fun updateOne(keramba: Keramba)
+    suspend fun updateOne(keramba: Keramba)
 
     @Query("SELECT * FROM keramba ORDER BY tanggal_install")
     fun getAll(): Flow<List<Keramba>>
@@ -31,4 +31,7 @@ interface KerambaDAO {
 
     @Query("SELECT COUNT(*) FROM keramba")
     fun getKerambaCount(): Int
+
+    @Query("DELETE FROM keramba WHERE keramba_id =:kerambaId")
+    suspend fun deleteOne(kerambaId: Int)
 }

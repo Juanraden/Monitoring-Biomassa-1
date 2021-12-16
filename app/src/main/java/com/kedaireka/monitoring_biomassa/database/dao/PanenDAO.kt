@@ -8,9 +8,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PanenDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(listPanen: List<Panen>)
+    suspend fun insertAll(listPanen: List<Panen>)
 
     @Transaction
     @Query("SELECT * FROM panen")
     fun getAllPanenAndBiota(): Flow<List<PanenAndBiota>>
+
+    @Query("SELECT COUNT(*) FROM panen WHERE keramba_id =:kerambaId")
+    fun getPanenCountFromKeramba(kerambaId: Int): Int
+
+    @Query("DELETE FROM panen WHERE keramba_id =:kerambaId")
+    suspend fun deletePanenFromKeramba(kerambaId: Int)
 }

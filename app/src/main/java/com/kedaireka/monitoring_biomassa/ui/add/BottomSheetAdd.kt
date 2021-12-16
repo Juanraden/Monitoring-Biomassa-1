@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetAddBinding
 
-class BottomSheetAdd: BottomSheetDialogFragment() {
+class BottomSheetAdd : BottomSheetDialogFragment() {
     private lateinit var binding: BottomSheetAddBinding
 
     override fun onCreateView(
@@ -21,23 +22,28 @@ class BottomSheetAdd: BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.bottomSheetAdd = this@BottomSheetAdd
+
         binding.cancelBtn.setOnClickListener { dismiss() }
+    }
 
-        binding.addKerambaBtn.setOnClickListener {
-            if (childFragmentManager.findFragmentByTag("BottomSheetKeramba") == null) {
-                BottomSheetKeramba().show(childFragmentManager, "BottomSheetKeramba")
+    fun launchBottomSheet(view: View) {
+        when (view.id) {
+            R.id.add_keramba_btn -> {
+                if (childFragmentManager.findFragmentByTag("BottomSheetKeramba") == null) {
+                    BottomSheetKeramba().show(childFragmentManager, "BottomSheetKeramba")
+                }
             }
-        }
-
-        binding.addPakanBtn.setOnClickListener {
-            if (childFragmentManager.findFragmentByTag("BottomSheetPakan") == null) {
-                BottomSheetPakan().show(childFragmentManager, "BottomSheetPakan")
+            R.id.add_pakan_btn -> {
+                if (childFragmentManager.findFragmentByTag("BottomSheetPakan") == null) {
+                    BottomSheetPakan().show(childFragmentManager, "BottomSheetPakan")
+                }
             }
-        }
-
-        binding.addBiotaBtn.setOnClickListener {
-            if (childFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
-                BottomSheetBiota().show(childFragmentManager, "BottomSheetBiota")
+            R.id.add_biota_btn -> {
+                if (childFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
+                    BottomSheetBiota().show(childFragmentManager, "BottomSheetBiota")
+                }
             }
         }
     }
