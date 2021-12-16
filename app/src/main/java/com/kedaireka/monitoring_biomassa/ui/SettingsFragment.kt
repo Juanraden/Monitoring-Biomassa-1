@@ -19,6 +19,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.databinding.FragmentSettingsBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
+import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.SettingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,6 +30,8 @@ class SettingsFragment : Fragment() {
     private val settingViewModel by viewModels<SettingViewModel>()
 
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
+
+    private val pakanViewModel by activityViewModels<PakanViewModel>()
 
     private val _fragmentTag = "Setting_Fragment"
 
@@ -76,6 +79,8 @@ class SettingsFragment : Fragment() {
                 settingViewModel.logOut()
 
                 kerambaViewModel.restartInit()
+
+                pakanViewModel.restartInit()
 
                 val host = NavHostFragment.create(R.navigation.nav_graph)
                 val fragmentTransaction = activity?.supportFragmentManager?.beginTransaction()
