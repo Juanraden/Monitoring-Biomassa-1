@@ -62,7 +62,9 @@ class KerambaRepository @Inject constructor(
                 kerambaDAO.insertAll(listKeramba)
 
             } else {
-                if (response.body() != null) {
+                if (response.code() == 500){
+                    throw Exception("Internal Server Error")
+                } else {
                     throw Exception(response.body()!!.message)
                 }
             }
@@ -90,7 +92,12 @@ class KerambaRepository @Inject constructor(
             monitoringService.addKerambaAsync(token, data).await()
 
         if (response.code() != 201) {
-            throw Exception(response.body()!!.message)
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 
@@ -117,7 +124,12 @@ class KerambaRepository @Inject constructor(
             monitoringService.updateKerambaAsync(token, data).await()
 
         if (response.code() != 200) {
-            throw Exception(response.body()!!.message)
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 
@@ -136,7 +148,12 @@ class KerambaRepository @Inject constructor(
             monitoringService.deleteKerambaAsync(token, data).await()
 
         if (response.code() != 200) {
-            throw Exception(response.body()!!.message)
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 }

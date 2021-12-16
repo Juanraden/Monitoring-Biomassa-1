@@ -53,8 +53,10 @@ class PakanRepository @Inject constructor(
                 pakanDAO.insertAll(listPakan)
 
             } else {
-                if (response.body() != null) {
-                    throw  Exception(response.body()!!.message)
+                if (response.code() == 500){
+                    throw Exception("Internal Server Error")
+                } else {
+                    throw Exception(response.body()!!.message)
                 }
             }
         }
@@ -79,7 +81,12 @@ class PakanRepository @Inject constructor(
             monitoringService.addPakanAsync(token, data).await()
 
         if (response.code() != 201) {
-            throw Exception(response.body()!!.message)
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 
@@ -104,7 +111,12 @@ class PakanRepository @Inject constructor(
             monitoringService.updatePakanAsync(token, data).await()
 
         if (response.code() != 200) {
-            throw Exception(response.body()!!.message)
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 
@@ -123,7 +135,12 @@ class PakanRepository @Inject constructor(
             monitoringService.deletePakanAsync(token, data).await()
 
         if (response.code() != 200) {
-            throw Exception(response.body()!!.message)
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 }
