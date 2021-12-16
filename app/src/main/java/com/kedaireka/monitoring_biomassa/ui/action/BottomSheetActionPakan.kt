@@ -6,18 +6,18 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
-import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetBiota
-import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
+import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPakan
+import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BottomSheetActionBiota : BottomSheetAction() {
-    private val biotaViewModel by activityViewModels<BiotaViewModel>()
+class BottomSheetActionPakan : BottomSheetAction() {
+    private val pakanViewModel by activityViewModels<PakanViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        biotaViewModel.requestDeleteResult.observe(viewLifecycleOwner, { result ->
+        pakanViewModel.requestDeleteResult.observe(viewLifecycleOwner, { result ->
             when (result) {
                 is NetworkResult.Loading -> {
 
@@ -26,14 +26,14 @@ class BottomSheetActionBiota : BottomSheetAction() {
 
                     if (this.arguments != null) {
 
-                        val biotaId = arguments!!.getInt("biota_id")
+                        val pakanId = arguments!!.getInt("pakan_id")
 
-                        biotaViewModel.deleteLocalBiota(biotaId)
+                        pakanViewModel.deleteLocalPakan(pakanId)
                     }
 
-                    biotaViewModel.doneDeleteRequest()
+                    pakanViewModel.doneDeleteRequest()
 
-                    this@BottomSheetActionBiota.dismiss()
+                    this@BottomSheetActionPakan.dismiss()
                 }
                 is NetworkResult.Error -> {
                     if (result.message != "") {
@@ -47,26 +47,23 @@ class BottomSheetActionBiota : BottomSheetAction() {
     override fun showBottomSheetEdit() {
         super.showBottomSheetEdit()
 
-        if (requireActivity().supportFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
+        if (requireActivity().supportFragmentManager.findFragmentByTag("BottomSheetPakan") == null) {
             if (this.arguments != null) {
-                val bottomSheetBiota = BottomSheetBiota()
+                val bottomSheetPakan = BottomSheetPakan()
 
                 val bundle = Bundle()
 
-                val kerambaId = arguments!!.getInt("keramba_id")
+                val pakanId = arguments!!.getInt("pakan_id")
 
-                val biotaId = arguments!!.getInt("biota_id")
+                bundle.putInt("pakan_id", pakanId)
 
-                bundle.putInt("keramba_id", kerambaId)
+                bottomSheetPakan.arguments = bundle
 
-                bundle.putInt("biota_id", biotaId)
-
-                bottomSheetBiota.arguments = bundle
-
-                bottomSheetBiota.show(requireActivity().supportFragmentManager, "BottomSheetBiota")
+                bottomSheetPakan.show(
+                    requireActivity().supportFragmentManager,
+                    "BottomSheetPakan"
+                )
             }
-
-            this@BottomSheetActionBiota.dismiss()
         }
     }
 
@@ -75,17 +72,17 @@ class BottomSheetActionBiota : BottomSheetAction() {
 
         if (this.arguments != null) {
 
-            val biotaId = arguments!!.getInt("biota_id")
+            val pakanId = arguments!!.getInt("pakan_id")
 
             val builder = AlertDialog.Builder(requireContext())
 
             builder.setTitle("Konfirmasi Hapus")
 
-            builder.setMessage("Apa anda yakin untuk menghapus biota ini?")
+            builder.setMessage("Apa anda yakin untuk menghapus pakan ini?")
 
             builder.setPositiveButton("Ya") { _, _ ->
 
-                biotaViewModel.deleteBiota(biotaId)
+                pakanViewModel.deletePakan(pakanId)
             }
 
             builder.setNegativeButton("Batal") { _, _ -> }

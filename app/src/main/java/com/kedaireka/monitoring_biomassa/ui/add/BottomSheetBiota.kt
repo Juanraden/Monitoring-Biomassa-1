@@ -233,6 +233,21 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                             }
                         )
                     }
+                } else {
+                    biotaViewModel.insertBiota(
+                        jenisBiotaEt.text.toString().trim(),
+                        bobotBibitEt.text.toString(),
+                        panjangBibitEt.text.toString(),
+                        jumlahBibitEt.text.toString(),
+                        if (tanggalTebarEt.text.toString() != "") {
+                            convertStringToDateLong(
+                                tanggalTebarEt.text.toString(),
+                                "EEEE dd-MMM-yyyy"
+                            )
+                        } else {
+                            0L
+                        }
+                    )
                 }
             } else {
                 if (TextUtils.isEmpty(jenisBiotaEt.text)) {

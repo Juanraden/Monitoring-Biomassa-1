@@ -2,7 +2,6 @@ package com.kedaireka.monitoring_biomassa.ui.action
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -83,12 +82,12 @@ class BottomSheetActionKeramba : BottomSheetAction() {
 
             builder.setMessage("Apa anda yakin untuk menghapus keramba ini?")
 
-            builder.setPositiveButton("Ya") { dialog, id ->
+            builder.setPositiveButton("Ya") { _, _ ->
 
                 kerambaViewModel.deleteKeramba(kerambaId)
             }
 
-            builder.setNegativeButton("Batal") { dialog, id -> }
+            builder.setNegativeButton("Batal") { _, _ -> }
 
             builder.show()
         }
