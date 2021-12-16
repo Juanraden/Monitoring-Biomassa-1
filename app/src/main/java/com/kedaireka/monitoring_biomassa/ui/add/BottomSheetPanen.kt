@@ -127,9 +127,7 @@ class BottomSheetPanen : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                 }
                 is NetworkResult.Loaded -> {
                     if (panenViewModel.inputKerambaId.value != null) {
-                        panenViewModel.fetchPanen(panenViewModel.inputKerambaId.value!!)
-
-                        biotaViewModel.fetchBiota(panenViewModel.inputKerambaId.value!!)
+                        biotaViewModel.fetchBiotaHistory(panenViewModel.inputKerambaId.value!!)
                     }
 
                     panenViewModel.donePostAddRequest()
