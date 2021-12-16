@@ -1,6 +1,9 @@
 package com.kedaireka.monitoring_biomassa.repository
 
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.asLiveData
 import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
 import com.kedaireka.monitoring_biomassa.data.network.PakanNetwork
 import com.kedaireka.monitoring_biomassa.data.network.container.PakanContainer
@@ -17,8 +20,12 @@ class PakanRepository @Inject constructor(
     private val pakanDAO: PakanDAO,
     private val sharedPreferences: SharedPreferences,
     private val monitoringService: MonitoringService,
+    private val pakanMapper: EntityMapper<Pakan, PakanDomain>,
     private val pakanNetworkMapper: EntityMapper<PakanNetwork, PakanDomain>
 ) {
+    val pakanList: LiveData<List<PakanDomain>> = Transformations.map(pakanDAO.getAll().asLiveData()){ list->
+        list.map { pakanMapper.mapFromEntity(it) }}
+
     suspend fun refreshPakan() {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
@@ -96,7 +103,7 @@ class PakanRepository @Inject constructor(
         val response: Response<PakanContainer> =
             monitoringService.updatePakanAsync(token, data).await()
 
-        if (response.code() != 201) {
+        if (response.code() != 200) {
             throw Exception(response.body()!!.message)
         }
     }

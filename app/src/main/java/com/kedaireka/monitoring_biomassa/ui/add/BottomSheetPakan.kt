@@ -9,17 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
-import androidx.fragment.app.viewModels
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kedaireka.monitoring_biomassa.R
+import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
+import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetPakanBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class BottomSheetPakan : BottomSheetDialogFragment() {
-    private val pakanViewModel by viewModels<PakanViewModel>()
+    private val pakanViewModel by activityViewModels<PakanViewModel>()
 
     private lateinit var binding: BottomSheetPakanBinding
 
@@ -39,6 +43,76 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
         binding.bottomSheetPakan = this@BottomSheetPakan
 
         binding.ivClose.setOnClickListener { dismiss() }
+
+        if (this.arguments != null) {
+            val pakanId = arguments!!.getInt("pakan_id")
+
+            pakanViewModel.loadPakanData(pakanId).observe(viewLifecycleOwner, {
+                bind(it)
+            })
+        }
+
+        setupObserver()
+    }
+
+    private fun bind(pakan: PakanDomain) {
+        binding.apply {
+            titleTv.text = pakan.jenis_pakan
+
+            namaPakanEt.setText(pakan.jenis_pakan, TextView.BufferType.SPANNABLE)
+
+            deskripsiPakanEt.setText(pakan.deskripsi, TextView.BufferType.SPANNABLE)
+
+            savePakanBtn.text = getString(R.string.update_jenis_pakan)
+        }
+    }
+
+    private fun setupObserver() {
+        pakanViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
+            when (result) {
+                is NetworkResult.Loading -> {
+                }
+                is NetworkResult.Loaded -> {
+
+                    pakanViewModel.fetchPakan()
+
+                    pakanViewModel.donePostAddRequest()
+
+                    this.dismiss()
+                }
+                is NetworkResult.Error -> {
+                    if (result.message != "") {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+
+        pakanViewModel.requestPutUpdateResult.observe(viewLifecycleOwner, { result ->
+            when (result) {
+                is NetworkResult.Loading -> {
+                }
+                is NetworkResult.Loaded -> {
+                    if (this@BottomSheetPakan.arguments != null) {
+                        val pakanId = this@BottomSheetPakan.arguments!!.getInt("pakan_id")
+
+                        pakanViewModel.updateLocalPakan(
+                            pakanId, binding.namaPakanEt.text.toString().trim(),
+                            binding.deskripsiPakanEt.text.toString().trim()
+                        )
+                    }
+
+                    pakanViewModel.donePutUpdateRequest()
+
+                    this.dismiss()
+                }
+                is NetworkResult.Error -> {
+                    if (result.message != "") {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
     }
 
     override fun onStart() {
@@ -52,28 +126,6 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
 
         behavior.peekHeight = 3000
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                    }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {
-                    }
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                    }
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
-            }
-
-        })
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -100,12 +152,19 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
                     namaPakanEt.text.toString().trim(),
                 )
             ) {
-                pakanViewModel.insertPakan(
-                    namaPakanEt.text.toString().trim(),
-                    deskripsiPakanEt.text.toString().trim()
-                )
+                if (this@BottomSheetPakan.arguments != null) {
+                    val pakanId = this@BottomSheetPakan.arguments!!.getInt("pakan_id")
 
-                dismiss()
+                    pakanViewModel.updatePakan(
+                        pakanId, namaPakanEt.text.toString().trim(),
+                        deskripsiPakanEt.text.toString().trim()
+                    )
+                } else {
+                    pakanViewModel.insertPakan(
+                        namaPakanEt.text.toString().trim(),
+                        deskripsiPakanEt.text.toString().trim()
+                    )
+                }
             } else {
                 if (TextUtils.isEmpty(namaPakanEt.text)) {
                     namaPakanEt.error = "Nama pakan harus diisi!"
