@@ -83,12 +83,12 @@ class BottomSheetActionBiota : BottomSheetAction() {
 
             builder.setMessage("Apa anda yakin untuk menghapus biota ini?")
 
-            builder.setPositiveButton("Ya") { dialog, id ->
+            builder.setPositiveButton("Ya") { _, _ ->
 
                 biotaViewModel.deleteBiota(biotaId)
             }
 
-            builder.setNegativeButton("Batal") { dialog, id -> }
+            builder.setNegativeButton("Batal") { _, _ -> }
 
             builder.show()
         }

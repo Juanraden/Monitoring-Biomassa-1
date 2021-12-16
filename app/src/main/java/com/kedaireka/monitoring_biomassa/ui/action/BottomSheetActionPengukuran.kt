@@ -57,13 +57,13 @@ class BottomSheetActionPengukuran:BottomSheetAction() {
 
             builder.setMessage("Apa anda yakin untuk menghapus data biota ini?")
 
-            builder.setPositiveButton("Ya") { dialog, id ->
+            builder.setPositiveButton("Ya") { _, _ ->
 
                 pengukuranViewModel.deletePengukuran(pengukuranId)
 
             }
 
-            builder.setNegativeButton("Batal") { dialog, id -> }
+            builder.setNegativeButton("Batal") { _, _ -> }
 
             builder.show()
         }
