@@ -41,6 +41,10 @@ class BiotaViewModel @Inject constructor(
     private val _requestDeleteResult = MutableLiveData<NetworkResult>()
     val requestDeleteResult: LiveData<NetworkResult> = _requestDeleteResult
 
+    fun doneToastException() {
+        _requestGetResult.value = NetworkResult.Error("")
+    }
+
     fun donePostAddRequest() {
         _requestPostAddResult.value = NetworkResult.Loading()
     }
@@ -58,6 +62,7 @@ class BiotaViewModel @Inject constructor(
             biotaDao.getById(id).asLiveData()
         ) { biotaMapper.mapFromEntity(it) }
     }
+
 
     fun setBiotaId(id: Int) {
         _loadedBiotaId.value = id
