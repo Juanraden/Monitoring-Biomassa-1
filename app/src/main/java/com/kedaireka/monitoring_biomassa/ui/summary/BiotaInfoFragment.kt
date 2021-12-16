@@ -1,7 +1,6 @@
 package com.kedaireka.monitoring_biomassa.ui.summary
 
 import android.annotation.SuppressLint
-import android.net.Network
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -71,7 +70,7 @@ class BiotaInfoFragment : Fragment() {
         }.observe(viewLifecycleOwner, { biota -> bind(biota) })
 
         Transformations.switchMap(biotaViewModel.loadedBiotaId) { biota_id ->
-            pengukuranViewModel.getAll(biota_id)
+            pengukuranViewModel.getAllBiotaData(biota_id)
         }.observe(viewLifecycleOwner, { list ->
             if (pengukuranViewModel.requestGetResult.value is NetworkResult.Loaded || pengukuranViewModel.requestGetResult.value is NetworkResult.Error) {
                 setupLineChart(list)

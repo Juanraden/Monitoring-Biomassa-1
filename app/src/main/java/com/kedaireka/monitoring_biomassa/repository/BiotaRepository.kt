@@ -104,8 +104,10 @@ class BiotaRepository @Inject constructor(
                 biotaDAO.insertAll(listBiota)
 
             } else {
-                if (response.body() != null) {
-                    throw  Exception(response.body()!!.message)
+                if (response.code() == 500){
+                    throw Exception("Internal Server Error")
+                } else {
+                    throw Exception(response.body()!!.message)
                 }
             }
         }
@@ -138,7 +140,13 @@ class BiotaRepository @Inject constructor(
             monitoringService.addBiotaAsync(token, data).await()
 
         if (response.code() != 201) {
-            throw Exception(response.body()!!.message)
+
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 
@@ -171,7 +179,13 @@ class BiotaRepository @Inject constructor(
             monitoringService.updateBiotaAsync(token, data).await()
 
         if (response.code() != 200) {
-            throw Exception(response.body()!!.message)
+
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 
@@ -190,7 +204,11 @@ class BiotaRepository @Inject constructor(
             monitoringService.deleteBiotaAsync(token, data).await()
 
         if (response.code() != 200) {
-            throw Exception(response.body()!!.message)
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 }

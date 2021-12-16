@@ -1,6 +1,9 @@
 package com.kedaireka.monitoring_biomassa.repository
 
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.asLiveData
 import com.kedaireka.monitoring_biomassa.data.domain.PengukuranDomain
 import com.kedaireka.monitoring_biomassa.data.network.PengukuranNetwork
 import com.kedaireka.monitoring_biomassa.data.network.container.PengukuranContainer
@@ -18,8 +21,14 @@ class PengukuranRepository @Inject constructor(
     private val pengukuranDAO: PengukuranDAO,
     private val monitoringService: MonitoringService,
     private val sharedPreferences: SharedPreferences,
+    private val pengukuranMapper: EntityMapper<Pengukuran, PengukuranDomain>,
     private val pengukuranNetworkMapper: EntityMapper<PengukuranNetwork, PengukuranDomain>
 ) {
+    fun getAllBiotaData(biota_id: Int): LiveData<List<PengukuranDomain>> =
+        Transformations.map(pengukuranDAO.getAll(biota_id).asLiveData()) { list ->
+            list.map { pengukuranMapper.mapFromEntity(it) }
+        }
+
     suspend fun refreshPengukuran(biotaId: Int) {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
@@ -48,8 +57,10 @@ class PengukuranRepository @Inject constructor(
 
                 pengukuranDAO.insertAll(listPengukuran)
             } else {
-                if (response.body() != null) {
-                    throw  Exception(response.body()!!.message)
+                if (response.code() == 500){
+                    throw Exception("Internal Server Error")
+                } else {
+                    throw Exception(response.body()!!.message)
                 }
             }
         }
@@ -78,7 +89,12 @@ class PengukuranRepository @Inject constructor(
             monitoringService.addPengukuranAsync(token, data).await()
 
         if (response.code() != 201) {
-            throw Exception(response.body()!!.message)
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 
@@ -97,7 +113,12 @@ class PengukuranRepository @Inject constructor(
             monitoringService.deletePengukuranAsync(token, data).await()
 
         if (response.code() != 200) {
-            throw Exception(response.body()!!.message)
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 }

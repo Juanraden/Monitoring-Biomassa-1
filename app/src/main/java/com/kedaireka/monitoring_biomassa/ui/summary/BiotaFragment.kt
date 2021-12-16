@@ -74,7 +74,7 @@ class BiotaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
 
-                        kerambaViewModel.doneToastException()
+                        biotaViewModel.doneToastException()
                     }
 
                     if (binding.swipeRefresh.isRefreshing) {

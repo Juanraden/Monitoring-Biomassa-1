@@ -1,13 +1,12 @@
 package com.kedaireka.monitoring_biomassa.ui.summary
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -27,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class BiotaHistoryFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
-    private val biotaViewModel by viewModels<BiotaViewModel>()
+    private val biotaViewModel by activityViewModels<BiotaViewModel>()
 
     private lateinit var binding: FragmentBiotaHistoryBinding
 
@@ -36,7 +35,7 @@ class BiotaHistoryFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentBiotaHistoryBinding.inflate(inflater, container, false)
 
@@ -88,7 +87,7 @@ class BiotaHistoryFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
 
-                        kerambaViewModel.doneToastException()
+                        biotaViewModel.doneToastException()
                     }
 
                     if (binding.swipeRefresh.isRefreshing) {

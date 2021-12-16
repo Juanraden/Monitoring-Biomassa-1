@@ -8,17 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.PanenDomain
-import com.kedaireka.monitoring_biomassa.database.entity.Panen
 import com.kedaireka.monitoring_biomassa.database.relation.PanenAndBiota
 import com.kedaireka.monitoring_biomassa.databinding.ListPanenBinding
-import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
-import javax.inject.Inject
 
 
-class PanenListAdapter: ListAdapter<PanenAndBiota, PanenListAdapter.ViewHolder>(DiffCallBack) {
-
-    @Inject lateinit var panenMapper: EntityMapper<Panen, PanenDomain>
+class PanenListAdapter : ListAdapter<PanenAndBiota, PanenListAdapter.ViewHolder>(DiffCallBack) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val withDataBinding: ListPanenBinding = DataBindingUtil.inflate(
@@ -38,7 +33,18 @@ class PanenListAdapter: ListAdapter<PanenAndBiota, PanenListAdapter.ViewHolder>(
     inner class ViewHolder(private val binding: ListPanenBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(panen: PanenAndBiota) {
-            val panenDomain: PanenDomain = panenMapper.mapFromEntity(panen.panen)
+            val entity = panen.panen
+
+            val panenDomain = PanenDomain(
+                activity_id = entity.activity_id,
+                tanggal_panen = entity.tanggal_panen,
+                panjang = entity.panjang,
+                bobot = entity.bobot,
+                jumlah_hidup = entity.jumlah_hidup,
+                jumlah_mati = entity.jumlah_mati,
+                biota_id = entity.biota_id,
+                keramba_id = entity.keramba_id
+            )
 
             with(binding) {
                 jenisBiotaTv.text = panen.biota.jenis_biota

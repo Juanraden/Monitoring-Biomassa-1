@@ -11,8 +11,8 @@ interface PanenDAO {
     suspend fun insertAll(listPanen: List<Panen>)
 
     @Transaction
-    @Query("SELECT * FROM panen")
-    fun getAllPanenAndBiota(): Flow<List<PanenAndBiota>>
+    @Query("SELECT * FROM panen WHERE keramba_id =:kerambaId")
+    fun getAllPanenAndBiota(kerambaId: Int): Flow<List<PanenAndBiota>>
 
     @Query("SELECT COUNT(*) FROM panen WHERE keramba_id =:kerambaId")
     fun getPanenCountFromKeramba(kerambaId: Int): Int

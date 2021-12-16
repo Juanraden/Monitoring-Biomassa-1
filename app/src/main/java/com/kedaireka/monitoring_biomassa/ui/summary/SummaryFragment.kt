@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Transformations
@@ -15,9 +16,11 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.SummaryFragmentTabAdapter
+import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentSummaryBinding
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
+import com.kedaireka.monitoring_biomassa.viewmodel.PanenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,6 +28,8 @@ class SummaryFragment : Fragment() {
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
     private val biotaViewModel by activityViewModels<BiotaViewModel>()
+
+    private val panenViewModel by activityViewModels<PanenViewModel>()
 
     private lateinit var binding: FragmentSummaryBinding
 
@@ -59,14 +64,15 @@ class SummaryFragment : Fragment() {
         }
     }
 
-    private fun setupTabLayout(){
+
+    private fun setupTabLayout() {
         val tabAdapter = SummaryFragmentTabAdapter(this)
 
         with(binding) {
             pager.adapter = tabAdapter
 
-            TabLayoutMediator(tabLayout, pager){tab, position->
-                when(position){
+            TabLayoutMediator(tabLayout, pager) { tab, position ->
+                when (position) {
                     0 -> tab.text = getString(R.string.info)
                     1 -> tab.text = getString(R.string.biota)
                     2 -> tab.text = getString(R.string.pakan)
@@ -76,8 +82,9 @@ class SummaryFragment : Fragment() {
         }
     }
 
-    private fun setupNavigation(){
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.settingsFragment))
+    private fun setupNavigation() {
+        val appBarConfiguration =
+            AppBarConfiguration(setOf(R.id.homeFragment, R.id.settingsFragment))
 
         binding.toolbarFragment.setupWithNavController(navController, appBarConfiguration)
 
@@ -86,7 +93,8 @@ class SummaryFragment : Fragment() {
         }
 
         Transformations.switchMap(
-            kerambaViewModel.loadedKerambaId){ id ->
+            kerambaViewModel.loadedKerambaId
+        ) { id ->
             kerambaViewModel.loadKerambaData(id)
         }.observe(viewLifecycleOwner, { keramba ->
             binding.toolbarFragment.title = keramba.nama_keramba

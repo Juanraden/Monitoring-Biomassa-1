@@ -44,10 +44,7 @@ class PengukuranViewModel @Inject constructor(
     private val _selectedBiotaId = MutableLiveData<Int>()
     val selectedBiotaId: LiveData<Int> = _selectedBiotaId
 
-    fun getAll(biota_id: Int): LiveData<List<PengukuranDomain>> =
-        Transformations.map(pengukuranDAO.getAll(biota_id).asLiveData()) { list ->
-            list.map { pengukuranMapper.mapFromEntity(it) }
-        }
+    fun getAllBiotaData(biota_id: Int): LiveData<List<PengukuranDomain>> = repository.getAllBiotaData(biota_id)
 
     fun selectBiotaId(biota_id: Int) {
         _selectedBiotaId.value = biota_id
