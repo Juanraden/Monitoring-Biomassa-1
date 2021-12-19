@@ -51,7 +51,9 @@ class PanenRepository @Inject constructor(
 
                 panenDAO.insertAll(listPanen)
             } else {
-                if (response.body() != null) {
+                if (response.code() == 500){
+                    throw Exception("Internal Server Error")
+                } else {
                     throw Exception(response.body()!!.message)
                 }
             }
@@ -87,7 +89,12 @@ class PanenRepository @Inject constructor(
             monitoringService.addPanenAsync(token, data).await()
 
         if (response.code() != 201){
-            throw Exception(response.body()!!.message)
+            if (response.code() == 500){
+                throw Exception("Internal Server Error")
+            } else {
+
+                throw Exception(response.body()!!.message)
+            }
         }
     }
 }
