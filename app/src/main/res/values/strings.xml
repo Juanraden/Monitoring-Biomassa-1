@@ -73,4 +73,5 @@
     <string name="jumlah_panen">Jumlah Panen (ekor)</string>
     <string name="banyaknya_biota">%1$s Biota</string>
     <string name="update_jenis_pakan">Update Jenis Pakan</string>
+    <string name="batal">batal</string>
 </resources>

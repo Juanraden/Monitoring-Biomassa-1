@@ -9,13 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PakanListAdapter
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentAddPakanBinding
-import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetAction
 import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetActionPakan
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPakan
 import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
@@ -35,7 +32,6 @@ class AddPakanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-
         binding = FragmentAddPakanBinding.inflate(inflater, container, false)
 
         navController = findNavController()
@@ -99,23 +95,42 @@ class AddPakanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun setupPakanList() {
-        val pakanListAdapter = PakanListAdapter {
-            if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
-                    "BottomSheetActionPakan"
-                ) == null
-            ) {
-                val bundle = Bundle()
+        val pakanListAdapter = PakanListAdapter(
+            // clickListener
+            {
+                if (childFragmentManager.findFragmentByTag("BottomSheetPakan") == null) {
+                    val bottomSheetPakan = BottomSheetPakan()
 
-                bundle.putInt("pakan_id", it.pakan_id)
+                    val bundle = Bundle()
 
-                val bottomSheetAction = BottomSheetActionPakan()
+                    bundle.putInt("pakan_id", it.pakan_id)
 
-                bottomSheetAction.arguments = bundle
+                    bottomSheetPakan.arguments = bundle
 
-                bottomSheetAction.show(childFragmentManager, "BottomSheetActionPakan")
+                    bottomSheetPakan.show(childFragmentManager, "BottomSheetPakan")
+                }
+            },
+
+            // longClickListener
+            {
+                if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
+                        "BottomSheetActionPakan"
+                    ) == null
+                ) {
+                    val bundle = Bundle()
+
+                    bundle.putInt("pakan_id", it.pakan_id)
+                    bundle.putBoolean("editState", true)
+
+                    val bottomSheetAction = BottomSheetActionPakan()
+
+                    bottomSheetAction.arguments = bundle
+
+                    bottomSheetAction.show(childFragmentManager, "BottomSheetActionPakan")
+                }
+                true
             }
-            true
-        }
+        )
 
         binding.pakanList.adapter = pakanListAdapter
 

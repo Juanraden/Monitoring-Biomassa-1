@@ -54,8 +54,10 @@ class BottomSheetActionPakan : BottomSheetAction() {
                 val bundle = Bundle()
 
                 val pakanId = arguments!!.getInt("pakan_id")
+                val editState = arguments!!.getBoolean("editState")
 
                 bundle.putInt("pakan_id", pakanId)
+                bundle.putBoolean("editState", editState)
 
                 bottomSheetPakan.arguments = bundle
 
