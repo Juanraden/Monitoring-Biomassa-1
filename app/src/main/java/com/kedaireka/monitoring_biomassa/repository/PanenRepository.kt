@@ -141,7 +141,7 @@ class PanenRepository @Inject constructor(
                     .setDescription("")
                     .setDestinationInExternalPublicDir(
                         directory.toString(),
-                        "Digital-Report-${name.replace("/[^0-9a-zA-Z]+/".toRegex(), "-")}.xlsx"
+                        "Digital-Report-${name.replace("[^a-zA-Z]+".toRegex(), "-")}.xlsx"
                     )
             }
 
