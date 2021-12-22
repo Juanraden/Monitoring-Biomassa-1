@@ -89,7 +89,7 @@ class KerambaListAdapter(
 
             return results
         }
-
+        @Suppress("UNCHECKED_CAST")
         override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
             submitList(p1?.values as MutableList<KerambaDomain>)
         }

@@ -96,4 +96,8 @@ class PanenViewModel @Inject constructor(
     ): Boolean {
         return !(_inputBiotaId.value == null || _inputKerambaId.value == null || panjang.isBlank() || bobot.isBlank() || jumlahHidup.isBlank() || jumlahMati.isBlank() || tanggal.isBlank())
     }
+
+    fun downloadExportedData(kerambaId: Int, name: String){
+        repository.downloadExporedData(kerambaId, name)
+    }
 }
