@@ -1,6 +1,11 @@
 package com.kedaireka.monitoring_biomassa.repository
 
+import android.annotation.SuppressLint
+import android.app.DownloadManager
 import android.content.SharedPreferences
+import android.database.Cursor
+import android.net.Uri
+import android.os.Environment
 import com.kedaireka.monitoring_biomassa.data.domain.PanenDomain
 import com.kedaireka.monitoring_biomassa.data.network.PanenNetwork
 import com.kedaireka.monitoring_biomassa.data.network.container.PanenContainer
@@ -12,12 +17,14 @@ import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
+import java.io.File
 import javax.inject.Inject
 
 class PanenRepository @Inject constructor(
     private val panenDAO: PanenDAO,
     private val monitoringService: MonitoringService,
     private val sharedPreferences: SharedPreferences,
+    private val downloadManager: DownloadManager,
     private val panenNetworkMapper: EntityMapper<PanenNetwork, PanenDomain>
 ) {
     suspend fun refreshPanen(kerambaId: Int) {
@@ -107,5 +114,49 @@ class PanenRepository @Inject constructor(
                 }
             }
         }
+    }
+
+    @SuppressLint("Range")
+    fun downloadExporedData(kerambaId: Int, name: String) {
+
+        val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
+
+        val token: String = sharedPreferences.getString("token", null) ?: ""
+
+        val directory = File(Environment.DIRECTORY_DOCUMENTS)
+
+        if (!directory.exists()) {
+            directory.mkdirs()
+        }
+
+        val downloadUri =
+            Uri.parse("https://web-biomassa.my.id/api/v1/export?keramba_id=${kerambaId}&user_id=${userId}")
+
+        val request =
+            DownloadManager.Request(downloadUri).addRequestHeader("api-key", token).apply {
+                setNotificationVisibility((DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED))
+
+                setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+                    .setAllowedOverRoaming(false)
+                    .setDescription("")
+                    .setDestinationInExternalPublicDir(
+                        directory.toString(),
+                        "Digital-Report-${name.replace("/[^0-9a-zA-Z]+/".toRegex(), "-")}.xlsx"
+                    )
+            }
+
+        val downloadId = downloadManager.enqueue(request)
+        val query = DownloadManager.Query().setFilterById(downloadId)
+        Thread {
+            var downloading = true
+            while (downloading) {
+                val cursor: Cursor = downloadManager.query(query)
+                cursor.moveToFirst()
+                if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
+                    downloading = false
+                }
+                cursor.close()
+            }
+        }.start()
     }
 }
