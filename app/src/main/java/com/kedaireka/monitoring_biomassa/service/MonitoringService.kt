@@ -2,6 +2,7 @@ package com.kedaireka.monitoring_biomassa.service
 
 import com.kedaireka.monitoring_biomassa.data.network.container.*
 import kotlinx.coroutines.Deferred
+import okhttp3.internal.http.hasBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -16,42 +17,42 @@ interface MonitoringService {
     // keramba section
     @GET("keramba")
     fun getKerambaListAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @Query("user_id") userId: Int
     ): Deferred<Response<KerambaContainer>>
 
     @FormUrlEncoded
     @POST("keramba")
     fun addKerambaAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<KerambaContainer>>
 
     @FormUrlEncoded
-    @POST("keramba/update")
+    @PUT("keramba")
     fun updateKerambaAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<KerambaContainer>>
 
     @FormUrlEncoded
-    @POST("keramba/delete")
+    @HTTP(method = "DELETE", path = "keramba", hasBody = true)
     fun deleteKerambaAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<KerambaContainer>>
 
     // biota section
     @GET("biota")
     fun getBiotaListAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @Query("user_id") userId: Int,
         @Query("keramba_id") kerambaId: Int
     ): Deferred<Response<BiotaContainer>>
 
     @GET("history")
     fun getHistoryBiotaListAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @Query("user_id") userId: Int,
         @Query("keramba_id") kerambaId: Int
     ): Deferred<Response<BiotaContainer>>
@@ -59,56 +60,56 @@ interface MonitoringService {
     @FormUrlEncoded
     @POST("biota")
     fun addBiotaAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<BiotaContainer>>
 
     @FormUrlEncoded
-    @POST("biota/update")
+    @PUT("biota")
     fun updateBiotaAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<BiotaContainer>>
 
     @FormUrlEncoded
-    @POST("biota/delete")
+    @HTTP(method = "DELETE", path = "biota", hasBody = true)
     fun deleteBiotaAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<BiotaContainer>>
 
     // pakan section
     @GET("pakan")
     fun getPakanListAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @Query("user_id") userId: Int
     ): Deferred<Response<PakanContainer>>
 
     @FormUrlEncoded
     @POST("pakan")
     fun addPakanAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<PakanContainer>>
 
     @FormUrlEncoded
-    @POST("pakan/update")
+    @PUT("pakan")
     fun updatePakanAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<PakanContainer>>
 
     @FormUrlEncoded
-    @POST("pakan/delete")
+    @HTTP(method = "DELETE", path = "pakan", hasBody = true)
     fun deletePakanAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<PakanContainer>>
 
     //pengukuran section
     @GET("pengukuran")
     fun getPengukuranListAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @Query("user_id") userId: Int,
         @Query("biota_id") biotaId: Int
     ): Deferred<Response<PengukuranContainer>>
@@ -116,28 +117,28 @@ interface MonitoringService {
     @FormUrlEncoded
     @POST("pengukuran")
     fun addPengukuranAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<PengukuranContainer>>
 
     @FormUrlEncoded
-    @POST("pengukuran/update")
+    @PUT("pengukuran")
     fun updatePengukuranAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<PengukuranContainer>>
 
     @FormUrlEncoded
-    @POST("pengukuran/delete")
+    @HTTP(method = "DELETE", path = "pengukuran", hasBody = true)
     fun deletePengukuranAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<PengukuranContainer>>
 
     //feeding
     @GET("feeding")
     fun getFeedingListAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @Query("user_id") userId: Int,
         @Query("keramba_id") kerambaId: Int
     ): Deferred<Response<FeedingContainer>>
@@ -145,7 +146,7 @@ interface MonitoringService {
     @FormUrlEncoded
     @POST("feeding")
     fun addFeedingAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<FeedingContainer>>
 
@@ -165,7 +166,7 @@ interface MonitoringService {
 
     @GET("feeding/detail")
     fun getFeedingDetailListAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @Query("user_id") userId: Int,
         @Query("keramba_id") kerambaId: Int,
         @Query("activity_id") activityId: Int
@@ -174,14 +175,14 @@ interface MonitoringService {
     @FormUrlEncoded
     @POST("feeding/detail")
     fun addFeedingDetailAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<FeedingDetailContainer>>
 
     //panen
     @GET("panen")
     fun getPanenListAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @Query("user_id") userId: Int,
         @Query("keramba_id") kerambaId: Int
     ): Deferred<Response<PanenContainer>>
@@ -189,7 +190,7 @@ interface MonitoringService {
     @FormUrlEncoded
     @POST("panen")
     fun addPanenAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<PanenContainer>>
 }
