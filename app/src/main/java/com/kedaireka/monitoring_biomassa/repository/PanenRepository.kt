@@ -133,7 +133,7 @@ class PanenRepository @Inject constructor(
             Uri.parse("https://web-biomassa.my.id/api/v1/export?keramba_id=${kerambaId}&user_id=${userId}")
 
         val request =
-            DownloadManager.Request(downloadUri).addRequestHeader("api-key", token).apply {
+            DownloadManager.Request(downloadUri).addRequestHeader("Authorization", token).apply {
                 setNotificationVisibility((DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED))
 
                 setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
