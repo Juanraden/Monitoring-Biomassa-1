@@ -149,6 +149,20 @@ interface MonitoringService {
         @FieldMap data: Map<String, String>
     ): Deferred<Response<FeedingContainer>>
 
+    @FormUrlEncoded
+    @POST("feeding/update")
+    fun updateFeedingAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<FeedingContainer>>
+
+    @FormUrlEncoded
+    @POST("feeding/delete")
+    fun deleteFeedingAsync(
+        @Header("api-key") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<FeedingContainer>>
+
     @GET("feeding/detail")
     fun getFeedingDetailListAsync(
         @Header("api-key") token: String,
