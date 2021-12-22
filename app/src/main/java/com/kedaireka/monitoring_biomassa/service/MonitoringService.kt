@@ -2,7 +2,6 @@ package com.kedaireka.monitoring_biomassa.service
 
 import com.kedaireka.monitoring_biomassa.data.network.container.*
 import kotlinx.coroutines.Deferred
-import okhttp3.internal.http.hasBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -151,16 +150,16 @@ interface MonitoringService {
     ): Deferred<Response<FeedingContainer>>
 
     @FormUrlEncoded
-    @POST("feeding/update")
+    @PUT("feeding")
     fun updateFeedingAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<FeedingContainer>>
 
     @FormUrlEncoded
-    @POST("feeding/delete")
+    @HTTP(method = "DELETE", path = "feeding", hasBody = true)
     fun deleteFeedingAsync(
-        @Header("api-key") token: String,
+        @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<FeedingContainer>>
 
