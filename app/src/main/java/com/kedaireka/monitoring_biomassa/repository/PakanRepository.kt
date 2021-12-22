@@ -53,10 +53,16 @@ class PakanRepository @Inject constructor(
                 pakanDAO.insertAll(listPakan)
 
             } else {
-                if (response.code() == 500){
-                    throw Exception("Internal Server Error")
-                } else {
-                    throw Exception(response.body()!!.message)
+                when {
+                    response.code() == 500 -> {
+                        throw Exception("Internal Server Error")
+                    }
+                    response.code() == 401 -> {
+                        throw Exception("Unauthorized")
+                    }
+                    else -> {
+                        throw Exception("HTTP Request Failed")
+                    }
                 }
             }
         }
@@ -81,11 +87,16 @@ class PakanRepository @Inject constructor(
             monitoringService.addPakanAsync(token, data).await()
 
         if (response.code() != 201) {
-            if (response.code() == 500){
-                throw Exception("Internal Server Error")
-            } else {
-
-                throw Exception(response.body()!!.message)
+            when {
+                response.code() == 500 -> {
+                    throw Exception("Internal Server Error")
+                }
+                response.code() == 401 -> {
+                    throw Exception("Unauthorized")
+                }
+                else -> {
+                    throw Exception("HTTP Request Failed")
+                }
             }
         }
     }
@@ -111,11 +122,16 @@ class PakanRepository @Inject constructor(
             monitoringService.updatePakanAsync(token, data).await()
 
         if (response.code() != 200) {
-            if (response.code() == 500){
-                throw Exception("Internal Server Error")
-            } else {
-
-                throw Exception(response.body()!!.message)
+            when {
+                response.code() == 500 -> {
+                    throw Exception("Internal Server Error")
+                }
+                response.code() == 401 -> {
+                    throw Exception("Unauthorized")
+                }
+                else -> {
+                    throw Exception("HTTP Request Failed")
+                }
             }
         }
     }
@@ -135,11 +151,16 @@ class PakanRepository @Inject constructor(
             monitoringService.deletePakanAsync(token, data).await()
 
         if (response.code() != 200) {
-            if (response.code() == 500){
-                throw Exception("Internal Server Error")
-            } else {
-
-                throw Exception(response.body()!!.message)
+            when {
+                response.code() == 500 -> {
+                    throw Exception("Internal Server Error")
+                }
+                response.code() == 401 -> {
+                    throw Exception("Unauthorized")
+                }
+                else -> {
+                    throw Exception("HTTP Request Failed")
+                }
             }
         }
     }

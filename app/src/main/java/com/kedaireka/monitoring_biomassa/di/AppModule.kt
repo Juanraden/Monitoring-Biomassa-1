@@ -1,5 +1,6 @@
 package com.kedaireka.monitoring_biomassa.di
 
+import android.app.DownloadManager
 import android.content.Context
 import android.content.SharedPreferences
 import dagger.Module
@@ -17,5 +18,11 @@ object AppModule {
     @Singleton
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences{
         return context.getSharedPreferences("user_login_preferences", Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDownloadManager(@ApplicationContext context: Context): DownloadManager{
+        return context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     }
 }

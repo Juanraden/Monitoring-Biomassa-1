@@ -65,8 +65,16 @@ class BiotaRepository @Inject constructor(
                 biotaDAO.insertAll(listBiota)
 
             } else {
-                if (response.body() != null) {
-                    throw  Exception(response.body()!!.message)
+                when {
+                    response.code() == 500 -> {
+                        throw Exception("Internal Server Error")
+                    }
+                    response.code() == 401 -> {
+                        throw Exception("Unauthorized")
+                    }
+                    else -> {
+                        throw Exception("HTTP Request Failed")
+                    }
                 }
             }
         }
@@ -104,10 +112,16 @@ class BiotaRepository @Inject constructor(
                 biotaDAO.insertAll(listBiota)
 
             } else {
-                if (response.code() == 500){
-                    throw Exception("Internal Server Error")
-                } else {
-                    throw Exception(response.body()!!.message)
+                when {
+                    response.code() == 500 -> {
+                        throw Exception("Internal Server Error")
+                    }
+                    response.code() == 401 -> {
+                        throw Exception("Unauthorized")
+                    }
+                    else -> {
+                        throw Exception("HTTP Request Failed")
+                    }
                 }
             }
         }
@@ -141,11 +155,16 @@ class BiotaRepository @Inject constructor(
 
         if (response.code() != 201) {
 
-            if (response.code() == 500){
-                throw Exception("Internal Server Error")
-            } else {
-
-                throw Exception(response.body()!!.message)
+            when {
+                response.code() == 500 -> {
+                    throw Exception("Internal Server Error")
+                }
+                response.code() == 401 -> {
+                    throw Exception("Unauthorized")
+                }
+                else -> {
+                    throw Exception("HTTP Request Failed")
+                }
             }
         }
     }
@@ -180,11 +199,16 @@ class BiotaRepository @Inject constructor(
 
         if (response.code() != 200) {
 
-            if (response.code() == 500){
-                throw Exception("Internal Server Error")
-            } else {
-
-                throw Exception(response.body()!!.message)
+            when {
+                response.code() == 500 -> {
+                    throw Exception("Internal Server Error")
+                }
+                response.code() == 401 -> {
+                    throw Exception("Unauthorized")
+                }
+                else -> {
+                    throw Exception("HTTP Request Failed")
+                }
             }
         }
     }
@@ -204,10 +228,16 @@ class BiotaRepository @Inject constructor(
             monitoringService.deleteBiotaAsync(token, data).await()
 
         if (response.code() != 200) {
-            if (response.code() == 500){
-                throw Exception("Internal Server Error")
-            } else {
-                throw Exception(response.body()!!.message)
+            when {
+                response.code() == 500 -> {
+                    throw Exception("Internal Server Error")
+                }
+                response.code() == 401 -> {
+                    throw Exception("Unauthorized")
+                }
+                else -> {
+                    throw Exception("HTTP Request Failed")
+                }
             }
         }
     }
