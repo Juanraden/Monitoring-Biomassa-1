@@ -57,10 +57,16 @@ class PengukuranRepository @Inject constructor(
 
                 pengukuranDAO.insertAll(listPengukuran)
             } else {
-                if (response.code() == 500){
-                    throw Exception("Internal Server Error")
-                } else {
-                    throw Exception(response.body()!!.message)
+                when {
+                    response.code() == 500 -> {
+                        throw Exception("Internal Server Error")
+                    }
+                    response.code() == 401 -> {
+                        throw Exception("Unauthorized")
+                    }
+                    else -> {
+                        throw Exception("HTTP Request Failed")
+                    }
                 }
             }
         }
@@ -89,11 +95,16 @@ class PengukuranRepository @Inject constructor(
             monitoringService.addPengukuranAsync(token, data).await()
 
         if (response.code() != 201) {
-            if (response.code() == 500){
-                throw Exception("Internal Server Error")
-            } else {
-
-                throw Exception(response.body()!!.message)
+            when {
+                response.code() == 500 -> {
+                    throw Exception("Internal Server Error")
+                }
+                response.code() == 401 -> {
+                    throw Exception("Unauthorized")
+                }
+                else -> {
+                    throw Exception("HTTP Request Failed")
+                }
             }
         }
     }
@@ -113,11 +124,16 @@ class PengukuranRepository @Inject constructor(
             monitoringService.deletePengukuranAsync(token, data).await()
 
         if (response.code() != 200) {
-            if (response.code() == 500){
-                throw Exception("Internal Server Error")
-            } else {
-
-                throw Exception(response.body()!!.message)
+            when {
+                response.code() == 500 -> {
+                    throw Exception("Internal Server Error")
+                }
+                response.code() == 401 -> {
+                    throw Exception("Unauthorized")
+                }
+                else -> {
+                    throw Exception("HTTP Request Failed")
+                }
             }
         }
     }

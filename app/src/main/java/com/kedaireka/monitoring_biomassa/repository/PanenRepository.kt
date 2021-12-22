@@ -51,16 +51,22 @@ class PanenRepository @Inject constructor(
 
                 panenDAO.insertAll(listPanen)
             } else {
-                if (response.code() == 500){
-                    throw Exception("Internal Server Error")
-                } else {
-                    throw Exception(response.body()!!.message)
+                when {
+                    response.code() == 500 -> {
+                        throw Exception("Internal Server Error")
+                    }
+                    response.code() == 401 -> {
+                        throw Exception("Unauthorized")
+                    }
+                    else -> {
+                        throw Exception("HTTP Request Failed")
+                    }
                 }
             }
         }
     }
 
-    suspend fun addPanen(panen: PanenDomain){
+    suspend fun addPanen(panen: PanenDomain) {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -88,12 +94,17 @@ class PanenRepository @Inject constructor(
         val response: Response<PanenContainer> =
             monitoringService.addPanenAsync(token, data).await()
 
-        if (response.code() != 201){
-            if (response.code() == 500){
-                throw Exception("Internal Server Error")
-            } else {
-
-                throw Exception(response.body()!!.message)
+        if (response.code() != 201) {
+            when {
+                response.code() == 500 -> {
+                    throw Exception("Internal Server Error")
+                }
+                response.code() == 401 -> {
+                    throw Exception("Unauthorized")
+                }
+                else -> {
+                    throw Exception("HTTP Request Failed")
+                }
             }
         }
     }
