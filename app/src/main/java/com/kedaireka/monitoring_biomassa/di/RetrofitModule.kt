@@ -43,7 +43,7 @@ object RetrofitModule {
     @Provides
     fun provideRetrofit(moshi: Moshi, client: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
-            .baseUrl("https://web-biomassa.000webhostapp.com/api/v1/")
+            .baseUrl("https://web-biomassa.my.id/api/v1/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(client)
