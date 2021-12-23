@@ -18,6 +18,7 @@ import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetPakanBinding
+import com.kedaireka.monitoring_biomassa.util.observeOnce
 import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -50,7 +51,7 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
             val pakanId = arguments!!.getInt("pakan_id")
             editState = arguments!!.getBoolean("editState")
 
-            pakanViewModel.loadPakanData(pakanId).observe(viewLifecycleOwner, {
+            pakanViewModel.loadPakanData(pakanId).observeOnce(viewLifecycleOwner, {
                 bind(it)
             })
 
@@ -217,7 +218,7 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
                 batalEditBtn.setOnClickListener {
                     editState = false
                     val pakanId = arguments!!.getInt("pakan_id")
-                    pakanViewModel.loadPakanData(pakanId).observe(viewLifecycleOwner, {
+                    pakanViewModel.loadPakanData(pakanId).observeOnce(viewLifecycleOwner, {
                         bind(it)
                     })
                     checkEditState(editState)
