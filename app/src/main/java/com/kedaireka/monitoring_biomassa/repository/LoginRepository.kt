@@ -30,7 +30,14 @@ class LoginRepository @Inject constructor(
 
             Result.Success(loggedInUser)
         } else {
-            Result.Error(Exception(response.body()!!.message))
+            when {
+                response.code() == 500 -> {
+                    Result.Error(Exception("Internal Server Error"))
+                }
+                else -> {
+                    Result.Error(Exception("HTTP Request Failed"))
+                }
+            }
         }
     }
 
@@ -63,7 +70,7 @@ class LoginRepository @Inject constructor(
         // @see https://developer.android.com/training/articles/keystore
     }
 
-    fun logOutUser(){
+    fun logOutUser() {
         sharedPreferences.edit().clear().apply()
     }
 }
