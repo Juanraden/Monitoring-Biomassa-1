@@ -1,24 +1,23 @@
 package com.kedaireka.monitoring_biomassa.ui.summary
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.adapter.PanenListAdapter
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentPanenBinding
-import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPakan
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPanen
+import com.kedaireka.monitoring_biomassa.util.observeOnce
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.PanenViewModel
@@ -39,7 +38,7 @@ class PanenFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentPanenBinding.inflate(inflater, container, false)
 
@@ -53,9 +52,9 @@ class PanenFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         fetchBiotaHistory()
 
-        setupObserver()
-
         setupPanenList()
+
+        setupObserver()
 
         binding.swipeRefresh.setOnRefreshListener(this)
     }
@@ -85,6 +84,11 @@ class PanenFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     fetchPanen()
                 }
                 is NetworkResult.Error -> {
+                    if (binding.swipeRefresh.isRefreshing) {
+                        binding.swipeRefresh.isRefreshing = false
+                    }
+
+                    binding.panenList.visibility = View.VISIBLE
                 }
             }
         })
@@ -92,6 +96,9 @@ class PanenFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         panenViewModel.requestGetResult.observe(viewLifecycleOwner, { result ->
             when (result) {
                 is NetworkResult.Loading -> {
+                    if (!binding.swipeRefresh.isRefreshing) {
+                        binding.swipeRefresh.isRefreshing = true
+                    }
                 }
                 is NetworkResult.Loaded -> {
                     if (binding.swipeRefresh.isRefreshing) {
@@ -144,16 +151,17 @@ class PanenFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         Transformations.switchMap(kerambaViewModel.loadedKerambaId) { kerambaId ->
             panenViewModel.getlistPanen(kerambaId)
         }.observe(viewLifecycleOwner, {
+            panenListAdapter.submitList(it)
 
-            if (panenViewModel.requestGetResult.value is NetworkResult.Loaded || panenViewModel.requestGetResult.value is NetworkResult.Error) {
-                panenListAdapter.submitList(it)
+            if (panenListAdapter.itemCount > 0) {
+                binding.panenList.smoothScrollToPosition(0)
             }
         })
+
+
     }
 
     override fun onRefresh() {
-        if (kerambaViewModel.loadedKerambaId.value != null) {
-            panenViewModel.fetchPanen(kerambaViewModel.loadedKerambaId.value!!)
-        }
+        fetchBiotaHistory()
     }
 }

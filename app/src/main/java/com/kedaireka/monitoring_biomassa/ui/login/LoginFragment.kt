@@ -23,14 +23,16 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
     private val loginViewModel by viewModels<LoginViewModel>()
+
     private lateinit var binding: FragmentLoginBinding
+
     private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         this.binding = FragmentLoginBinding.inflate(inflater, container, false)
 
@@ -41,10 +43,43 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
 
+        binding.loginFragment = this@LoginFragment
+
+        setupObserver()
+
+        binding.password.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                startLogin()
+            }
+            false
+        }
+    }
+
+    fun startLogin() {
+        val loginButton = this.binding.login
+
+        val loadingProgressBar = this.binding.loading
+
         val usernameEditText = this.binding.username
+
         val passwordEditText = this.binding.password
+
+        loginButton.isEnabled = false
+
+        loadingProgressBar.visibility = View.VISIBLE
+
+        loginViewModel.login(
+            usernameEditText.text.toString(),
+            passwordEditText.text.toString()
+        )
+
+        hideKeyBoard()
+    }
+
+    private fun setupObserver() {
         val loginButton = this.binding.login
         val loadingProgressBar = this.binding.loading
 
@@ -56,7 +91,7 @@ class LoginFragment : Fragment() {
 
                     loadingProgressBar.visibility = View.GONE
 
-                    if (!loginButton.isEnabled){
+                    if (!loginButton.isEnabled) {
                         loginButton.isEnabled = true
                     }
                 }
@@ -66,48 +101,24 @@ class LoginFragment : Fragment() {
                     navController.navigate(LoginFragmentDirections.actionLoginFragmentToNavBarFragment())
                 }
             })
-
-        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(
-                    usernameEditText.text.toString(),
-                    passwordEditText.text.toString()
-                )
-            }
-            false
-        }
-
-        loginButton.setOnClickListener {
-            loginButton.isEnabled = false
-
-            loadingProgressBar.visibility = View.VISIBLE
-
-            loginViewModel.login(
-                usernameEditText.text.toString(),
-                passwordEditText.text.toString()
-            )
-
-            hideKeyBoard()
-        }
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome) + ' ' +  model.displayName
-        // TODO : initiate successful logged in experience
-        val appContext = context?.applicationContext ?: return
-        Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
+        val welcome = getString(R.string.welcome) + ' ' + model.displayName
+        Toast.makeText(requireContext(), welcome, Toast.LENGTH_LONG).show()
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
-        val appContext = context?.applicationContext ?: return
-        Toast.makeText(appContext, errorString, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), errorString, Toast.LENGTH_LONG).show()
     }
+
     private fun hideKeyBoard() {
         if (activity!!.currentFocus == null) {
             return
         }
         val inputMethodManager =
             activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
         inputMethodManager.hideSoftInputFromWindow(activity!!.currentFocus!!.windowToken, 0)
     }
 }
