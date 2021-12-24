@@ -18,6 +18,7 @@ import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetPakanBinding
+import com.kedaireka.monitoring_biomassa.util.observeOnce
 import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,6 +27,8 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
     private val pakanViewModel by activityViewModels<PakanViewModel>()
 
     private lateinit var binding: BottomSheetPakanBinding
+
+    private var editState: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,13 +49,18 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
 
         if (this.arguments != null) {
             val pakanId = arguments!!.getInt("pakan_id")
+            editState = arguments!!.getBoolean("editState")
 
-            pakanViewModel.loadPakanData(pakanId).observe(viewLifecycleOwner, {
+            pakanViewModel.loadPakanData(pakanId).observeOnce(viewLifecycleOwner, {
                 bind(it)
             })
+
+            checkEditState(editState)
         }
 
         setupObserver()
+
+        switchEditButton()
     }
 
     private fun bind(pakan: PakanDomain) {
@@ -62,8 +70,6 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
             namaPakanEt.setText(pakan.jenis_pakan, TextView.BufferType.SPANNABLE)
 
             deskripsiPakanEt.setText(pakan.deskripsi, TextView.BufferType.SPANNABLE)
-
-            savePakanBtn.text = getString(R.string.update_jenis_pakan)
         }
     }
 
@@ -199,5 +205,53 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
 
     private fun isEntryValid(jenis_pakan: String): Boolean {
         return pakanViewModel.isEntryValid(jenis_pakan)
+    }
+
+    fun switchEditButton() {
+        if (this.arguments != null) {
+            binding.apply {
+                savePakanBtn.setOnClickListener {
+                    editState = true
+                    checkEditState(editState)
+                }
+
+                batalEditBtn.setOnClickListener {
+                    editState = false
+                    val pakanId = arguments!!.getInt("pakan_id")
+                    pakanViewModel.loadPakanData(pakanId).observeOnce(viewLifecycleOwner, {
+                        bind(it)
+                    })
+                    checkEditState(editState)
+                }
+            }
+        } else {
+            binding.savePakanBtn.setOnClickListener {
+                savePakan()
+            }
+        }
+    }
+
+    private fun checkEditState(editState: Boolean) {
+        if (!editState) {
+            binding.apply {
+                namaPakanEt.isEnabled = false
+                deskripsiPakanEt.isEnabled = false
+
+                savePakanBtn.text = getString(R.string.edit)
+
+                savePakanBtn.visibility = View.VISIBLE
+                batalEditBtn.visibility = View.GONE
+                saveEditBtn.visibility = View.GONE
+            }
+        } else {
+            binding.apply {
+                namaPakanEt.isEnabled = true
+                deskripsiPakanEt.isEnabled = true
+
+                savePakanBtn.visibility = View.GONE
+                batalEditBtn.visibility = View.VISIBLE
+                saveEditBtn.visibility = View.VISIBLE
+            }
+        }
     }
 }
