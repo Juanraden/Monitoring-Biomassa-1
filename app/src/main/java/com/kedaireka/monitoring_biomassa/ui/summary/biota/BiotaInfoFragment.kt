@@ -1,4 +1,4 @@
-package com.kedaireka.monitoring_biomassa.ui.summary
+package com.kedaireka.monitoring_biomassa.ui.summary.biota
 
 import android.annotation.SuppressLint
 import android.os.Bundle

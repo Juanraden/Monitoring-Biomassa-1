@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/layout_padding"
-            tools:context=".ui.summary.InfoFragment">
+            tools:context=".ui.summary.keramba.InfoFragment">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/info_keramba_card"

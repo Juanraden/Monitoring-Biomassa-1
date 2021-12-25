@@ -15,7 +15,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PakanRepository @Inject constructor(
     private val pakanDAO: PakanDAO,
     private val sharedPreferences: SharedPreferences,
@@ -25,6 +27,34 @@ class PakanRepository @Inject constructor(
 ) {
     val pakanList: LiveData<List<PakanDomain>> = Transformations.map(pakanDAO.getAll().asLiveData()){ list->
         list.map { pakanMapper.mapFromEntity(it) }}
+
+    fun loadPakanData(pakanId: Int): LiveData<PakanDomain> = Transformations.map(
+        pakanDAO.getById(pakanId).asLiveData()
+    ) { pakanMapper.mapFromEntity(it) }
+
+    suspend fun updateLocalPakan(pakanId: Int, jenis_pakan: String, deskripsi: String){
+        withContext(Dispatchers.IO) {
+            pakanDAO.updateOne(
+                Pakan(
+                    pakan_id = pakanId,
+                    jenis_pakan = jenis_pakan,
+                    deskripsi = deskripsi
+                )
+            )
+        }
+    }
+
+    suspend fun deleteLocalPakan(pakanId: Int){
+        withContext(Dispatchers.IO) {
+            pakanDAO.deleteOne(pakanId)
+        }
+    }
+
+    suspend fun deleteAllLocalPakan(){
+        withContext(Dispatchers.IO) {
+            pakanDAO.deleteAllPakan()
+        }
+    }
 
     suspend fun refreshPakan() {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0

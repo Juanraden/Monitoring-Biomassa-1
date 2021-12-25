@@ -3,22 +3,15 @@ package com.kedaireka.monitoring_biomassa.viewmodel
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.PengukuranDomain
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
-import com.kedaireka.monitoring_biomassa.database.dao.PengukuranDAO
-import com.kedaireka.monitoring_biomassa.database.entity.Pengukuran
 import com.kedaireka.monitoring_biomassa.repository.PengukuranRepository
-import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class PengukuranViewModel @Inject constructor(
-    private val pengukuranDAO: PengukuranDAO,
-    private val repository: PengukuranRepository,
-    private val pengukuranMapper: EntityMapper<Pengukuran, PengukuranDomain>
+    private val repository: PengukuranRepository
 ) : ViewModel() {
     private val _requestGetResult = MutableLiveData<NetworkResult>()
     val requestGetResult: LiveData<NetworkResult> = _requestGetResult
@@ -42,7 +35,6 @@ class PengukuranViewModel @Inject constructor(
     }
 
     private val _selectedBiotaId = MutableLiveData<Int>()
-    val selectedBiotaId: LiveData<Int> = _selectedBiotaId
 
     fun getAllBiotaData(biota_id: Int): LiveData<List<PengukuranDomain>> = repository.getAllBiotaData(biota_id)
 
@@ -104,6 +96,6 @@ class PengukuranViewModel @Inject constructor(
     }
 
     fun deleteLocalPengukuran(pengukuranId: Int){
-        viewModelScope.launch { withContext(Dispatchers.IO){ pengukuranDAO.deleteOne(pengukuranId) } }
+        viewModelScope.launch { repository.deleteLocalPengukuran(pengukuranId) }
     }
 }

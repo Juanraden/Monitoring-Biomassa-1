@@ -16,7 +16,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class BiotaRepository @Inject constructor(
     private val biotaDAO: BiotaDAO,
     private val monitoringService: MonitoringService,
@@ -28,6 +30,46 @@ class BiotaRepository @Inject constructor(
         Transformations.map(biotaDAO.getAll(id).asLiveData()) { list ->
             list.map { biotaMapper.mapFromEntity(it) }
         }
+
+    fun getAllBiotaHistory(id: Int): LiveData<List<BiotaDomain>> =
+        Transformations.map(biotaDAO.getAllHistory(id).asLiveData()) { list ->
+            list.map { biotaMapper.mapFromEntity(it) }
+        }
+
+    suspend fun updateLocalBiota(
+        biotaId: Int,
+        jenis: String,
+        bobot: String,
+        panjang: String,
+        jumlah: String,
+        kerambaId: Int,
+        tanggal: Long,
+    ) {
+        withContext(Dispatchers.IO) {
+            biotaDAO.updateOne(
+                Biota(
+                    biota_id = biotaId,
+                    jenis_biota = jenis,
+                    bobot = bobot.toDouble(),
+                    panjang = panjang.toDouble(),
+                    jumlah_bibit = jumlah.toInt(),
+                    tanggal_tebar = tanggal,
+                    keramba_id = kerambaId,
+                    tanggal_panen = 0L
+                )
+            )
+        }
+    }
+
+    suspend fun deleteLocalBiota(biotaId: Int){
+        withContext(Dispatchers.IO) { biotaDAO.deleteOne(biotaId) }
+    }
+
+    fun loadBiotaData(id: Int): LiveData<BiotaDomain> {
+        return Transformations.map(
+            biotaDAO.getById(id).asLiveData()
+        ) { biotaMapper.mapFromEntity(it) }
+    }
 
     suspend fun refreshBiota(kerambaId: Int) {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0

@@ -10,6 +10,7 @@ import com.kedaireka.monitoring_biomassa.data.network.KerambaNetwork
 import com.kedaireka.monitoring_biomassa.data.network.container.KerambaContainer
 import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
+import com.kedaireka.monitoring_biomassa.database.relation.KerambaAndBiota
 import com.kedaireka.monitoring_biomassa.service.MonitoringService
 import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
@@ -17,7 +18,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class KerambaRepository @Inject constructor(
     private val kerambaDAO: KerambaDAO,
     private val sharedPreferences: SharedPreferences,
@@ -29,6 +32,35 @@ class KerambaRepository @Inject constructor(
         Transformations.map(kerambaDAO.getAll().asLiveData()) { list ->
             list.map { kerambaMapper.mapFromEntity(it) }
         }
+
+    val kerambaAndBiotaList: LiveData<List<KerambaAndBiota>> = kerambaDAO.getKerambaAndBiota().asLiveData()
+
+    suspend fun updateLocalKeramba(id: Int, nama: String, ukuran: String, tanggal: Long){
+        withContext(Dispatchers.IO) {
+            kerambaDAO.updateOne(
+                Keramba(
+                    keramba_id = id,
+                    nama_keramba = nama,
+                    ukuran = ukuran.toDouble(),
+                    tanggal_install = tanggal
+                )
+            )
+        }
+    }
+
+    suspend fun deleteLocalKeramba(kerambaId: Int) {
+        withContext(Dispatchers.IO) { kerambaDAO.deleteOne(kerambaId) }
+    }
+
+    suspend fun deleteAllLocalKeramba(){
+        withContext(Dispatchers.IO){
+            kerambaDAO.deleteAllKeramba()
+        }
+    }
+
+    fun getKerambaById(kerambaId: Int): LiveData<KerambaDomain>{
+        return Transformations.map(kerambaDAO.getById(kerambaId).asLiveData()){ kerambaMapper.mapFromEntity(it) }
+    }
 
     suspend fun refreshKeramba() {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0

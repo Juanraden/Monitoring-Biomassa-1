@@ -1,4 +1,4 @@
-package com.kedaireka.monitoring_biomassa.ui.summary
+package com.kedaireka.monitoring_biomassa.ui.summary.biota
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +18,7 @@ import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaBinding
 import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetActionBiota
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetBiota
+import com.kedaireka.monitoring_biomassa.ui.summary.SummaryFragmentDirections
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint

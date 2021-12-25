@@ -1,19 +1,22 @@
 package com.kedaireka.monitoring_biomassa.viewmodel
 
 import androidx.lifecycle.*
-import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
+import com.kedaireka.monitoring_biomassa.data.domain.FeedingDomain
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
-import com.kedaireka.monitoring_biomassa.repository.PakanRepository
+import com.kedaireka.monitoring_biomassa.repository.FeedingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PakanViewModel @Inject constructor(
-    private val repository: PakanRepository
+class FeedingViewModel @Inject constructor(
+    private val repository: FeedingRepository
 ) : ViewModel() {
-    private val _init = MutableLiveData(true)
-    val init: LiveData<Boolean> = _init
+
+    private val _loadedFeedingId = MutableLiveData<Int>()
+
+    private val _selectedKerambaId = MutableLiveData<Int>()
+    val selectedKerambaId: LiveData<Int> = _selectedKerambaId
 
     private val _requestGetResult = MutableLiveData<NetworkResult>()
     val requestGetResult: LiveData<NetworkResult> = _requestGetResult
@@ -43,42 +46,57 @@ class PakanViewModel @Inject constructor(
         _requestDeleteResult.value = NetworkResult.Loading()
     }
 
-    fun loadPakanData(pakanId: Int): LiveData<PakanDomain> = repository.loadPakanData(pakanId)
+    fun loadFeedingData(id: Int): LiveData<FeedingDomain> = repository.loadFeedingData(id)
 
-    fun getAll(): LiveData<List<PakanDomain>> = repository.pakanList
+    fun setFeedingId(id: Int) {
+        _loadedFeedingId.value = id
+    }
 
-    fun insertPakan(jenis_pakan: String, deskripsi: String = "") {
-        _requestPostAddResult.value = NetworkResult.Loading()
+    fun getAllFeeding(id: Int): LiveData<List<FeedingDomain>> = repository.getAllFeeding(id)
 
+    fun selectKerambaId(id: Int) {
+        _selectedKerambaId.value = id
+    }
 
+    fun isEntryValid(
+        tanggal: Long
+    ): Boolean {
+        return !(_selectedKerambaId.value == null || tanggal == 0L)
+    }
+
+    fun insertFeeding(tanggal: Long) {
         viewModelScope.launch {
+            _requestPostAddResult.value = NetworkResult.Loading()
+
             try {
-                repository.addPakan(
-                    PakanDomain(
-                        pakan_id = 0,
-                        jenis_pakan = jenis_pakan,
-                        deskripsi = deskripsi
+                repository.addFeeding(
+                    FeedingDomain(
+                        feeding_id = 0,
+                        keramba_id = _selectedKerambaId.value!!,
+                        tanggal_feeding = tanggal
                     )
                 )
 
                 _requestPostAddResult.value = NetworkResult.Loaded()
+
             } catch (e: Exception) {
                 _requestPostAddResult.value = NetworkResult.Error(e.message.toString())
             }
-
         }
     }
 
-    fun updatePakan(pakanId: Int, jenis_pakan: String, deskripsi: String = "") {
+    fun updateFeeding(
+        feedingId: Int,
+        tanggal: Long
+    ) {
         _requestPutUpdateResult.value = NetworkResult.Loading()
-
         viewModelScope.launch {
             try {
-                repository.updatePakan(
-                    PakanDomain(
-                        pakan_id = pakanId,
-                        jenis_pakan = jenis_pakan,
-                        deskripsi = deskripsi
+                repository.updateFeeding(
+                    FeedingDomain(
+                        feeding_id = feedingId,
+                        keramba_id = _selectedKerambaId.value!!,
+                        tanggal_feeding = tanggal
                     )
                 )
 
@@ -89,61 +107,49 @@ class PakanViewModel @Inject constructor(
         }
     }
 
-    fun deletePakan(pakanId: Int) {
+    fun updateLocalFeeding(
+        feedingId: Int,
+        tanggal: Long
+    ) {
+        viewModelScope.launch {
+            repository.updateLocalFeeding(
+                feedingId,
+                selectedKerambaId.value!!,
+                tanggal
+            )
+        }
+    }
+
+    fun deleteFeeding(feedingId: Int) {
         _requestDeleteResult.value = NetworkResult.Loading()
 
         viewModelScope.launch {
             try {
-                repository.deletePakan(pakanId)
+                repository.deleteFeeding(feedingId)
 
                 _requestDeleteResult.value = NetworkResult.Loaded()
             } catch (e: Exception) {
-                _requestDeleteResult.value = NetworkResult.Error(e.message.toString())
+                _requestPutUpdateResult.value = NetworkResult.Error(e.message.toString())
             }
         }
+
     }
 
-    fun updateLocalPakan(pakanId: Int, jenis_pakan: String, deskripsi: String = "") {
-        viewModelScope.launch { repository.updateLocalPakan(pakanId, jenis_pakan, deskripsi)}
+    fun deleteLocalFeeding(feedingId: Int) {
+        viewModelScope.launch { repository.deleteLocalFeeding(feedingId) }
     }
 
-    fun deleteLocalPakan(pakanId: Int) {
-        viewModelScope.launch { repository.deleteLocalPakan(pakanId) }
-    }
-
-    fun isEntryValid(jenis_pakan: String): Boolean = jenis_pakan.isNotBlank()
-
-    fun fetchPakan() {
+    fun fetchFeeding(kerambaId: Int) {
         _requestGetResult.value = NetworkResult.Loading()
 
         viewModelScope.launch {
             try {
-                repository.refreshPakan()
+                repository.refreshFeeding(kerambaId)
 
                 _requestGetResult.value = NetworkResult.Loaded()
             } catch (e: Exception) {
                 _requestGetResult.value = NetworkResult.Error(e.message.toString())
             }
-
         }
-    }
-
-    private fun doneInit() {
-        _init.value = true
-    }
-
-    fun startInit() {
-        fetchPakan()
-
-        doneInit()
-    }
-
-    fun restartInit() {
-        _init.value = false
-    }
-
-
-    init {
-        startInit()
     }
 }

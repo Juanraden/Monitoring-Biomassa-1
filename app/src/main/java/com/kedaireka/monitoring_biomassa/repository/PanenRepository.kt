@@ -6,11 +6,14 @@ import android.content.SharedPreferences
 import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import com.kedaireka.monitoring_biomassa.data.domain.PanenDomain
 import com.kedaireka.monitoring_biomassa.data.network.PanenNetwork
 import com.kedaireka.monitoring_biomassa.data.network.container.PanenContainer
 import com.kedaireka.monitoring_biomassa.database.dao.PanenDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Panen
+import com.kedaireka.monitoring_biomassa.database.relation.PanenAndBiota
 import com.kedaireka.monitoring_biomassa.service.MonitoringService
 import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
@@ -19,7 +22,9 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PanenRepository @Inject constructor(
     private val panenDAO: PanenDAO,
     private val monitoringService: MonitoringService,
@@ -27,6 +32,10 @@ class PanenRepository @Inject constructor(
     private val downloadManager: DownloadManager,
     private val panenNetworkMapper: EntityMapper<PanenNetwork, PanenDomain>
 ) {
+
+    fun getlistPanen(kerambaId: Int): LiveData<List<PanenAndBiota>> =
+        panenDAO.getAllPanenAndBiota(kerambaId).asLiveData()
+
     suspend fun refreshPanen(kerambaId: Int) {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 

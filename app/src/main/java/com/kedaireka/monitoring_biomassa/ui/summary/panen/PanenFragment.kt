@@ -1,4 +1,4 @@
-package com.kedaireka.monitoring_biomassa.ui.summary
+package com.kedaireka.monitoring_biomassa.ui.summary.panen
 
 import android.os.Bundle
 import android.view.LayoutInflater

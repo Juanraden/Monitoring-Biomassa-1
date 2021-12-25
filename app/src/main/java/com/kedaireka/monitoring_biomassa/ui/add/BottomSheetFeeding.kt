@@ -14,28 +14,26 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kedaireka.monitoring_biomassa.R
-import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
+import com.kedaireka.monitoring_biomassa.data.domain.FeedingDomain
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
-import com.kedaireka.monitoring_biomassa.databinding.BottomSheetBiotaBinding
+import com.kedaireka.monitoring_biomassa.databinding.BottomSheetFeedingBinding
 import com.kedaireka.monitoring_biomassa.ui.DatePickerFragment
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
-import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
+import com.kedaireka.monitoring_biomassa.viewmodel.FeedingViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
-
-// parameter: biotaId: Int?, kerambaId: Int
 @AndroidEntryPoint
-class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelectedListener,
+class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelectedListener,
     DatePickerDialog.OnDateSetListener {
 
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
-    private val biotaViewModel by activityViewModels<BiotaViewModel>()
+    private val feedingViewModel by activityViewModels<FeedingViewModel>()
 
-    private lateinit var binding: BottomSheetBiotaBinding
+    private lateinit var binding: BottomSheetFeedingBinding
 
     private lateinit var mapKeramba: Map<String, Int>
 
@@ -44,7 +42,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = BottomSheetBiotaBinding.inflate(inflater)
+        binding = BottomSheetFeedingBinding.inflate(inflater)
 
         return binding.root
     }
@@ -54,15 +52,15 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
 
         binding.ivClose.setOnClickListener { dismiss() }
 
-        binding.bottomSheetBiota = this@BottomSheetBiota
+        binding.bottomSheetFeeding = this@BottomSheetFeeding
 
         setupDropdown()
 
-        if (this@BottomSheetBiota.arguments != null) {
-            val biotaId: Int = this@BottomSheetBiota.arguments!!.getInt("biota_id")
+        if (this@BottomSheetFeeding.arguments != null) {
+            val feedingId: Int = this@BottomSheetFeeding.arguments!!.getInt("feeding_id")
 
-            if (biotaId > 0) {
-                biotaViewModel.loadBiotaData(biotaId).observe(viewLifecycleOwner, { bind(it) })
+            if (feedingId > 0) {
+                feedingViewModel.loadFeedingData(feedingId).observe(viewLifecycleOwner, { bind(it) })
             }
         }
 
@@ -70,16 +68,16 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
     }
 
     private fun setupObserver() {
-        biotaViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
+        feedingViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
             when (result) {
                 is NetworkResult.Loading -> {
                 }
                 is NetworkResult.Loaded -> {
 
-                    if (biotaViewModel.selectedKerambaId.value != null) {
-                        biotaViewModel.fetchBiota(biotaViewModel.selectedKerambaId.value!!)
+                    if (feedingViewModel.selectedKerambaId.value != null) {
+                        feedingViewModel.fetchFeeding(feedingViewModel.selectedKerambaId.value!!)
 
-                        biotaViewModel.donePostAddRequest()
+                        feedingViewModel.donePostAddRequest()
                     }
 
                     this.dismiss()
@@ -92,23 +90,19 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
             }
         })
 
-        biotaViewModel.requestPutUpdateResult.observe(viewLifecycleOwner, { result ->
+        feedingViewModel.requestPutUpdateResult.observe(viewLifecycleOwner, { result ->
             when (result) {
                 is NetworkResult.Loading -> {
                 }
                 is NetworkResult.Loaded -> {
-                    if (this@BottomSheetBiota.arguments != null) {
-                        val biotaId: Int = this@BottomSheetBiota.arguments!!.getInt("biota_id")
+                    if (this@BottomSheetFeeding.arguments != null) {
+                        val feedingId: Int = this@BottomSheetFeeding.arguments!!.getInt("feeding_id")
 
-                        biotaViewModel.updateLocalBiota(
-                            biotaId,
-                            binding.jenisBiotaEt.text.toString().trim(),
-                            binding.bobotBibitEt.text.toString(),
-                            binding.panjangBibitEt.text.toString(),
-                            binding.jumlahBibitEt.text.toString(),
-                            if (binding.tanggalTebarEt.text.toString() != "") {
+                        feedingViewModel.updateLocalFeeding(
+                            feedingId,
+                            if (binding.tanggalFeedingEt.text.toString() != "") {
                                 convertStringToDateLong(
-                                    binding.tanggalTebarEt.text.toString(),
+                                    binding.tanggalFeedingEt.text.toString(),
                                     "EEEE dd-MMM-yyyy"
                                 )
                             } else {
@@ -116,7 +110,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                             }
                         )
 
-                        biotaViewModel.donePutUpdateRequest()
+                        feedingViewModel.donePutUpdateRequest()
                     }
                     this.dismiss()
                 }
@@ -129,27 +123,16 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         })
     }
 
-    private fun bind(biotaDomain: BiotaDomain) {
+    private fun bind(feedingDomain: FeedingDomain) {
         binding.apply {
-            titleTv.text = biotaDomain.jenis_biota
+            titleTv.text = convertLongToDateString(feedingDomain.tanggal_feeding, "EEEE dd-MMM-yyyy")
 
-            jenisBiotaEt.setText(biotaDomain.jenis_biota, TextView.BufferType.SPANNABLE)
-
-            bobotBibitEt.setText(biotaDomain.bobot.toString(), TextView.BufferType.SPANNABLE)
-
-            panjangBibitEt.setText(biotaDomain.panjang.toString(), TextView.BufferType.SPANNABLE)
-
-            jumlahBibitEt.setText(
-                biotaDomain.jumlah_bibit.toString(),
-                TextView.BufferType.SPANNABLE
-            )
-
-            binding.tanggalTebarEt.setText(
-                convertLongToDateString(biotaDomain.tanggal_tebar, "EEEE dd-MMM-yyyy"),
+            binding.tanggalFeedingEt.setText(
+                convertLongToDateString(feedingDomain.tanggal_feeding, "EEEE dd-MMM-yyyy"),
                 TextView.BufferType.EDITABLE
             )
 
-            saveBiotaBtn.text = getString(R.string.edit_biota)
+            saveFeedingBtn.text = getString(R.string.edit_biota)
         }
     }
 
@@ -209,34 +192,25 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         }
     }
 
-
-    fun saveBiota() {
+    fun saveFeeding() {
         binding.apply {
             if (isEntryValid(
-                    jenisBiotaEt.text.toString().trim(),
-                    bobotBibitEt.text.toString(),
-                    panjangBibitEt.text.toString(),
-                    jumlahBibitEt.text.toString(),
-                    if (tanggalTebarEt.text.toString() != "") {
-                        convertStringToDateLong(tanggalTebarEt.text.toString(), "EEEE dd-MMM-yyyy")
+                    if (tanggalFeedingEt.text.toString() != "") {
+                        convertStringToDateLong(tanggalFeedingEt.text.toString(), "EEEE dd-MMM-yyyy")
                     } else {
                         0L
                     }
                 )
             ) {
-                if (this@BottomSheetBiota.arguments != null) {
-                    val biotaId: Int = this@BottomSheetBiota.arguments!!.getInt("biota_id")
+                if (this@BottomSheetFeeding.arguments != null) {
+                    val feedingId: Int = this@BottomSheetFeeding.arguments!!.getInt("feeding_id")
 
-                    if (biotaId > 0) {
-                        biotaViewModel.updateBiota(
-                            biotaId,
-                            jenisBiotaEt.text.toString().trim(),
-                            bobotBibitEt.text.toString(),
-                            panjangBibitEt.text.toString(),
-                            jumlahBibitEt.text.toString(),
-                            if (tanggalTebarEt.text.toString() != "") {
+                    if (feedingId > 0) {
+                        feedingViewModel.updateFeeding(
+                            feedingId,
+                            if (tanggalFeedingEt.text.toString() != "") {
                                 convertStringToDateLong(
-                                    tanggalTebarEt.text.toString(),
+                                    tanggalFeedingEt.text.toString(),
                                     "EEEE dd-MMM-yyyy"
                                 )
                             } else {
@@ -244,14 +218,10 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                             }
                         )
                     } else {
-                        biotaViewModel.insertBiota(
-                            jenisBiotaEt.text.toString().trim(),
-                            bobotBibitEt.text.toString(),
-                            panjangBibitEt.text.toString(),
-                            jumlahBibitEt.text.toString(),
-                            if (tanggalTebarEt.text.toString() != "") {
+                        feedingViewModel.insertFeeding(
+                            if (tanggalFeedingEt.text.toString() != "") {
                                 convertStringToDateLong(
-                                    tanggalTebarEt.text.toString(),
+                                    tanggalFeedingEt.text.toString(),
                                     "EEEE dd-MMM-yyyy"
                                 )
                             } else {
@@ -260,14 +230,10 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                         )
                     }
                 } else {
-                    biotaViewModel.insertBiota(
-                        jenisBiotaEt.text.toString().trim(),
-                        bobotBibitEt.text.toString(),
-                        panjangBibitEt.text.toString(),
-                        jumlahBibitEt.text.toString(),
-                        if (tanggalTebarEt.text.toString() != "") {
+                    feedingViewModel.insertFeeding(
+                        if (tanggalFeedingEt.text.toString() != "") {
                             convertStringToDateLong(
-                                tanggalTebarEt.text.toString(),
+                                tanggalFeedingEt.text.toString(),
                                 "EEEE dd-MMM-yyyy"
                             )
                         } else {
@@ -276,24 +242,8 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                     )
                 }
             } else {
-                if (TextUtils.isEmpty(jenisBiotaEt.text)) {
-                    jenisBiotaEt.error = "Jenis biota harus diisi!"
-                }
-
-                if (TextUtils.isEmpty(bobotBibitEt.text)) {
-                    bobotBibitEt.error = "Bobot bibit harus diisi!"
-                }
-
-                if (TextUtils.isEmpty(panjangBibitEt.text)) {
-                    panjangBibitEt.error = "Panjang bibit harus diisi!"
-                }
-
-                if (TextUtils.isEmpty(jumlahBibitEt.text)) {
-                    jumlahBibitEt.error = "Banyaknya bibit harus diisi!"
-                }
-
-                if (TextUtils.isEmpty(tanggalTebarEt.text)) {
-                    tanggalTebarEt.error = "Tanggal tebar harus diketahui!"
+                if (TextUtils.isEmpty(tanggalFeedingEt.text)) {
+                    tanggalFeedingEt.error = "Tanggal pemberian pakan harus diketahui!"
                 }
             }
         }
@@ -306,13 +256,9 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
     }
 
     private fun isEntryValid(
-        jenis: String,
-        bobot: String,
-        panjang: String,
-        jumlah: String,
-        tanggal: Long,
+        tanggal: Long
     ): Boolean {
-        return biotaViewModel.isEntryValid(jenis, bobot, panjang, jumlah, tanggal)
+        return feedingViewModel.isEntryValid(tanggal)
     }
 
     private fun setupDropdown() {
@@ -330,8 +276,8 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
 
             binding.kerambaDropdown.adapter = arrayAdapter
 
-            if (this@BottomSheetBiota.arguments != null) {
-                val kerambaId: Int = this@BottomSheetBiota.arguments!!.getInt("keramba_id")
+            if (this@BottomSheetFeeding.arguments != null) {
+                val kerambaId: Int = this@BottomSheetFeeding.arguments!!.getInt("keramba_id")
 
                 val kerambaIdlist: List<Int> = mapKeramba.values.toList()
 
@@ -341,7 +287,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
 
             }
 
-            binding.kerambaDropdown.onItemSelectedListener = this@BottomSheetBiota
+            binding.kerambaDropdown.onItemSelectedListener = this@BottomSheetFeeding
         })
     }
 
@@ -349,7 +295,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         val namaKeramba = parent.getItemAtPosition(pos)
 
         if (namaKeramba != null) {
-            biotaViewModel.selectkerambaId(mapKeramba[namaKeramba]!!)
+            feedingViewModel.selectKerambaId(mapKeramba[namaKeramba]!!)
         }
     }
 
@@ -359,7 +305,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
         val selectedDate: Calendar = Calendar.getInstance()
         selectedDate.set(year, month, dayOfMonth)
 
-        binding.tanggalTebarEt.setText(
+        binding.tanggalFeedingEt.setText(
             convertLongToDateString(selectedDate.timeInMillis, "EEEE dd-MMM-yyyy"),
             TextView.BufferType.EDITABLE
         )

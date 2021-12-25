@@ -3,7 +3,6 @@ package com.kedaireka.monitoring_biomassa.viewmodel
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.PanenDomain
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
-import com.kedaireka.monitoring_biomassa.database.dao.PanenDAO
 import com.kedaireka.monitoring_biomassa.database.relation.PanenAndBiota
 import com.kedaireka.monitoring_biomassa.repository.PanenRepository
 import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
@@ -13,7 +12,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PanenViewModel @Inject constructor(
-    private val panenDAO: PanenDAO,
     private val repository: PanenRepository
 ) : ViewModel() {
     private val _requestGetResult = MutableLiveData<NetworkResult>()
@@ -30,14 +28,12 @@ class PanenViewModel @Inject constructor(
         _requestPostAddResult.value = NetworkResult.Loading()
     }
 
-    fun getlistPanen(kerambaId: Int): LiveData<List<PanenAndBiota>> =
-        panenDAO.getAllPanenAndBiota(kerambaId).asLiveData()
+    fun getlistPanen(kerambaId: Int): LiveData<List<PanenAndBiota>> = repository.getlistPanen(kerambaId)
 
     private val _inputKerambaId = MutableLiveData<Int>()
     val inputKerambaId: LiveData<Int> = _inputKerambaId
 
     private val _inputBiotaId = MutableLiveData<Int>()
-    val inputBiotaId: LiveData<Int> = _inputBiotaId
 
     fun selectKeramba(id: Int) {
         _inputKerambaId.value = id

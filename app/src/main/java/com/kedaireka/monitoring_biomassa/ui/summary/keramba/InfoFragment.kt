@@ -1,4 +1,4 @@
-package com.kedaireka.monitoring_biomassa.ui.summary
+package com.kedaireka.monitoring_biomassa.ui.summary.keramba
 
 import android.graphics.Color
 import android.os.Bundle
@@ -22,6 +22,7 @@ import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentInfoBinding
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetKeramba
+import com.kedaireka.monitoring_biomassa.ui.summary.SummaryFragmentDirections
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel

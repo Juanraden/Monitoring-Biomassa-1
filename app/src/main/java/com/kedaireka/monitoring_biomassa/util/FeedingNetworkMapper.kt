@@ -2,8 +2,9 @@ package com.kedaireka.monitoring_biomassa.util
 
 import com.kedaireka.monitoring_biomassa.data.domain.FeedingDomain
 import com.kedaireka.monitoring_biomassa.data.network.FeedingNetwork
+import javax.inject.Inject
 
-class FeedingNetworkMapper: EntityMapper<FeedingNetwork, FeedingDomain> {
+class FeedingNetworkMapper @Inject constructor(): EntityMapper<FeedingNetwork, FeedingDomain> {
     override fun mapFromEntity(entity: FeedingNetwork): FeedingDomain {
         return FeedingDomain(
             feeding_id = entity.feeding_id.toInt(),
