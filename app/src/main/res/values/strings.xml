@@ -74,4 +74,7 @@
     <string name="banyaknya_biota">%1$s Biota</string>
     <string name="update_jenis_pakan">Update Jenis Pakan</string>
     <string name="batal">batal</string>
+    <string name="ukuran_tebar">Ukuran Tebar</string>
+    <string name="jam_pemberian_pakan">Jam Pemberian Pakan</string>
+    <string name="tambah_detail_pemberian_pakan">Tambah Detail Pemberian Pakan</string>
 </resources>
