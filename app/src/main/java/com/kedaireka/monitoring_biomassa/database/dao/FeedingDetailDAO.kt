@@ -3,6 +3,7 @@ package com.kedaireka.monitoring_biomassa.database.dao
 import androidx.room.*
 import com.kedaireka.monitoring_biomassa.database.entity.Feeding
 import com.kedaireka.monitoring_biomassa.database.entity.FeedingDetail
+import com.kedaireka.monitoring_biomassa.database.relation.FeedingDetailAndPakan
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -13,6 +14,16 @@ interface FeedingDetailDAO {
     @Update
     suspend fun updateOne(feeding: Feeding)
 
-    @Query("SELECT * FROM feeding_detail WHERE feeding_id =:feeding_id ORDER BY waktu_feeding DESC LIMIT 10")
-    fun getAll(feeding_id: Int): Flow<List<FeedingDetail>>
+    @Query("SELECT * FROM feeding_detail WHERE feeding_id =:feedingId ORDER BY waktu_feeding")
+    fun getAll(feedingId: Int): Flow<List<FeedingDetail>>
+
+    @Transaction
+    @Query("SELECT * FROM feeding_detail WHERE feeding_id =:feedingId ORDER BY waktu_feeding")
+    fun getAllDetailAndPakan(feedingId: Int): Flow<List<FeedingDetailAndPakan>>
+
+    @Query("SELECT COUNT(*) FROM feeding_detail WHERE feeding_id=:feedingId")
+    fun getDetailCountFromFeeding(feedingId: Int): Int
+
+    @Query("DELETE FROM feeding_detail WHERE feeding_id =:feedingId")
+    suspend fun deleteDetailFromFeeding(feedingId: Int)
 }
