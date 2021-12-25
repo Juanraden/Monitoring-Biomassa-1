@@ -62,6 +62,11 @@ abstract class MapperModule {
     ): EntityMapper<Feeding, FeedingDomain>
 
     @Binds
+    abstract fun bindFeedingNetworkMapper(
+        feedingNetworkMapper: FeedingNetworkMapper
+    ): EntityMapper<FeedingNetwork, FeedingDomain>
+
+    @Binds
     abstract fun bindFeedingDetailMapper(
         feedingDetailMapper: FeedingDetailMapper
     ): EntityMapper<FeedingDetail, FeedingDetailDomain>
