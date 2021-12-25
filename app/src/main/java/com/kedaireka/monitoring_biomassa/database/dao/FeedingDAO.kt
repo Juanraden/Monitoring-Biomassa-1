@@ -15,9 +15,18 @@ interface FeedingDAO {
     @Update
     suspend fun updateOne(feeding: Feeding)
 
-    @Query("SELECT * FROM feeding WHERE feeding_id =:feeding_id ORDER BY tanggal_feeding DESC LIMIT 10")
-    fun getAll(feeding_id: Int): Flow<List<Feeding>>
+    @Query("SELECT * FROM feeding WHERE keramba_id=:kerambaId ORDER BY tanggal_feeding DESC")
+    fun getAll(kerambaId: Int): Flow<List<Feeding>>
 
-    @Query("SELECT * FROM feeding WHERE feeding_id =:feeding_id")
-    fun getById(feeding_id: Int): Flow<Feeding>
+    @Query("SELECT * FROM feeding WHERE feeding_id =:feedingId")
+    fun getById(feedingId: Int): Flow<Feeding>
+
+    @Query("SELECT COUNT(*) FROM feeding WHERE keramba_id =:kerambaId")
+    fun getFeedingCountFromKeramba(kerambaId: Int): Int
+
+    @Query("DELETE FROM feeding WHERE keramba_id =:kerambaId")
+    suspend fun deleteFeedingFromKeramba(kerambaId: Int)
+
+    @Query("DELETE FROM feeding WHERE feeding_id =:feedingId")
+    suspend fun deleteOne(feedingId: Int)
 }
