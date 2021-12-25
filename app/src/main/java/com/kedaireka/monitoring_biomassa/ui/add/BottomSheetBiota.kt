@@ -25,6 +25,8 @@ import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+
+// parameter: biotaId: Int?, kerambaId: Int
 @AndroidEntryPoint
 class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelectedListener,
     DatePickerDialog.OnDateSetListener {
