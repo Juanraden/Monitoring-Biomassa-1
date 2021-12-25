@@ -27,13 +27,29 @@
         <action
             android:id="@+id/action_summaryFragment_to_biotaTabFragment"
             app:destination="@id/biotaTabFragment" />
+        <action
+            android:id="@+id/action_summaryFragment_to_feedingDetailFragment"
+            app:destination="@id/feedingDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/biotaHistoryFragment"
-        android:name="com.kedaireka.monitoring_biomassa.ui.summary.BiotaHistoryFragment"
+        android:name="com.kedaireka.monitoring_biomassa.ui.summary.keramba.BiotaHistoryFragment"
         android:label="@string/riwayat_biota" />
     <fragment
         android:id="@+id/biotaTabFragment"
-        android:name="com.kedaireka.monitoring_biomassa.ui.summary.BiotaTabFragment"
+        android:name="com.kedaireka.monitoring_biomassa.ui.summary.biota.BiotaTabFragment"
         android:label="Biota Summary" />
+    <fragment
+        android:id="@+id/feedingDetailFragment"
+        android:name="com.kedaireka.monitoring_biomassa.ui.summary.pakan.FeedingDetailFragment"
+        android:label="FeedingDetailFragment" >
+        <argument
+            android:name="kerambaId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="feedingId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>

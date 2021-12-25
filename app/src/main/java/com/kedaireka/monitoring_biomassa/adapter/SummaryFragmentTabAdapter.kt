@@ -2,10 +2,10 @@ package com.kedaireka.monitoring_biomassa.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.kedaireka.monitoring_biomassa.ui.summary.BiotaFragment
-import com.kedaireka.monitoring_biomassa.ui.summary.InfoFragment
-import com.kedaireka.monitoring_biomassa.ui.summary.PakanFragment
-import com.kedaireka.monitoring_biomassa.ui.summary.PanenFragment
+import com.kedaireka.monitoring_biomassa.ui.summary.biota.BiotaFragment
+import com.kedaireka.monitoring_biomassa.ui.summary.keramba.InfoFragment
+import com.kedaireka.monitoring_biomassa.ui.summary.pakan.FeedingFragment
+import com.kedaireka.monitoring_biomassa.ui.summary.panen.PanenFragment
 
 
 class SummaryFragmentTabAdapter constructor(fragment: Fragment): FragmentStateAdapter(fragment) {
@@ -16,7 +16,7 @@ class SummaryFragmentTabAdapter constructor(fragment: Fragment): FragmentStateAd
         return when (position){
             0 -> InfoFragment()
             1 -> BiotaFragment()
-            2 -> PakanFragment()
+            2 -> FeedingFragment()
             else -> PanenFragment()
         }
     }

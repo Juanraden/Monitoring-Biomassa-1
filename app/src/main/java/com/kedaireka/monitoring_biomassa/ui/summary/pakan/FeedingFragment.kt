@@ -1,4 +1,4 @@
-package com.kedaireka.monitoring_biomassa.ui.summary
+package com.kedaireka.monitoring_biomassa.ui.summary.pakan
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,33 +12,33 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.kedaireka.monitoring_biomassa.adapter.BiotaListAdapter
+import com.kedaireka.monitoring_biomassa.adapter.FeedingListAdapter
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
-import com.kedaireka.monitoring_biomassa.databinding.FragmentBiotaBinding
-import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetActionBiota
-import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetBiota
-import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
+import com.kedaireka.monitoring_biomassa.databinding.FragmentPakanBinding
+import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetActionFeeding
+import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetFeeding
+import com.kedaireka.monitoring_biomassa.ui.summary.SummaryFragmentDirections
+import com.kedaireka.monitoring_biomassa.viewmodel.FeedingViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
-class BiotaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
-
+class FeedingFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private val kerambaViewModel by activityViewModels<KerambaViewModel>()
 
-    private val biotaViewModel by activityViewModels<BiotaViewModel>()
+    private val feedingViewModel by activityViewModels<FeedingViewModel>()
 
-    private lateinit var binding: FragmentBiotaBinding
+    private lateinit var binding: FragmentPakanBinding
 
     private lateinit var navController: NavController
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentBiotaBinding.inflate(inflater, container, false)
+        binding = FragmentPakanBinding.inflate(inflater, container, false)
 
         navController = findNavController()
 
@@ -48,7 +48,9 @@ class BiotaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupBiotaList()
+        fetchFeeding()
+
+        setupFeedingList()
 
         setupObserver()
 
@@ -56,7 +58,7 @@ class BiotaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun setupObserver() {
-        biotaViewModel.requestGetResult.observe(viewLifecycleOwner, { result ->
+        feedingViewModel.requestGetResult.observe(viewLifecycleOwner, { result ->
             when (result) {
                 is NetworkResult.Loading -> {
                     if (!binding.swipeRefresh.isRefreshing) {
@@ -68,87 +70,100 @@ class BiotaFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         binding.swipeRefresh.isRefreshing = false
                     }
 
-                    binding.biotaList.visibility = View.VISIBLE
+                    binding.feedingList.visibility = View.VISIBLE
                 }
                 is NetworkResult.Error -> {
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
 
-                        biotaViewModel.doneToastException()
+                        feedingViewModel.doneToastException()
                     }
 
                     if (binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = false
                     }
 
-                    binding.biotaList.visibility = View.VISIBLE
+                    binding.feedingList.visibility = View.VISIBLE
                 }
             }
         })
     }
 
-    private fun setupBiotaList() {
+    private fun setupFeedingList() {
         val bundle = Bundle()
 
         Transformations.switchMap(kerambaViewModel.loadedKerambaId) { keramba_id ->
 
             bundle.putInt("keramba_id", keramba_id)
-            bundle.putInt("biota_id", 0)
+            bundle.putInt("feeding_id", 0)
 
-            biotaViewModel.getAllBiota(keramba_id)
+            feedingViewModel.getAllFeeding(keramba_id)
 
-        }.observe(viewLifecycleOwner, { listBiota ->
-            val biotaHeaderAdapter = HeaderButtonAdapter {
-                if (childFragmentManager.findFragmentByTag("BottomSheetBiota") == null) {
+        }.observe(viewLifecycleOwner, { listFeeding ->
+            val feedingHeaderAdapter = HeaderButtonAdapter {
+                if (childFragmentManager.findFragmentByTag("BottomSheetFeeding") == null) {
 
-                    val bottomSheetBiota = BottomSheetBiota()
+                    val bottomSheetFeeding = BottomSheetFeeding()
 
-                    bottomSheetBiota.arguments = bundle
+                    bottomSheetFeeding.arguments = bundle
 
-                    bottomSheetBiota.show(childFragmentManager, "BottomSheetBiota")
+                    bottomSheetFeeding.show(childFragmentManager, "BottomSheetFeeding")
                 }
             }
 
-            val biotaListAdapter = BiotaListAdapter(
-                { biota ->
-                    navController.navigate(SummaryFragmentDirections.actionSummaryFragmentToBiotaTabFragment())
-
-                    biotaViewModel.setBiotaId(biota.biota_id)
+            val feedingListAdapter = FeedingListAdapter(
+                //onclick listener
+                {
+                    navController.navigate(
+                        SummaryFragmentDirections.actionSummaryFragmentToFeedingDetailFragment(
+                            it.keramba_id,
+                            it.feeding_id
+                        )
+                    )
                 },
 
                 //long click listener
                 {
                     if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null && childFragmentManager.findFragmentByTag(
-                            "BottomSheetActionBiota"
+                            "BottomSheetActionFeeding"
                         ) == null
                     ) {
 
-                        val bottomSheetAction = BottomSheetActionBiota()
+                        val bottomSheetAction = BottomSheetActionFeeding()
 
                         val args = Bundle()
 
                         args.putInt("keramba_id", it.keramba_id)
 
-                        args.putInt("biota_id", it.biota_id)
+                        args.putInt("feeding_id", it.feeding_id)
 
                         bottomSheetAction.arguments = args
 
-                        bottomSheetAction.show(childFragmentManager, "BottomSheetActionBiota")
+                        bottomSheetAction.show(childFragmentManager, "BottomSheetActionFeeding")
                     }
                     true
-                })
+                }
+            )
 
-            val concatAdapter = ConcatAdapter(biotaHeaderAdapter, biotaListAdapter)
+            val concatAdapter = ConcatAdapter(feedingHeaderAdapter, feedingListAdapter)
 
-            binding.biotaList.adapter = concatAdapter
+            binding.feedingList.adapter = concatAdapter
 
-            biotaListAdapter.submitList(listBiota)
+            feedingListAdapter.submitList(listFeeding)
+
+            if (feedingListAdapter.itemCount > 0) {
+                binding.feedingList.smoothScrollToPosition(0)
+            }
         })
     }
 
-    override fun onRefresh() {
+    private fun fetchFeeding() {
         if (kerambaViewModel.loadedKerambaId.value != null) {
-            biotaViewModel.fetchBiota(kerambaViewModel.loadedKerambaId.value!!)
+            feedingViewModel.fetchFeeding(kerambaViewModel.loadedKerambaId.value!!)
         }
+    }
+
+    override fun onRefresh() {
+        fetchFeeding()
     }
 }
