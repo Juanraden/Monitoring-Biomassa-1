@@ -47,6 +47,8 @@ class PakanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        fetchFeeding()
+        
         setupFeedingList()
 
         setupObserver()
@@ -141,12 +143,20 @@ class PakanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             binding.feedingList.adapter = concatAdapter
 
             feedingListAdapter.submitList(listFeeding)
+
+            if (feedingListAdapter.itemCount > 0) {
+                binding.feedingList.smoothScrollToPosition(0)
+            }
         })
     }
 
-    override fun onRefresh() {
+    private fun fetchFeeding(){
         if (kerambaViewModel.loadedKerambaId.value != null) {
             feedingViewModel.fetchFeeding(kerambaViewModel.loadedKerambaId.value!!)
         }
+    }
+
+    override fun onRefresh() {
+        fetchFeeding()
     }
 }

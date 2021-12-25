@@ -112,11 +112,11 @@ class FeedingRepository @Inject constructor(
 
         val data = mutableMapOf<String, String>()
 
-        data["feeding_id"] = feedingNetwork.feeding_id
+        data["activity_id"] = feedingNetwork.feeding_id
 
         data["keramba_id"] = feedingNetwork.keramba_id
 
-        data["tanggal_tebar"] = feedingNetwork.tanggal_feeding
+        data["tanggal_feeding"] = feedingNetwork.tanggal_feeding
 
         data["user_id"] = userId.toString()
 
@@ -145,7 +145,7 @@ class FeedingRepository @Inject constructor(
 
         val data = mutableMapOf<String, String>()
 
-        data["feeding_id"] = feedingId.toString()
+        data["activity_id"] = feedingId.toString()
 
         data["user_id"] = userId.toString()
 
