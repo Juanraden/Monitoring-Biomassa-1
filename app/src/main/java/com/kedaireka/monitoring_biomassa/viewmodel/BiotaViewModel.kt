@@ -1,22 +1,18 @@
 package com.kedaireka.monitoring_biomassa.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
-import com.kedaireka.monitoring_biomassa.database.dao.BiotaDAO
-import com.kedaireka.monitoring_biomassa.database.entity.Biota
 import com.kedaireka.monitoring_biomassa.repository.BiotaRepository
-import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class BiotaViewModel @Inject constructor(
-    private val biotaDao: BiotaDAO,
-    private val biotaMapper: EntityMapper<Biota, BiotaDomain>,
     private val repository: BiotaRepository
 ) : ViewModel() {
 
@@ -57,11 +53,7 @@ class BiotaViewModel @Inject constructor(
         _requestDeleteResult.value = NetworkResult.Loading()
     }
 
-    fun loadBiotaData(id: Int): LiveData<BiotaDomain> {
-        return Transformations.map(
-            biotaDao.getById(id).asLiveData()
-        ) { biotaMapper.mapFromEntity(it) }
-    }
+    fun loadBiotaData(id: Int): LiveData<BiotaDomain> = repository.loadBiotaData(id)
 
 
     fun setBiotaId(id: Int) {
@@ -70,10 +62,7 @@ class BiotaViewModel @Inject constructor(
 
     fun getAllBiota(id: Int): LiveData<List<BiotaDomain>> = repository.getAllBiota(id)
 
-    fun getAllBiotaHistory(id: Int): LiveData<List<BiotaDomain>> =
-        Transformations.map(biotaDao.getAllHistory(id).asLiveData()) { list ->
-            list.map { biotaMapper.mapFromEntity(it) }
-        }
+    fun getAllBiotaHistory(id: Int): LiveData<List<BiotaDomain>> = repository.getAllBiotaHistory(id)
 
     fun selectkerambaId(id: Int) {
         _selectedKerambaId.value = id
@@ -116,7 +105,7 @@ class BiotaViewModel @Inject constructor(
     }
 
     fun updateBiota(
-        biota_id: Int,
+        biotaId: Int,
         jenis: String,
         bobot: String,
         panjang: String,
@@ -128,7 +117,7 @@ class BiotaViewModel @Inject constructor(
             try {
                 repository.updateBiota(
                     BiotaDomain(
-                        biota_id = biota_id,
+                        biota_id = biotaId,
                         jenis_biota = jenis,
                         bobot = bobot.toDouble(),
                         panjang = panjang.toDouble(),
@@ -147,7 +136,7 @@ class BiotaViewModel @Inject constructor(
     }
 
     fun updateLocalBiota(
-        biota_id: Int,
+        biotaId: Int,
         jenis: String,
         bobot: String,
         panjang: String,
@@ -155,20 +144,15 @@ class BiotaViewModel @Inject constructor(
         tanggal: Long
     ) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                biotaDao.updateOne(
-                    Biota(
-                        biota_id = biota_id,
-                        jenis_biota = jenis,
-                        bobot = bobot.toDouble(),
-                        panjang = panjang.toDouble(),
-                        jumlah_bibit = jumlah.toInt(),
-                        tanggal_tebar = tanggal,
-                        keramba_id = _selectedKerambaId.value!!,
-                        tanggal_panen = 0L
-                    )
-                )
-            }
+            repository.updateLocalBiota(
+                biotaId,
+                jenis,
+                bobot,
+                panjang,
+                jumlah,
+                selectedKerambaId.value!!,
+                tanggal
+            )
         }
     }
 
@@ -188,7 +172,7 @@ class BiotaViewModel @Inject constructor(
     }
 
     fun deleteLocalBiota(biotaId: Int) {
-        viewModelScope.launch { withContext(Dispatchers.IO) { biotaDao.deleteOne(biotaId) } }
+        viewModelScope.launch { repository.deleteLocalBiota(biotaId) }
     }
 
     fun fetchBiota(kerambaId: Int) {

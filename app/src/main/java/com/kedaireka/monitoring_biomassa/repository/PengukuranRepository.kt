@@ -16,7 +16,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PengukuranRepository @Inject constructor(
     private val pengukuranDAO: PengukuranDAO,
     private val monitoringService: MonitoringService,
@@ -28,6 +30,10 @@ class PengukuranRepository @Inject constructor(
         Transformations.map(pengukuranDAO.getAll(biota_id).asLiveData()) { list ->
             list.map { pengukuranMapper.mapFromEntity(it) }
         }
+
+    suspend fun deleteLocalPengukuran(pengukuranId: Int){
+        withContext(Dispatchers.IO){ pengukuranDAO.deleteOne(pengukuranId) }
+    }
 
     suspend fun refreshPengukuran(biotaId: Int) {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0

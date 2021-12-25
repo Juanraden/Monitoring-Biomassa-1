@@ -4,20 +4,16 @@ import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
-import com.kedaireka.monitoring_biomassa.database.dao.KerambaDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Biota
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
 import com.kedaireka.monitoring_biomassa.repository.KerambaRepository
 import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class KerambaViewModel @Inject constructor(
-    private val kerambaDAO: KerambaDAO,
     private val kerambaMapper: EntityMapper<Keramba, KerambaDomain>,
     private val biotaMapper: EntityMapper<Biota, BiotaDomain>,
     private val repository: KerambaRepository
@@ -70,9 +66,7 @@ class KerambaViewModel @Inject constructor(
     }
 
     fun loadKerambaData(id: Int): LiveData<KerambaDomain> {
-        return Transformations.map(kerambaDAO.getById(id).asLiveData()) {
-            kerambaMapper.mapFromEntity(it)
-        }
+        return repository.getKerambaById(id)
     }
 
     fun isEntryValid(jenis: String, ukuran: String, tanggal: Long): Boolean {
@@ -137,27 +131,16 @@ class KerambaViewModel @Inject constructor(
     }
 
     fun updateLocalKeramba(id: Int, nama: String, ukuran: String, tanggal: Long) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                kerambaDAO.updateOne(
-                    Keramba(
-                        keramba_id = id,
-                        nama_keramba = nama,
-                        ukuran = ukuran.toDouble(),
-                        tanggal_install = tanggal
-                    )
-                )
-            }
-        }
+        viewModelScope.launch { repository.updateLocalKeramba(id, nama, ukuran, tanggal) }
     }
 
     fun deleteLocalKeramba(kerambaId: Int) {
-        viewModelScope.launch { withContext(Dispatchers.IO) { kerambaDAO.deleteOne(kerambaId) } }
+        viewModelScope.launch { repository.deleteLocalKeramba(kerambaId) }
     }
 
     fun loadKerambaAndBiota(): LiveData<Map<KerambaDomain, List<BiotaDomain>>> {
         return Transformations.map(
-            kerambaDAO.getKerambaAndBiota().asLiveData()
+            repository.kerambaAndBiotaList
         ) { listKerambaAndBiota ->
             listKerambaAndBiota.map {
                 kerambaMapper.mapFromEntity(it.keramba) to it.biotaList.map { biota ->
@@ -186,7 +169,7 @@ class KerambaViewModel @Inject constructor(
         }
     }
 
-    fun doneInit() {
+    private fun doneInit() {
         _init.value = true
     }
 

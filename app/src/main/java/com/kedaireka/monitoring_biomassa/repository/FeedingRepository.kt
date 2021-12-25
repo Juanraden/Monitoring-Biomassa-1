@@ -8,7 +8,9 @@ import com.kedaireka.monitoring_biomassa.data.domain.FeedingDomain
 import com.kedaireka.monitoring_biomassa.data.network.FeedingNetwork
 import com.kedaireka.monitoring_biomassa.data.network.container.FeedingContainer
 import com.kedaireka.monitoring_biomassa.database.dao.FeedingDAO
+import com.kedaireka.monitoring_biomassa.database.dao.FeedingDetailDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Feeding
+import com.kedaireka.monitoring_biomassa.database.relation.FeedingDetailAndPakan
 import com.kedaireka.monitoring_biomassa.service.MonitoringService
 import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
@@ -16,9 +18,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FeedingRepository @Inject constructor(
     private val feedingDAO: FeedingDAO,
+    private val feedingDetailDAO: FeedingDetailDAO,
     private val monitoringService: MonitoringService,
     private val sharedPreferences: SharedPreferences,
     private val feedingMapper: EntityMapper<Feeding, FeedingDomain>,
@@ -28,6 +33,31 @@ class FeedingRepository @Inject constructor(
         Transformations.map(feedingDAO.getAll(id).asLiveData()) { list ->
             list.map { feedingMapper.mapFromEntity(it) }
         }
+
+    fun getAllFeedingDetailAndPakan(feedingId: Int): LiveData<List<FeedingDetailAndPakan>> =
+        feedingDetailDAO.getAllDetailAndPakan(feedingId).asLiveData()
+
+    fun loadFeedingData(id: Int): LiveData<FeedingDomain> {
+        return Transformations.map(
+            feedingDAO.getById(id).asLiveData()
+        ) { feedingMapper.mapFromEntity(it) }
+    }
+
+    suspend fun updateLocalFeeding(feedingId: Int, kerambaId: Int, tanggal: Long){
+        withContext(Dispatchers.IO) {
+            feedingDAO.updateOne(
+                Feeding(
+                    feeding_id = feedingId,
+                    keramba_id = kerambaId,
+                    tanggal_feeding = tanggal
+                )
+            )
+        }
+    }
+
+    suspend fun deleteLocalFeeding(feedingId: Int){
+        withContext(Dispatchers.IO) { feedingDAO.deleteOne(feedingId) }
+    }
 
     suspend fun refreshFeeding(kerambaId: Int) {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0

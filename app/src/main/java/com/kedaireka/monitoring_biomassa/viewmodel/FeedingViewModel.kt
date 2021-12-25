@@ -3,25 +3,17 @@ package com.kedaireka.monitoring_biomassa.viewmodel
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.FeedingDomain
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
-import com.kedaireka.monitoring_biomassa.database.dao.FeedingDAO
-import com.kedaireka.monitoring_biomassa.database.entity.Feeding
 import com.kedaireka.monitoring_biomassa.repository.FeedingRepository
-import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class FeedingViewModel @Inject constructor(
-    private val feedingDao: FeedingDAO,
-    private val feedingMapper: EntityMapper<Feeding, FeedingDomain>,
     private val repository: FeedingRepository
 ) : ViewModel() {
 
     private val _loadedFeedingId = MutableLiveData<Int>()
-    val loadedFeedingId: LiveData<Int> = _loadedFeedingId
 
     private val _selectedKerambaId = MutableLiveData<Int>()
     val selectedKerambaId: LiveData<Int> = _selectedKerambaId
@@ -54,11 +46,7 @@ class FeedingViewModel @Inject constructor(
         _requestDeleteResult.value = NetworkResult.Loading()
     }
 
-    fun loadFeedingData(id: Int): LiveData<FeedingDomain> {
-        return Transformations.map(
-            feedingDao.getById(id).asLiveData()
-        ) { feedingMapper.mapFromEntity(it) }
-    }
+    fun loadFeedingData(id: Int): LiveData<FeedingDomain> = repository.loadFeedingData(id)
 
     fun setFeedingId(id: Int) {
         _loadedFeedingId.value = id
@@ -98,7 +86,7 @@ class FeedingViewModel @Inject constructor(
     }
 
     fun updateFeeding(
-        feeding_id: Int,
+        feedingId: Int,
         tanggal: Long
     ) {
         _requestPutUpdateResult.value = NetworkResult.Loading()
@@ -106,7 +94,7 @@ class FeedingViewModel @Inject constructor(
             try {
                 repository.updateFeeding(
                     FeedingDomain(
-                        feeding_id = feeding_id,
+                        feeding_id = feedingId,
                         keramba_id = _selectedKerambaId.value!!,
                         tanggal_feeding = tanggal
                     )
@@ -120,19 +108,15 @@ class FeedingViewModel @Inject constructor(
     }
 
     fun updateLocalFeeding(
-        feeding_id: Int,
+        feedingId: Int,
         tanggal: Long
     ) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                feedingDao.updateOne(
-                    Feeding(
-                        feeding_id = feeding_id,
-                        keramba_id = _selectedKerambaId.value!!,
-                        tanggal_feeding = tanggal
-                    )
-                )
-            }
+            repository.updateLocalFeeding(
+                feedingId,
+                selectedKerambaId.value!!,
+                tanggal
+            )
         }
     }
 
@@ -152,7 +136,7 @@ class FeedingViewModel @Inject constructor(
     }
 
     fun deleteLocalFeeding(feedingId: Int) {
-        viewModelScope.launch { withContext(Dispatchers.IO) { feedingDao.deleteOne(feedingId) } }
+        viewModelScope.launch { repository.deleteLocalFeeding(feedingId) }
     }
 
     fun fetchFeeding(kerambaId: Int) {

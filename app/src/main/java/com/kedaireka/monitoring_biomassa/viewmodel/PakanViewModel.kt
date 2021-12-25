@@ -3,21 +3,14 @@ package com.kedaireka.monitoring_biomassa.viewmodel
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
-import com.kedaireka.monitoring_biomassa.database.dao.PakanDAO
-import com.kedaireka.monitoring_biomassa.database.entity.Pakan
 import com.kedaireka.monitoring_biomassa.repository.PakanRepository
-import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class PakanViewModel @Inject constructor(
-    private val pakanDAO: PakanDAO,
-    private val repository: PakanRepository,
-    private val pakanMapper: EntityMapper<Pakan, PakanDomain>
+    private val repository: PakanRepository
 ) : ViewModel() {
     private val _init = MutableLiveData(true)
     val init: LiveData<Boolean> = _init
@@ -50,9 +43,7 @@ class PakanViewModel @Inject constructor(
         _requestDeleteResult.value = NetworkResult.Loading()
     }
 
-    fun loadPakanData(pakanId: Int): LiveData<PakanDomain> = Transformations.map(
-        pakanDAO.getById(pakanId).asLiveData()
-    ) { pakanMapper.mapFromEntity(it) }
+    fun loadPakanData(pakanId: Int): LiveData<PakanDomain> = repository.loadPakanData(pakanId)
 
     fun getAll(): LiveData<List<PakanDomain>> = repository.pakanList
 
@@ -113,25 +104,11 @@ class PakanViewModel @Inject constructor(
     }
 
     fun updateLocalPakan(pakanId: Int, jenis_pakan: String, deskripsi: String = "") {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                pakanDAO.updateOne(
-                    Pakan(
-                        pakan_id = pakanId,
-                        jenis_pakan = jenis_pakan,
-                        deskripsi = deskripsi
-                    )
-                )
-            }
-        }
+        viewModelScope.launch { repository.updateLocalPakan(pakanId, jenis_pakan, deskripsi)}
     }
 
     fun deleteLocalPakan(pakanId: Int) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                pakanDAO.deleteOne(pakanId)
-            }
-        }
+        viewModelScope.launch { repository.deleteLocalPakan(pakanId) }
     }
 
     fun isEntryValid(jenis_pakan: String): Boolean = jenis_pakan.isNotBlank()
@@ -151,7 +128,7 @@ class PakanViewModel @Inject constructor(
         }
     }
 
-    fun doneInit() {
+    private fun doneInit() {
         _init.value = true
     }
 
