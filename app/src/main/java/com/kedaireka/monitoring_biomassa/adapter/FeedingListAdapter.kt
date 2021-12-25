@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.data.domain.FeedingDomain
 import com.kedaireka.monitoring_biomassa.databinding.ListFeedingBinding
+import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 
 class FeedingListAdapter(
     val clickListener: (obj: FeedingDomain) -> Unit,
@@ -43,7 +44,7 @@ class FeedingListAdapter(
     inner class ViewHolder(private val binding: ListFeedingBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(feedingDomain: FeedingDomain){
             with(binding){
-                tanggalFeedingTv.text = feedingDomain.tanggal_feeding.toString()
+                tanggalFeedingTv.text = convertLongToDateString(feedingDomain.tanggal_feeding, "EEEE dd-MMM-yyyy")
 
                 feedingCard.setOnClickListener { clickListener(feedingDomain) }
 
