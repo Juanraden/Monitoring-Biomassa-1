@@ -207,7 +207,7 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
         return pakanViewModel.isEntryValid(jenis_pakan)
     }
 
-    fun switchEditButton() {
+    private fun switchEditButton() {
         if (this.arguments != null) {
             binding.apply {
                 savePakanBtn.setOnClickListener {
