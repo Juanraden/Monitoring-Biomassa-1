@@ -80,4 +80,9 @@ abstract class MapperModule {
     abstract fun bindPanenNetworkMapper(
         panenNetworkMapper: PanenNetworkMapper
     ): EntityMapper<PanenNetwork, PanenDomain>
+
+    @Binds
+    abstract fun bindFeedingNetworkMapper(
+        feedingNetworkMapper: FeedingNetworkMapper
+    ): EntityMapper<FeedingNetwork, FeedingDomain>
 }
