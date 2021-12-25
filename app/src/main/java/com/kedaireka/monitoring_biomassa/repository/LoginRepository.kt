@@ -14,7 +14,6 @@ import javax.inject.Singleton
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-@Singleton
 class LoginRepository @Inject constructor(
     private val monitoringService: MonitoringService,
     private val sharedPreferences: SharedPreferences
