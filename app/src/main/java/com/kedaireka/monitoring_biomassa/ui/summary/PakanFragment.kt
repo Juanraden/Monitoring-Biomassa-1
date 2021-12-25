@@ -48,7 +48,7 @@ class PakanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         super.onViewCreated(view, savedInstanceState)
 
         fetchFeeding()
-
+        
         setupFeedingList()
 
         setupObserver()
