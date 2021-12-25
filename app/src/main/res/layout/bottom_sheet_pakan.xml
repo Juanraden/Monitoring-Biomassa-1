@@ -20,12 +20,12 @@
 
             <TextView
                 android:id="@+id/title_tv"
+                style="@style/BottomSheetTextColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
                 android:text="@string/tambah_pakan"
-                android:textColor="@android:color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -60,6 +60,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/nama_pakan_et"
+                        style="@style/BottomSheetTextColor"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/nama_pakan"
@@ -67,8 +68,7 @@
                         android:inputType="text"
                         android:maxLength="24"
                         android:minHeight="48dp"
-                        android:selectAllOnFocus="true"
-                        android:textColor="@color/black" />
+                        android:selectAllOnFocus="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -80,6 +80,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/deskripsi_pakan_et"
+                        style="@style/BottomSheetTextColor"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="top"
@@ -89,8 +90,7 @@
                         android:lines="5"
                         android:maxLength="200"
                         android:scrollbars="vertical"
-                        android:selectAllOnFocus="true"
-                        android:textColor="@color/black" />
+                        android:selectAllOnFocus="true" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -99,7 +99,8 @@
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/simpan" />
+                    android:text="@string/simpan"
+                    android:textColor="@color/white" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -112,8 +113,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
-                            android:backgroundTint="@color/red"
+                            android:backgroundTint="@color/red_2"
                             android:text="@string/batal"
+                            android:textColor="@color/white"
                             android:visibility="gone" />
 
                         <com.google.android.material.button.MaterialButton
@@ -123,6 +125,7 @@
                             android:layout_height="wrap_content"
                             android:onClick="@{() -> bottomSheetPakan.savePakan()}"
                             android:text="@string/simpan"
+                            android:textColor="@color/white"
                             android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
