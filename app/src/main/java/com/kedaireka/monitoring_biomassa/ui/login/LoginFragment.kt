@@ -108,8 +108,8 @@ class LoginFragment : Fragment() {
         Toast.makeText(requireContext(), welcome, Toast.LENGTH_LONG).show()
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(requireContext(), errorString, Toast.LENGTH_LONG).show()
+    private fun showLoginFailed(string: String) {
+        Toast.makeText(requireContext(), string, Toast.LENGTH_LONG).show()
     }
 
     private fun hideKeyBoard() {

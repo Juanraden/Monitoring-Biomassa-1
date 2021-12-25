@@ -4,12 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kedaireka.monitoring_biomassa.R
-import com.kedaireka.monitoring_biomassa.repository.LoginRepository
-import com.kedaireka.monitoring_biomassa.data.network.LoginResult
-import dagger.hilt.android.lifecycle.HiltViewModel
-import com.kedaireka.monitoring_biomassa.data.network.Result
 import com.kedaireka.monitoring_biomassa.data.network.LoggedInUserView
+import com.kedaireka.monitoring_biomassa.data.network.LoginResult
+import com.kedaireka.monitoring_biomassa.data.network.Result
+import com.kedaireka.monitoring_biomassa.repository.LoginRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,10 +28,10 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
                     _loginResult.value =
                         LoginResult(success = LoggedInUserView(displayName = result.data.username))
                 } else {
-                    _loginResult.value = LoginResult(error = R.string.invalid_input)
+                    _loginResult.value = LoginResult(error = "Invalid username or password")
                 }
             } catch (e: Exception){
-                _loginResult.value = LoginResult(error = R.string.login_failed)
+                _loginResult.value = LoginResult(error = e.message.toString())
             }
         }
 //        _loginResult.value =

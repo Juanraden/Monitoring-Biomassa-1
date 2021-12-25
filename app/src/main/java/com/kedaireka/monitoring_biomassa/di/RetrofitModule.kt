@@ -8,9 +8,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Headers
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -28,25 +25,25 @@ object RetrofitModule {
 
 
     //TODO: DELETE WHEN DEPLOY APK
+//    @Singleton
+//    @Provides
+//    fun providesOkHttpClient(): OkHttpClient {
+//        val interceptor = HttpLoggingInterceptor()
+//        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+//        val client: OkHttpClient.Builder = OkHttpClient.Builder()
+//            .addInterceptor(interceptor)
+//
+//        return client.build()
+//    }
+
     @Singleton
     @Provides
-    fun providesOkHttpClient(): OkHttpClient {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        val client: OkHttpClient.Builder = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-
-        return client.build()
-    }
-
-    @Singleton
-    @Provides
-    fun provideRetrofit(moshi: Moshi, client: OkHttpClient): Retrofit.Builder {
+    fun provideRetrofit(moshi: Moshi): Retrofit.Builder {
         return Retrofit.Builder()
             .baseUrl("https://web-biomassa.my.id/api/v1/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .client(client)
+//            .client(client)
     }
 
 
