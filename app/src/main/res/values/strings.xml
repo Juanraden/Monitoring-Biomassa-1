@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Monitoring-Biomassa</string>
-    <string name="home_page_name">Dashboard</string>
+    <string name="home_page_name">Home</string>
     <string name="add_bottomsheet_name">Add</string>
     <string name="setting_page_name">Pengaturan</string>
     <string name="tambahkan">Tambahkan</string>
@@ -17,7 +17,7 @@
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome!"</string>
-    <string name="login_failed">"Login failed"</string>
+    <string name="login_failed">"Login failed: %1$s"</string>
     <string name="invalid_input">Invalid username or password</string>
 
     <!--    Strings related to Summary Fragment-->

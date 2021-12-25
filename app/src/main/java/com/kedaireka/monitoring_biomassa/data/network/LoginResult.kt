@@ -5,5 +5,5 @@ package com.kedaireka.monitoring_biomassa.data.network
  */
 data class LoginResult(
     val success: LoggedInUserView? = null,
-    val error: Int? = null
+    val error: String? = null
 )
