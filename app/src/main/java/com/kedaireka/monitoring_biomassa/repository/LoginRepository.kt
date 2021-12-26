@@ -5,6 +5,7 @@ import com.kedaireka.monitoring_biomassa.data.network.LoggedInUser
 import com.kedaireka.monitoring_biomassa.data.network.container.LoginContainer
 import com.kedaireka.monitoring_biomassa.data.network.Result
 import com.kedaireka.monitoring_biomassa.service.MonitoringService
+import org.json.JSONObject
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,6 +33,10 @@ class LoginRepository @Inject constructor(
             when {
                 response.code() == 500 -> {
                     Result.Error(Exception("Internal Server Error"))
+                }
+                response.code() == 400 -> {
+                    val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
+                    throw Exception(jsonObj.getString("message"))
                 }
                 else -> {
                     Result.Error(Exception("HTTP Request Failed"))
