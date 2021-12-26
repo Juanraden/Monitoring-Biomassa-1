@@ -1,6 +1,8 @@
 package com.kedaireka.monitoring_biomassa.ui.summary.biota
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -139,6 +141,8 @@ class BiotaInfoFragment : Fragment() {
 
             legend.isEnabled = true
 
+            legend.textSize = 15f
+
             legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
 
             legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
@@ -206,6 +210,18 @@ class BiotaInfoFragment : Fragment() {
                     this.data = data
 
                     this.invalidate()
+                }
+            }
+
+            data.setValueTextSize(12f)
+
+            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    axisLeft.axisLineColor = Color.WHITE
+                    axisLeft.textColor = Color.WHITE
+                    xAxis.textColor = Color.WHITE
+                    legend.textColor = Color.WHITE
+                    data.setValueTextColor(Color.WHITE)
                 }
             }
         }

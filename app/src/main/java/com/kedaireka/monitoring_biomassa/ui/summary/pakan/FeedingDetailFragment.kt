@@ -22,7 +22,6 @@ import com.kedaireka.monitoring_biomassa.adapter.HeaderCardAdapter
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentFeedingDetailBinding
 import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetActionFeedingDetail
-import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetActionPengukuran
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetFeeding
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetFeedingDetail
 import com.kedaireka.monitoring_biomassa.viewmodel.FeedingDetailViewModel
