@@ -44,7 +44,7 @@ class FeedingListAdapter(
     inner class ViewHolder(private val binding: ListFeedingBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(feedingDomain: FeedingDomain){
             with(binding){
-                tanggalFeedingTv.text = convertLongToDateString(feedingDomain.tanggal_feeding, "EEEE, dd-MMM-yyyy")
+                tanggalFeedingTv.text = convertLongToDateString(feedingDomain.tanggal_feeding, "EEEE dd-MMM-yyyy")
 
                 feedingCard.setOnClickListener { clickListener(feedingDomain) }
 
