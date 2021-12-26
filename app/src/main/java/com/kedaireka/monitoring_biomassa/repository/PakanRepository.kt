@@ -98,7 +98,7 @@ class PakanRepository @Inject constructor(
         }
     }
 
-    suspend fun addPakan(pakan: PakanDomain) {
+    suspend fun addPakan(pakan: PakanDomain): PakanContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -128,10 +128,12 @@ class PakanRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 
-    suspend fun updatePakan(pakan: PakanDomain) {
+    suspend fun updatePakan(pakan: PakanDomain): PakanContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -163,10 +165,12 @@ class PakanRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 
-    suspend fun deletePakan(pakanId: Int) {
+    suspend fun deletePakan(pakanId: Int): PakanContainer{
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -192,6 +196,8 @@ class PakanRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 }

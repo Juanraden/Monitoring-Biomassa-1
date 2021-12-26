@@ -82,7 +82,7 @@ class PanenRepository @Inject constructor(
         }
     }
 
-    suspend fun addPanen(panen: PanenDomain) {
+    suspend fun addPanen(panen: PanenDomain): PanenContainer{
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -122,11 +122,13 @@ class PanenRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 
     @SuppressLint("Range")
-    fun downloadExporedData(kerambaId: Int, name: String) {
+    fun downloadExportedData(kerambaId: Int, name: String) {
 
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
