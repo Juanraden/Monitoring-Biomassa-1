@@ -4,12 +4,16 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.asLiveData
+import com.kedaireka.monitoring_biomassa.data.domain.FeedingDetailDomain
 import com.kedaireka.monitoring_biomassa.data.domain.FeedingDomain
+import com.kedaireka.monitoring_biomassa.data.network.FeedingDetailNetwork
 import com.kedaireka.monitoring_biomassa.data.network.FeedingNetwork
 import com.kedaireka.monitoring_biomassa.data.network.container.FeedingContainer
+import com.kedaireka.monitoring_biomassa.data.network.container.FeedingDetailContainer
 import com.kedaireka.monitoring_biomassa.database.dao.FeedingDAO
 import com.kedaireka.monitoring_biomassa.database.dao.FeedingDetailDAO
 import com.kedaireka.monitoring_biomassa.database.entity.Feeding
+import com.kedaireka.monitoring_biomassa.database.entity.FeedingDetail
 import com.kedaireka.monitoring_biomassa.database.relation.FeedingDetailAndPakan
 import com.kedaireka.monitoring_biomassa.service.MonitoringService
 import com.kedaireka.monitoring_biomassa.util.EntityMapper
@@ -27,7 +31,8 @@ class FeedingRepository @Inject constructor(
     private val monitoringService: MonitoringService,
     private val sharedPreferences: SharedPreferences,
     private val feedingMapper: EntityMapper<Feeding, FeedingDomain>,
-    private val feedingNetworkMapper: EntityMapper<FeedingNetwork, FeedingDomain>
+    private val feedingNetworkMapper: EntityMapper<FeedingNetwork, FeedingDomain>,
+    private val feedingDetailNetworkMapper: EntityMapper<FeedingDetailNetwork, FeedingDetailDomain>
 ) {
     fun getAllFeeding(id: Int): LiveData<List<FeedingDomain>> =
         Transformations.map(feedingDAO.getAll(id).asLiveData()) { list ->
@@ -37,13 +42,13 @@ class FeedingRepository @Inject constructor(
     fun getAllFeedingDetailAndPakan(feedingId: Int): LiveData<List<FeedingDetailAndPakan>> =
         feedingDetailDAO.getAllDetailAndPakan(feedingId).asLiveData()
 
-    fun loadFeedingData(id: Int): LiveData<FeedingDomain> {
+    fun loadFeedingDataByFeedingId(id: Int): LiveData<FeedingDomain> {
         return Transformations.map(
-            feedingDAO.getById(id).asLiveData()
+            feedingDAO.getByFeedingId(id).asLiveData()
         ) { feedingMapper.mapFromEntity(it) }
     }
 
-    suspend fun updateLocalFeeding(feedingId: Int, kerambaId: Int, tanggal: Long){
+    suspend fun updateLocalFeeding(feedingId: Int, kerambaId: Int, tanggal: Long) {
         withContext(Dispatchers.IO) {
             feedingDAO.updateOne(
                 Feeding(
@@ -55,7 +60,7 @@ class FeedingRepository @Inject constructor(
         }
     }
 
-    suspend fun deleteLocalFeeding(feedingId: Int){
+    suspend fun deleteLocalFeeding(feedingId: Int) {
         withContext(Dispatchers.IO) { feedingDAO.deleteOne(feedingId) }
     }
 
@@ -75,7 +80,10 @@ class FeedingRepository @Inject constructor(
                     Feeding(
                         feeding_id = target.feeding_id.toInt(),
                         keramba_id = target.keramba_id.toInt(),
-                        tanggal_feeding = convertStringToDateLong(target.tanggal_feeding, "yyyy-MM-dd")
+                        tanggal_feeding = convertStringToDateLong(
+                            target.tanggal_feeding,
+                            "yyyy-MM-dd"
+                        )
                     )
                 }.toList()
 
@@ -100,7 +108,121 @@ class FeedingRepository @Inject constructor(
         }
     }
 
-    suspend fun addFeeding(feeding: FeedingDomain) {
+
+    suspend fun refreshFeedingDetail(activityId: Int) {
+        val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
+
+        val token: String = sharedPreferences.getString("token", null) ?: ""
+
+        withContext(Dispatchers.IO) {
+            val response: Response<FeedingDetailContainer> =
+                monitoringService.getFeedingDetailListAsync(token, userId, activityId).await()
+
+            if (response.code() == 200) {
+                val listFeedingDetailNetwork: List<FeedingDetailNetwork> = response.body()!!.data
+
+                val listFeeding = listFeedingDetailNetwork.map { target ->
+                    FeedingDetail(
+                        feeding_id = target.feeding_id.toInt(),
+                        pakan_id = target.pakan_id.toInt(),
+                        ukuran_tebar = target.ukuran_tebar.toDouble(),
+                        waktu_feeding = convertStringToDateLong(target.jam_feeding, "H:m:s")
+                    )
+                }.toList()
+
+                if (feedingDetailDAO.getDetailCountFromFeeding(activityId) > listFeeding.size) {
+                    feedingDetailDAO.deleteDetailFromFeeding(activityId)
+                }
+
+                feedingDetailDAO.insertAll(listFeeding)
+            } else {
+                when {
+                    response.code() == 500 -> {
+                        throw Exception("Internal Server Error")
+                    }
+                    response.code() == 401 -> {
+                        throw Exception("Unauthorized")
+                    }
+                    else -> {
+                        throw Exception("HTTP Request Failed")
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun addFeedingDetail(feedingDetail: FeedingDetailDomain): FeedingDetailContainer {
+        val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
+
+        val token: String = sharedPreferences.getString("token", null) ?: ""
+
+        val feedingDetailNetwork: FeedingDetailNetwork =
+            feedingDetailNetworkMapper.mapToEntity(feedingDetail)
+
+        val data = mutableMapOf<String, String>()
+
+        data["activity_id"] = feedingDetailNetwork.feeding_id
+
+        data["ukuran_tebar"] = feedingDetailNetwork.ukuran_tebar
+
+        data["jam_feeding"] = feedingDetailNetwork.jam_feeding
+
+        data["pakan_id"] = feedingDetailNetwork.pakan_id
+
+        data["user_id"] = userId.toString()
+
+        val response: Response<FeedingDetailContainer> =
+            monitoringService.addFeedingDetailAsync(token, data).await()
+
+        if (response.code() != 201) {
+            when {
+                response.code() == 500 -> {
+                    throw Exception("Internal Server Error")
+                }
+                response.code() == 401 -> {
+                    throw Exception("Unauthorized")
+                }
+                else -> {
+                    throw Exception("HTTP Request Failed")
+                }
+            }
+        } else {
+            return response.body()!!
+        }
+    }
+
+    suspend fun deleteFeedingDetail(activityId: Int): FeedingDetailContainer {
+        val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
+
+        val token: String = sharedPreferences.getString("token", null) ?: ""
+
+        val data = mutableMapOf<String, String>()
+
+        data["activity_id"] = activityId.toString()
+
+        data["user_id"] = userId.toString()
+
+        val response: Response<FeedingDetailContainer> =
+            monitoringService.deleteFeedingDetailAsync(token, data).await()
+
+        if (response.code() != 200) {
+            when {
+                response.code() == 500 -> {
+                    throw Exception("Internal Server Error")
+                }
+                response.code() == 401 -> {
+                    throw Exception("Unauthorized")
+                }
+                else -> {
+                    throw Exception("HTTP Request Failed")
+                }
+            }
+        } else {
+            return response.body()!!
+        }
+    }
+
+    suspend fun addFeeding(feeding: FeedingDomain): FeedingContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -118,7 +240,7 @@ class FeedingRepository @Inject constructor(
         val response: Response<FeedingContainer> =
             monitoringService.addFeedingAsync(token, data).await()
 
-        if (response.code() != 201){
+        if (response.code() != 201) {
             when {
                 response.code() == 500 -> {
                     throw Exception("Internal Server Error")
@@ -130,10 +252,12 @@ class FeedingRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 
-    suspend fun updateFeeding(feeding: FeedingDomain) {
+    suspend fun updateFeeding(feeding: FeedingDomain): FeedingContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -165,10 +289,12 @@ class FeedingRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 
-    suspend fun deleteFeeding(feedingId: Int) {
+    suspend fun deleteFeeding(feedingId: Int): FeedingContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -194,6 +320,8 @@ class FeedingRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 }
