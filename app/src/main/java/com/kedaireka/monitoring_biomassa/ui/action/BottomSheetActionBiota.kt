@@ -43,6 +43,8 @@ class BottomSheetActionBiota : BottomSheetAction() {
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+
+                    biotaViewModel.doneDeleteRequest()
                 }
             }
         })

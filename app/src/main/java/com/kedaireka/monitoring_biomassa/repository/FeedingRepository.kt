@@ -64,6 +64,10 @@ class FeedingRepository @Inject constructor(
         withContext(Dispatchers.IO) { feedingDAO.deleteOne(feedingId) }
     }
 
+    suspend fun deleteLocalFeedingDetail(detailId: Int){
+        withContext(Dispatchers.IO) { feedingDetailDAO.deleteOne(detailId)}
+    }
+
     suspend fun refreshFeeding(kerambaId: Int) {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
@@ -123,6 +127,7 @@ class FeedingRepository @Inject constructor(
 
                 val listFeeding = listFeedingDetailNetwork.map { target ->
                     FeedingDetail(
+                        detail_id = target.detail_id.toInt(),
                         feeding_id = target.feeding_id.toInt(),
                         pakan_id = target.pakan_id.toInt(),
                         ukuran_tebar = target.ukuran_tebar.toDouble(),
@@ -191,14 +196,14 @@ class FeedingRepository @Inject constructor(
         }
     }
 
-    suspend fun deleteFeedingDetail(activityId: Int): FeedingDetailContainer {
+    suspend fun deleteFeedingDetail(detailId: Int): FeedingDetailContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
 
         val data = mutableMapOf<String, String>()
 
-        data["activity_id"] = activityId.toString()
+        data["detail_id"] = detailId.toString()
 
         data["user_id"] = userId.toString()
 
