@@ -1,10 +1,12 @@
 package com.kedaireka.monitoring_biomassa.ui.summary.keramba
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Transformations
@@ -134,6 +136,8 @@ class InfoFragment : Fragment() {
             dataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
 
             val dataNow = PieData(dataSet)
+            dataNow.setValueTextSize(20f)
+            dataNow.setValueTextColor(Color.WHITE)
 
             binding.biotaChart.apply {
                 data = dataNow
@@ -142,10 +146,18 @@ class InfoFragment : Fragment() {
                 holeRadius = 58f
                 description.text = ""
 
+                legend.textSize = 15f
+                when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        legend.textColor = Color.WHITE
+                    }
+                }
+
                 transparentCircleRadius = 61f
                 isDrawHoleEnabled = true
                 setHoleColor(Color.WHITE)
                 centerText = "Komposisi Biota"
+                setCenterTextSize(15f)
 
                 invalidate()
             }
