@@ -123,9 +123,31 @@ class BottomSheetPanen : BottomSheetDialogFragment(), AdapterView.OnItemSelected
     private fun setupObserver() {
         panenViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {
+                    binding.apply {
+                        savePanenBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+                }
                 is NetworkResult.Loading -> {
+                    binding.apply {
+                        savePanenBtn.visibility = View.GONE
+
+                        progressLoading.visibility = View.VISIBLE
+                    }
                 }
                 is NetworkResult.Loaded -> {
+                    binding.apply {
+                        savePanenBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
+                    if (result.message != ""){
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+
                     if (panenViewModel.inputKerambaId.value != null) {
                         biotaViewModel.fetchBiotaHistory(panenViewModel.inputKerambaId.value!!)
                     }
@@ -135,6 +157,12 @@ class BottomSheetPanen : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
+                    binding.apply {
+                        savePanenBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }

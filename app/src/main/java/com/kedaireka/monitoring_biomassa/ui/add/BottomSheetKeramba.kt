@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -200,9 +199,30 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
     private fun setupObserver() {
         kerambaViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {
+                    binding.apply {
+                        saveKerambaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+                }
                 is NetworkResult.Loading -> {
+                    binding.apply {
+                        saveKerambaBtn.visibility = View.GONE
+
+                        progressLoading.visibility = View.VISIBLE
+                    }
                 }
                 is NetworkResult.Loaded -> {
+                    binding.apply {
+                        saveKerambaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
+                    if (result.message != ""){
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
 
                     kerambaViewModel.fetchKeramba()
 
@@ -211,6 +231,11 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
+                    binding.apply {
+                        saveKerambaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
@@ -220,9 +245,31 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
 
         kerambaViewModel.requestPutUpdateResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {
+                    binding.apply {
+                        saveKerambaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+                }
                 is NetworkResult.Loading -> {
+                    binding.apply {
+                        saveKerambaBtn.visibility = View.GONE
+
+                        progressLoading.visibility = View.VISIBLE
+                    }
                 }
                 is NetworkResult.Loaded -> {
+                    binding.apply {
+                        saveKerambaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
+                    if (result.message != ""){
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+
                     if (this@BottomSheetKeramba.arguments != null) {
                         kerambaViewModel.updateLocalKeramba(
                             arguments!!.getInt("keramba_id"),
@@ -244,6 +291,12 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
+                    binding.apply {
+                        saveKerambaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
 
