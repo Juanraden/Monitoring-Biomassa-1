@@ -136,6 +136,13 @@ class FeedingDetailFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun setupObserver() {
+        pakanViewModel.init.observe(viewLifecycleOwner, {
+            if (it == false) {
+                pakanViewModel.startInit()
+            }
+        })
+
+
         feedingDetailViewModel.loadKerambaData(args.kerambaId).observe(viewLifecycleOwner, {
             binding.toolbarFragment.title = "Pakan ${it.nama_keramba}"
         })
