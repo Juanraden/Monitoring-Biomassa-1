@@ -183,9 +183,10 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
                         val biotaId = this@BottomSheetPengukuran.arguments!!.getInt("biota_id")
 
                         pengukuranViewModel.fetchPengukuran(biotaId)
-
-                        pengukuranViewModel.donePostAddRequest()
                     }
+
+                    pengukuranViewModel.donePostAddRequest()
+
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
@@ -198,6 +199,8 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+
+                    pengukuranViewModel.donePostAddRequest()
                 }
             }
         })

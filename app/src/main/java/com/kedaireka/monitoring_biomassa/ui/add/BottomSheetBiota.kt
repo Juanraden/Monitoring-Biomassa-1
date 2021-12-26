@@ -99,9 +99,9 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
 
                     if (biotaViewModel.selectedKerambaId.value != null) {
                         biotaViewModel.fetchBiota(biotaViewModel.selectedKerambaId.value!!)
-
-                        biotaViewModel.donePostAddRequest()
                     }
+
+                    biotaViewModel.donePostAddRequest()
 
                     this.dismiss()
                 }
@@ -115,6 +115,8 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+
+                    biotaViewModel.donePostAddRequest()
                 }
             }
         })
@@ -164,9 +166,9 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                                 0L
                             }
                         )
-
-                        biotaViewModel.donePutUpdateRequest()
                     }
+                    biotaViewModel.donePutUpdateRequest()
+
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
@@ -179,6 +181,7 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+                    biotaViewModel.donePutUpdateRequest()
                 }
             }
         })
