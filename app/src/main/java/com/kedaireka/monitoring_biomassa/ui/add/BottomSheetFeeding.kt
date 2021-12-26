@@ -92,9 +92,8 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
                         binding.saveFeedingBtn.visibility = View.VISIBLE
 
                         binding.progressLoading.visibility = View.GONE
-
-                        feedingViewModel.donePostAddRequest()
                     }
+                    feedingViewModel.donePostAddRequest()
 
                     this.dismiss()
                 }
@@ -106,6 +105,8 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+
+                    feedingViewModel.donePostAddRequest()
                 }
             }
         })
@@ -135,15 +136,17 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
                                 0L
                             }
                         )
-
-                        feedingViewModel.donePutUpdateRequest()
                     }
+
+                    feedingViewModel.donePutUpdateRequest()
+
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+                    feedingViewModel.donePutUpdateRequest()
                 }
             }
         })

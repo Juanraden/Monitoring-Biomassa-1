@@ -239,6 +239,8 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+
+                    kerambaViewModel.donePostAddRequest()
                 }
             }
         })
@@ -299,9 +301,9 @@ class BottomSheetKeramba : BottomSheetDialogFragment(), DatePickerDialog.OnDateS
 
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
-
-                        kerambaViewModel.doneToastException()
                     }
+
+                    kerambaViewModel.donePutUpdateRequest()
                 }
             }
         })

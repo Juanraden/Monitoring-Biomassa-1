@@ -113,6 +113,8 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+
+                    pakanViewModel.donePostAddRequest()
                 }
             }
         })
@@ -174,6 +176,8 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+
+                    pakanViewModel.donePutUpdateRequest()
                 }
             }
         })

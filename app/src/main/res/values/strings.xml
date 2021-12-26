@@ -78,4 +78,5 @@
     <string name="jam_pemberian_pakan">Jam Pemberian Pakan</string>
     <string name="tambah_detail_pemberian_pakan">Tambah Detail Pemberian Pakan</string>
     <string name="login">Login</string>
+    <string name="tanggal_pemberian_pakan">Tanggal Pemberian Pakan</string>
 </resources>
