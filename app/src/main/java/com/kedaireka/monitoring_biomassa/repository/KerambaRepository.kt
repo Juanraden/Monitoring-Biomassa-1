@@ -16,6 +16,7 @@ import com.kedaireka.monitoring_biomassa.util.EntityMapper
 import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -101,6 +102,10 @@ class KerambaRepository @Inject constructor(
                     response.code() == 401 -> {
                         throw Exception("Unauthorized")
                     }
+                    response.code() == 400 -> {
+                        val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
+                        throw Exception(jsonObj.getString("message"))
+                    }
                     else -> {
                         throw Exception("HTTP Request Failed")
                     }
@@ -136,6 +141,10 @@ class KerambaRepository @Inject constructor(
                 }
                 response.code() == 401 -> {
                     throw Exception("Unauthorized")
+                }
+                response.code() == 400 -> {
+                    val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
+                    throw Exception(jsonObj.getString("message"))
                 }
                 else -> {
                     throw Exception("HTTP Request Failed")
@@ -176,6 +185,10 @@ class KerambaRepository @Inject constructor(
                 response.code() == 401 -> {
                     throw Exception("Unauthorized")
                 }
+                response.code() == 400 -> {
+                    val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
+                    throw Exception(jsonObj.getString("message"))
+                }
                 else -> {
                     throw Exception("HTTP Request Failed")
                 }
@@ -206,6 +219,10 @@ class KerambaRepository @Inject constructor(
                 }
                 response.code() == 401 -> {
                     throw Exception("Unauthorized")
+                }
+                response.code() == 400 -> {
+                    val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
+                    throw Exception(jsonObj.getString("message"))
                 }
                 else -> {
                     throw Exception("HTTP Request Failed")
