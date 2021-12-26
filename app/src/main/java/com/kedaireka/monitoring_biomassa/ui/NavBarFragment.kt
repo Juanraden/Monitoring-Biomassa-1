@@ -35,6 +35,11 @@ class NavBarFragment : Fragment() {
 
         binding.bottomNavView.setupWithNavController(navController)
 
+        binding.bottomNavView.setOnItemReselectedListener { item ->
+            val sourceDestinationId = item.itemId
+            navController.popBackStack(sourceDestinationId, inclusive = false)
+        }
+
         binding.fab.setOnClickListener {
             if (childFragmentManager.findFragmentByTag("BottomSheetAdd") == null) {
                 BottomSheetAdd().show(childFragmentManager, "BottomSheetAdd")
