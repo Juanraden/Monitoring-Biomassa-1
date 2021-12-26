@@ -166,6 +166,8 @@ class BottomSheetPanen : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+
+                    panenViewModel.donePostAddRequest()
                 }
             }
 

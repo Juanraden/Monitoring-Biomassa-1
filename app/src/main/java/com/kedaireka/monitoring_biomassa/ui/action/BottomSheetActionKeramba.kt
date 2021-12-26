@@ -67,6 +67,8 @@ class BottomSheetActionKeramba : BottomSheetAction() {
 
                         kerambaViewModel.doneToastException()
                     }
+
+                    kerambaViewModel.doneDeleteRequest()
                 }
             }
         })

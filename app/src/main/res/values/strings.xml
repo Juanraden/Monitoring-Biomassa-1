@@ -80,4 +80,5 @@
     <string name="login">Login</string>
     <string name="tanggal_pemberian_pakan">Tanggal Pemberian Pakan</string>
     <string name="tambah_pemberian_pakan">Tambah Pemberian Pakan</string>
+    <string name="edit_data">Edit Data</string>
 </resources>

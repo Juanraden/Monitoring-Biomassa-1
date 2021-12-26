@@ -114,6 +114,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/jam_feeding_et"
+                        android:onClick="@{() -> bottomSheetFeedingDetail.showTimePicker()}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="true"
@@ -134,6 +135,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/layout_padding"
                         android:layout_marginEnd="@dimen/layout_padding"
+                        android:onClick="@{() -> bottomSheetFeedingDetail.saveFeedingDetail()}"
                         android:text="@string/simpan" />
 
                     <ProgressBar

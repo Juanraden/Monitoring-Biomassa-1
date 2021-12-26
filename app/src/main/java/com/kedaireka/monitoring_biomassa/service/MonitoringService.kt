@@ -167,13 +167,19 @@ interface MonitoringService {
     fun getFeedingDetailListAsync(
         @Header("Authorization") token: String,
         @Query("user_id") userId: Int,
-        @Query("keramba_id") kerambaId: Int,
         @Query("activity_id") activityId: Int
     ): Deferred<Response<FeedingDetailContainer>>
 
     @FormUrlEncoded
     @POST("feeding/detail")
     fun addFeedingDetailAsync(
+        @Header("Authorization") token: String,
+        @FieldMap data: Map<String, String>
+    ): Deferred<Response<FeedingDetailContainer>>
+
+    @FormUrlEncoded
+    @HTTP(method = "DELETE", path = "feeding/detail", hasBody = true)
+    fun deleteFeedingDetailAsync(
         @Header("Authorization") token: String,
         @FieldMap data: Map<String, String>
     ): Deferred<Response<FeedingDetailContainer>>

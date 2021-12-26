@@ -19,7 +19,7 @@ import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddPakanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class PakanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private val pakanViewModel by activityViewModels<PakanViewModel>()
 
