@@ -2,6 +2,7 @@ package com.kedaireka.monitoring_biomassa.viewmodel
 
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.PakanDomain
+import com.kedaireka.monitoring_biomassa.data.network.container.PakanContainer
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.repository.PakanRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,15 +33,15 @@ class PakanViewModel @Inject constructor(
     }
 
     fun donePostAddRequest() {
-        _requestPostAddResult.value = NetworkResult.Loading()
+        _requestPostAddResult.value = NetworkResult.Initial()
     }
 
     fun donePutUpdateRequest() {
-        _requestPutUpdateResult.value = NetworkResult.Loading()
+        _requestPutUpdateResult.value = NetworkResult.Initial()
     }
 
     fun doneDeleteRequest() {
-        _requestDeleteResult.value = NetworkResult.Loading()
+        _requestDeleteResult.value = NetworkResult.Initial()
     }
 
     fun loadPakanData(pakanId: Int): LiveData<PakanDomain> = repository.loadPakanData(pakanId)
@@ -53,7 +54,7 @@ class PakanViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.addPakan(
+                val container: PakanContainer = repository.addPakan(
                     PakanDomain(
                         pakan_id = 0,
                         jenis_pakan = jenis_pakan,
@@ -61,7 +62,7 @@ class PakanViewModel @Inject constructor(
                     )
                 )
 
-                _requestPostAddResult.value = NetworkResult.Loaded()
+                _requestPostAddResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestPostAddResult.value = NetworkResult.Error(e.message.toString())
             }
@@ -74,7 +75,7 @@ class PakanViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.updatePakan(
+                val container: PakanContainer = repository.updatePakan(
                     PakanDomain(
                         pakan_id = pakanId,
                         jenis_pakan = jenis_pakan,
@@ -82,7 +83,7 @@ class PakanViewModel @Inject constructor(
                     )
                 )
 
-                _requestPutUpdateResult.value = NetworkResult.Loaded()
+                _requestPutUpdateResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestPutUpdateResult.value = NetworkResult.Error(e.message.toString())
             }
@@ -94,9 +95,9 @@ class PakanViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.deletePakan(pakanId)
+                val container: PakanContainer = repository.deletePakan(pakanId)
 
-                _requestDeleteResult.value = NetworkResult.Loaded()
+                _requestDeleteResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestDeleteResult.value = NetworkResult.Error(e.message.toString())
             }

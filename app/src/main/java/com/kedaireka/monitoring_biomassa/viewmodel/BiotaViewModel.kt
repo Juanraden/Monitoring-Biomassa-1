@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
+import com.kedaireka.monitoring_biomassa.data.network.container.BiotaContainer
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.repository.BiotaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,15 +43,15 @@ class BiotaViewModel @Inject constructor(
     }
 
     fun donePostAddRequest() {
-        _requestPostAddResult.value = NetworkResult.Loading()
+        _requestPostAddResult.value = NetworkResult.Initial()
     }
 
     fun donePutUpdateRequest() {
-        _requestPutUpdateResult.value = NetworkResult.Loading()
+        _requestPutUpdateResult.value = NetworkResult.Initial()
     }
 
     fun doneDeleteRequest() {
-        _requestDeleteResult.value = NetworkResult.Loading()
+        _requestDeleteResult.value = NetworkResult.Initial()
     }
 
     fun loadBiotaData(id: Int): LiveData<BiotaDomain> = repository.loadBiotaData(id)
@@ -83,7 +84,7 @@ class BiotaViewModel @Inject constructor(
             _requestPostAddResult.value = NetworkResult.Loading()
 
             try {
-                repository.addBiota(
+                val container: BiotaContainer = repository.addBiota(
                     BiotaDomain(
                         biota_id = 0,
                         keramba_id = _selectedKerambaId.value!!,
@@ -96,7 +97,7 @@ class BiotaViewModel @Inject constructor(
                     )
                 )
 
-                _requestPostAddResult.value = NetworkResult.Loaded()
+                _requestPostAddResult.value = NetworkResult.Loaded(container.message)
 
             } catch (e: Exception) {
                 _requestPostAddResult.value = NetworkResult.Error(e.message.toString())
@@ -115,7 +116,7 @@ class BiotaViewModel @Inject constructor(
         _requestPutUpdateResult.value = NetworkResult.Loading()
         viewModelScope.launch {
             try {
-                repository.updateBiota(
+                val container: BiotaContainer = repository.updateBiota(
                     BiotaDomain(
                         biota_id = biotaId,
                         jenis_biota = jenis,
@@ -128,7 +129,7 @@ class BiotaViewModel @Inject constructor(
                     )
                 )
 
-                _requestPutUpdateResult.value = NetworkResult.Loaded()
+                _requestPutUpdateResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestPutUpdateResult.value = NetworkResult.Error(e.message.toString())
             }
@@ -161,9 +162,9 @@ class BiotaViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.deleteBiota(biotaId)
+                val container: BiotaContainer = repository.deleteBiota(biotaId)
 
-                _requestDeleteResult.value = NetworkResult.Loaded()
+                _requestDeleteResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestPutUpdateResult.value = NetworkResult.Error(e.message.toString())
             }

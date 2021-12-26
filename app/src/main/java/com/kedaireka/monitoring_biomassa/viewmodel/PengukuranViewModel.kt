@@ -2,6 +2,7 @@ package com.kedaireka.monitoring_biomassa.viewmodel
 
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.PengukuranDomain
+import com.kedaireka.monitoring_biomassa.data.network.container.PengukuranContainer
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.repository.PengukuranRepository
 import com.kedaireka.monitoring_biomassa.util.convertStringToDateLong
@@ -27,11 +28,11 @@ class PengukuranViewModel @Inject constructor(
     }
 
     fun donePostAddRequest() {
-        _requestPostAddResult.value = NetworkResult.Loading()
+        _requestPostAddResult.value = NetworkResult.Initial()
     }
 
     fun doneDeleteRequest() {
-        _requestDeleteResult.value = NetworkResult.Loading()
+        _requestDeleteResult.value = NetworkResult.Initial()
     }
 
     private val _selectedBiotaId = MutableLiveData<Int>()
@@ -51,7 +52,7 @@ class PengukuranViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.addPengukuran(
+                val container: PengukuranContainer = repository.addPengukuran(
                     PengukuranDomain(
                         pengukuran_id = 0,
                         panjang = panjang.toDouble(),
@@ -61,7 +62,7 @@ class PengukuranViewModel @Inject constructor(
                     )
                 )
 
-                _requestPostAddResult.value = NetworkResult.Loaded()
+                _requestPostAddResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestPostAddResult.value = NetworkResult.Error(e.message.toString())
             }
@@ -73,9 +74,9 @@ class PengukuranViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.deletePengukuran(pengukuranId)
+                val container: PengukuranContainer = repository.deletePengukuran(pengukuranId)
 
-                _requestDeleteResult.value = NetworkResult.Loaded()
+                _requestDeleteResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestDeleteResult.value = NetworkResult.Error(e.message.toString())
             }
