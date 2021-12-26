@@ -24,8 +24,9 @@ import androidx.room.PrimaryKey
 )
 data class FeedingDetail constructor(
     @PrimaryKey(autoGenerate = true)
-    val feeding_id: Int = 0,
+    val detail_id: Int = 0,
     val pakan_id: Int,
     val ukuran_tebar: Double,
-    val waktu_feeding: Long
+    val waktu_feeding: Long,
+    val feeding_id: Int,
 )

@@ -79,4 +79,5 @@
     <string name="tambah_detail_pemberian_pakan">Tambah Detail Pemberian Pakan</string>
     <string name="login">Login</string>
     <string name="tanggal_pemberian_pakan">Tanggal Pemberian Pakan</string>
+    <string name="edit_data">Edit Data</string>
 </resources>

@@ -19,6 +19,7 @@ import com.kedaireka.monitoring_biomassa.databinding.FragmentPakanBinding
 import com.kedaireka.monitoring_biomassa.ui.action.BottomSheetActionFeeding
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetFeeding
 import com.kedaireka.monitoring_biomassa.ui.summary.SummaryFragmentDirections
+import com.kedaireka.monitoring_biomassa.viewmodel.FeedingDetailViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.FeedingViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,7 +50,7 @@ class FeedingFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         super.onViewCreated(view, savedInstanceState)
 
         fetchFeeding()
-        
+
         setupFeedingList()
 
         setupObserver()

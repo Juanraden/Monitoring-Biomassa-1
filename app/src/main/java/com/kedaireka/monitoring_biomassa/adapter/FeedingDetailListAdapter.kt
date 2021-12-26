@@ -14,7 +14,7 @@ import com.kedaireka.monitoring_biomassa.databinding.ListFeedingDetailBinding
 import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 
 class FeedingDetailListAdapter(
-    val longClickListener: (obj: FeedingDomain) -> Boolean
+    val longClickListener: (obj: FeedingDetailDomain) -> Boolean
 ) : ListAdapter<FeedingDetailAndPakan, FeedingDetailListAdapter.ViewHolder>(DiffCallBack) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,6 +36,7 @@ class FeedingDetailListAdapter(
         fun bind(feedingDetailAndPakan: FeedingDetailAndPakan) {
 
             val feedingDetailDomain = FeedingDetailDomain(
+                detail_id = feedingDetailAndPakan.feedingDetail.detail_id,
                 feeding_id = feedingDetailAndPakan.feedingDetail.feeding_id,
                 ukuran_tebar = feedingDetailAndPakan.feedingDetail.ukuran_tebar,
                 pakan_id = feedingDetailAndPakan.feedingDetail.pakan_id,
@@ -49,7 +50,9 @@ class FeedingDetailListAdapter(
                 ukuranTebarTv.text = feedingDetailDomain.ukuran_tebar.toString()
 
                 jamPakanTv.text =
-                    convertLongToDateString(feedingDetailDomain.waktu_feeding, "H:m:s")
+                    convertLongToDateString(feedingDetailDomain.waktu_feeding, "H:m")
+
+                detailCard.setOnLongClickListener { longClickListener(feedingDetailDomain) }
             }
         }
     }
@@ -59,7 +62,7 @@ class FeedingDetailListAdapter(
             oldItem: FeedingDetailAndPakan,
             newItem: FeedingDetailAndPakan
         ): Boolean {
-            return oldItem.feedingDetail.feeding_id == newItem.feedingDetail.feeding_id
+            return oldItem.feedingDetail.detail_id == newItem.feedingDetail.detail_id
         }
 
         override fun areContentsTheSame(

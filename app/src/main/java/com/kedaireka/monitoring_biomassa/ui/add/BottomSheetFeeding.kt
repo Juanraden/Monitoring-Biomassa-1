@@ -119,8 +119,15 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
                     binding.progressLoading.visibility = View.GONE
                 }
                 is NetworkResult.Loading -> {
+                    binding.saveFeedingBtn.visibility = View.GONE
+
+                    binding.progressLoading.visibility = View.VISIBLE
                 }
                 is NetworkResult.Loaded -> {
+                    binding.saveFeedingBtn.visibility = View.VISIBLE
+
+                    binding.progressLoading.visibility = View.GONE
+
                     if (this@BottomSheetFeeding.arguments != null) {
                         val feedingId: Int =
                             this@BottomSheetFeeding.arguments!!.getInt("feeding_id")
@@ -143,6 +150,10 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
+                    binding.saveFeedingBtn.visibility = View.VISIBLE
+
+                    binding.progressLoading.visibility = View.GONE
+
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
@@ -162,7 +173,7 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
                 TextView.BufferType.EDITABLE
             )
 
-            saveFeedingBtn.text = getString(R.string.edit_biota)
+            saveFeedingBtn.text = getString(R.string.edit_data)
         }
     }
 
