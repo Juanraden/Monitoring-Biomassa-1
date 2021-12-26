@@ -18,7 +18,7 @@ import com.kedaireka.monitoring_biomassa.adapter.FeedingDetailListAdapter
 import com.kedaireka.monitoring_biomassa.adapter.HeaderButtonAdapter
 import com.kedaireka.monitoring_biomassa.databinding.FragmentFeedingDetailBinding
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetFeedingDetail
-import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPakan
+import com.kedaireka.monitoring_biomassa.util.convertLongToDateString
 import com.kedaireka.monitoring_biomassa.viewmodel.FeedingDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -84,9 +84,13 @@ class FeedingDetailFragment : Fragment() {
 
     private fun setupObserver() {
         feedingDetailViewModel.loadKerambaData(args.kerambaId).observe(viewLifecycleOwner, {
-            binding.namaKerambaTv.text = it.nama_keramba
 
             binding.toolbarFragment.title = "Pakan ${it.nama_keramba}"
+        })
+
+        feedingDetailViewModel.loadFeedingData(args.feedingId).observe(viewLifecycleOwner, {
+            binding.hariTv.text = convertLongToDateString(it.tanggal_feeding, "EEEE")
+            binding.tanggalPemberianPakanTv.text = convertLongToDateString(it.tanggal_feeding, "dd-MMM-yyyy")
         })
     }
 

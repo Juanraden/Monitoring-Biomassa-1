@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/layout_padding"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/layout_padding"
             android:layout_marginEnd="@dimen/layout_padding"
             android:layout_marginBottom="5dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,22 +45,22 @@
                     app:srcCompat="@drawable/ic_baseline_edit_24" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/nama_keramba_tv"
+                    android:id="@+id/hari_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="@string/keramba" />
+                    tools:text="Hari" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tanggal_pemberian_pakan_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    app:layout_constraintStart_toStartOf="@+id/nama_keramba_tv"
-                    app:layout_constraintTop_toBottomOf="@+id/nama_keramba_tv"
-                    tools:text="@string/tanggal_instalasi" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    app:layout_constraintStart_toStartOf="@+id/hari_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/hari_tv"
+                    tools:text="tanggal" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
@@ -75,6 +75,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/info_keramba_card" />
+            app:layout_constraintTop_toBottomOf="@id/info_keramba_card"
+            android:layout_marginTop="@dimen/layout_padding"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
