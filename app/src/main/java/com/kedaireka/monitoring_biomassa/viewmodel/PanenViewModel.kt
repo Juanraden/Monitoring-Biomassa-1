@@ -2,6 +2,7 @@ package com.kedaireka.monitoring_biomassa.viewmodel
 
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.PanenDomain
+import com.kedaireka.monitoring_biomassa.data.network.container.PanenContainer
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.database.relation.PanenAndBiota
 import com.kedaireka.monitoring_biomassa.repository.PanenRepository
@@ -25,7 +26,7 @@ class PanenViewModel @Inject constructor(
     }
 
     fun donePostAddRequest() {
-        _requestPostAddResult.value = NetworkResult.Loading()
+        _requestPostAddResult.value = NetworkResult.Initial()
     }
 
     fun getlistPanen(kerambaId: Int): LiveData<List<PanenAndBiota>> = repository.getlistPanen(kerambaId)
@@ -68,7 +69,7 @@ class PanenViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.addPanen(
+                val container: PanenContainer = repository.addPanen(
                     PanenDomain(
                         activity_id = 0,
                         keramba_id = _inputKerambaId.value!!,
@@ -80,7 +81,7 @@ class PanenViewModel @Inject constructor(
                         tanggal_panen = convertStringToDateLong(tanggal, "EEEE dd-MMM-yyyy")
                     )
                 )
-                _requestPostAddResult.value = NetworkResult.Loaded()
+                _requestPostAddResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestPostAddResult.value = NetworkResult.Error(e.message.toString())
             }

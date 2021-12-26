@@ -72,9 +72,30 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
     private fun setupObserver() {
         biotaViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {
+                    binding.apply {
+                        saveBiotaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+                }
                 is NetworkResult.Loading -> {
+                    binding.apply {
+                        saveBiotaBtn.visibility = View.GONE
+
+                        progressLoading.visibility = View.VISIBLE
+                    }
                 }
                 is NetworkResult.Loaded -> {
+                    binding.apply {
+                        saveBiotaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
+                    if (result.message != ""){
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
 
                     if (biotaViewModel.selectedKerambaId.value != null) {
                         biotaViewModel.fetchBiota(biotaViewModel.selectedKerambaId.value!!)
@@ -85,6 +106,12 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
+                    binding.apply {
+                        saveBiotaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
@@ -94,9 +121,31 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
 
         biotaViewModel.requestPutUpdateResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {
+                    binding.apply {
+                        saveBiotaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+                }
                 is NetworkResult.Loading -> {
+                    binding.apply {
+                        saveBiotaBtn.visibility = View.GONE
+
+                        progressLoading.visibility = View.VISIBLE
+                    }
                 }
                 is NetworkResult.Loaded -> {
+                    binding.apply {
+                        saveBiotaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
+                    if (result.message != ""){
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+
                     if (this@BottomSheetBiota.arguments != null) {
                         val biotaId: Int = this@BottomSheetBiota.arguments!!.getInt("biota_id")
 
@@ -121,6 +170,12 @@ class BottomSheetBiota : BottomSheetDialogFragment(), AdapterView.OnItemSelected
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
+                    binding.apply {
+                        saveBiotaBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }

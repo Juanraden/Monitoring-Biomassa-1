@@ -51,6 +51,7 @@ class BiotaDataFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun setupObserver() {
         pengukuranViewModel.requestGetResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {}
                 is NetworkResult.Loading -> {
                     if (!binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = true

@@ -17,7 +17,6 @@ import com.kedaireka.monitoring_biomassa.adapter.PanenListAdapter
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.databinding.FragmentPanenBinding
 import com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPanen
-import com.kedaireka.monitoring_biomassa.util.observeOnce
 import com.kedaireka.monitoring_biomassa.viewmodel.BiotaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.KerambaViewModel
 import com.kedaireka.monitoring_biomassa.viewmodel.PanenViewModel
@@ -75,6 +74,7 @@ class PanenFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun setupObserver() {
         biotaViewModel.requestGetHistoryResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {}
                 is NetworkResult.Loading -> {
                     if (!binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = true
@@ -95,6 +95,7 @@ class PanenFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         panenViewModel.requestGetResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {}
                 is NetworkResult.Loading -> {
                     if (!binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = true

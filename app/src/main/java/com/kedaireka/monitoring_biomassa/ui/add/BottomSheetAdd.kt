@@ -15,7 +15,7 @@ class BottomSheetAdd : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = BottomSheetAddBinding.inflate(inflater)
         return binding.root
     }

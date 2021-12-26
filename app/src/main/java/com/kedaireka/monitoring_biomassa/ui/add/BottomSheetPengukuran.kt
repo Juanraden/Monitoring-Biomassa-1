@@ -154,9 +154,31 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
     private fun setupObserver() {
         pengukuranViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {
+                    binding.apply {
+                        savePengukuranBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+                }
                 is NetworkResult.Loading -> {
+                    binding.apply {
+                        savePengukuranBtn.visibility = View.GONE
+
+                        progressLoading.visibility = View.VISIBLE
+                    }
                 }
                 is NetworkResult.Loaded -> {
+                    binding.apply {
+                        savePengukuranBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
+                    if (result.message != ""){
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+
                     if (this@BottomSheetPengukuran.arguments != null) {
                         val biotaId = this@BottomSheetPengukuran.arguments!!.getInt("biota_id")
 
@@ -167,6 +189,12 @@ class BottomSheetPengukuran : BottomSheetDialogFragment(), AdapterView.OnItemSel
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
+                    binding.apply {
+                        savePengukuranBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }

@@ -71,6 +71,7 @@ class BiotaHistoryFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         biotaViewModel.requestGetHistoryResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {}
                 is NetworkResult.Loading -> {
                     if (!binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = true
