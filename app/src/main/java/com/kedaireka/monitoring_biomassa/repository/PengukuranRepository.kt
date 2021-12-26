@@ -31,8 +31,8 @@ class PengukuranRepository @Inject constructor(
             list.map { pengukuranMapper.mapFromEntity(it) }
         }
 
-    suspend fun deleteLocalPengukuran(pengukuranId: Int){
-        withContext(Dispatchers.IO){ pengukuranDAO.deleteOne(pengukuranId) }
+    suspend fun deleteLocalPengukuran(pengukuranId: Int) {
+        withContext(Dispatchers.IO) { pengukuranDAO.deleteOne(pengukuranId) }
     }
 
     suspend fun refreshPengukuran(biotaId: Int) {
@@ -78,7 +78,7 @@ class PengukuranRepository @Inject constructor(
         }
     }
 
-    suspend fun addPengukuran(pengukuran: PengukuranDomain) {
+    suspend fun addPengukuran(pengukuran: PengukuranDomain): PengukuranContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -112,10 +112,12 @@ class PengukuranRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 
-    suspend fun deletePengukuran(pengukuranId: Int) {
+    suspend fun deletePengukuran(pengukuranId: Int): PengukuranContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -141,6 +143,8 @@ class PengukuranRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 }

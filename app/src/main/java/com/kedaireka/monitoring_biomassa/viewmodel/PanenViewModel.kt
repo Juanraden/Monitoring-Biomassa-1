@@ -94,6 +94,6 @@ class PanenViewModel @Inject constructor(
     }
 
     fun downloadExportedData(kerambaId: Int, name: String){
-        repository.downloadExporedData(kerambaId, name)
+        repository.downloadExportedData(kerambaId, name)
     }
 }
