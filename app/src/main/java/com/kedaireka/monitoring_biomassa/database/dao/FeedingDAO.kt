@@ -19,7 +19,7 @@ interface FeedingDAO {
     fun getAll(kerambaId: Int): Flow<List<Feeding>>
 
     @Query("SELECT * FROM feeding WHERE feeding_id =:feedingId")
-    fun getById(feedingId: Int): Flow<Feeding>
+    fun getByFeedingId(feedingId: Int): Flow<Feeding>
 
     @Query("SELECT COUNT(*) FROM feeding WHERE keramba_id =:kerambaId")
     fun getFeedingCountFromKeramba(kerambaId: Int): Int

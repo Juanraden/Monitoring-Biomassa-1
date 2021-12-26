@@ -7,15 +7,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.FrameLayout
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kedaireka.monitoring_biomassa.R
 import com.kedaireka.monitoring_biomassa.databinding.BottomSheetFeedingDetailBinding
+import com.kedaireka.monitoring_biomassa.viewmodel.PakanViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class BottomSheetFeedingDetail : BottomSheetDialogFragment() {
+@AndroidEntryPoint
+class BottomSheetFeedingDetail : BottomSheetDialogFragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: BottomSheetFeedingDetailBinding
+
+    private val pakanViewModel by activityViewModels<PakanViewModel>()
+
+    private lateinit var mapPakan: Map<String, Int>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,6 +35,32 @@ class BottomSheetFeedingDetail : BottomSheetDialogFragment() {
         binding = BottomSheetFeedingDetailBinding.inflate(inflater)
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.ivClose.setOnClickListener { dismiss() }
+
+        setupDropdown()
+    }
+
+    private fun setupDropdown() {
+        pakanViewModel.getAll().observe(viewLifecycleOwner, { listPakan ->
+            mapPakan = listPakan.map { it.jenis_pakan to it.pakan_id }.toMap()
+
+            val pakanList = mapPakan.keys.toList()
+
+            val arrayAdapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, pakanList)
+
+            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+            binding.pakanDropdown.adapter = arrayAdapter
+
+            binding.pakanDropdown.onItemSelectedListener = this@BottomSheetFeedingDetail
+
+        })
     }
 
     override fun onStart() {
@@ -82,4 +118,8 @@ class BottomSheetFeedingDetail : BottomSheetDialogFragment() {
             imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
     }
+
+    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {}
+
+    override fun onNothingSelected(p0: AdapterView<*>?) {}
 }

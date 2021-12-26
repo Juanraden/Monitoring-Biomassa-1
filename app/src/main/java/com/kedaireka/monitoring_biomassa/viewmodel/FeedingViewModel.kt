@@ -2,6 +2,7 @@ package com.kedaireka.monitoring_biomassa.viewmodel
 
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.FeedingDomain
+import com.kedaireka.monitoring_biomassa.data.network.container.FeedingContainer
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.repository.FeedingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,18 +36,18 @@ class FeedingViewModel @Inject constructor(
     }
 
     fun donePostAddRequest() {
-        _requestPostAddResult.value = NetworkResult.Loading()
+        _requestPostAddResult.value = NetworkResult.Initial()
     }
 
     fun donePutUpdateRequest() {
-        _requestPutUpdateResult.value = NetworkResult.Loading()
+        _requestPutUpdateResult.value = NetworkResult.Initial()
     }
 
     fun doneDeleteRequest() {
-        _requestDeleteResult.value = NetworkResult.Loading()
+        _requestDeleteResult.value = NetworkResult.Initial()
     }
 
-    fun loadFeedingData(id: Int): LiveData<FeedingDomain> = repository.loadFeedingData(id)
+    fun loadFeedingData(id: Int): LiveData<FeedingDomain> = repository.loadFeedingDataByFeedingId(id)
 
     fun setFeedingId(id: Int) {
         _loadedFeedingId.value = id
@@ -69,7 +70,7 @@ class FeedingViewModel @Inject constructor(
             _requestPostAddResult.value = NetworkResult.Loading()
 
             try {
-                repository.addFeeding(
+                val container: FeedingContainer = repository.addFeeding(
                     FeedingDomain(
                         feeding_id = 0,
                         keramba_id = _selectedKerambaId.value!!,
@@ -77,7 +78,7 @@ class FeedingViewModel @Inject constructor(
                     )
                 )
 
-                _requestPostAddResult.value = NetworkResult.Loaded()
+                _requestPostAddResult.value = NetworkResult.Loaded(container.message)
 
             } catch (e: Exception) {
                 _requestPostAddResult.value = NetworkResult.Error(e.message.toString())
@@ -92,7 +93,7 @@ class FeedingViewModel @Inject constructor(
         _requestPutUpdateResult.value = NetworkResult.Loading()
         viewModelScope.launch {
             try {
-                repository.updateFeeding(
+                val container: FeedingContainer = repository.updateFeeding(
                     FeedingDomain(
                         feeding_id = feedingId,
                         keramba_id = _selectedKerambaId.value!!,
@@ -100,7 +101,7 @@ class FeedingViewModel @Inject constructor(
                     )
                 )
 
-                _requestPutUpdateResult.value = NetworkResult.Loaded()
+                _requestPutUpdateResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestPutUpdateResult.value = NetworkResult.Error(e.message.toString())
             }
@@ -125,9 +126,9 @@ class FeedingViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.deleteFeeding(feedingId)
+                val container: FeedingContainer = repository.deleteFeeding(feedingId)
 
-                _requestDeleteResult.value = NetworkResult.Loaded()
+                _requestDeleteResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestPutUpdateResult.value = NetworkResult.Error(e.message.toString())
             }

@@ -109,14 +109,24 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/save_keramba_btn"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:onClick="@{() ->bottomSheetKeramba.onSaveKerambaBtnClicked()}"
-                    android:text="@string/simpan"
-                    android:textColor="@color/white" />
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/save_keramba_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:onClick="@{() ->bottomSheetKeramba.onSaveKerambaBtnClicked()}"
+                        android:text="@string/simpan"
+                        android:textColor="@color/white" />
+                    <ProgressBar
+                        android:id="@+id/progress_loading"
+                        android:visibility="gone"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </FrameLayout>
             </LinearLayout>
         </ScrollView>
 

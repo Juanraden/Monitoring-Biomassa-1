@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="bottomSheetPakan"
             type="com.kedaireka.monitoring_biomassa.ui.add.BottomSheetPakan" />
@@ -94,29 +94,45 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/save_pakan_btn"
-                    style="@style/Widget.MaterialComponents.Button"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/simpan"
-                    android:textColor="@color/white" />
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/save_pakan_btn"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/simpan"
+                        android:textColor="@color/white" />
+
+                    <ProgressBar
+                        android:id="@+id/progress_loading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone" />
+                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/batal_edit_btn"
-                            style="@style/Widget.MaterialComponents.Button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:backgroundTint="@color/red_2"
-                            android:text="@string/batal"
-                            android:textColor="@color/white"
-                            android:visibility="gone" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/batal_edit_btn"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:backgroundTint="@color/red_2"
+                        android:text="@string/batal"
+                        android:textColor="@color/white"
+                        android:visibility="gone" />
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/save_edit_btn"
@@ -127,6 +143,14 @@
                             android:text="@string/simpan"
                             android:textColor="@color/white"
                             android:visibility="gone" />
+
+                        <ProgressBar
+                            android:id="@+id/progress_edit_loading"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:visibility="gone"/>
+                    </FrameLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

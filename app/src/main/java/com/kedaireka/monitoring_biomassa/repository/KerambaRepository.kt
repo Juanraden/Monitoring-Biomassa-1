@@ -109,7 +109,7 @@ class KerambaRepository @Inject constructor(
         }
     }
 
-    suspend fun addKeramba(keramba: KerambaDomain) {
+    suspend fun addKeramba(keramba: KerambaDomain): KerambaContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -141,10 +141,12 @@ class KerambaRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 
-    suspend fun updateKeramba(keramba: KerambaDomain){
+    suspend fun updateKeramba(keramba: KerambaDomain): KerambaContainer{
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -178,10 +180,12 @@ class KerambaRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 
-    suspend fun deleteKeramba(kerambaId: Int){
+    suspend fun deleteKeramba(kerambaId: Int): KerambaContainer{
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -207,6 +211,8 @@ class KerambaRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 }

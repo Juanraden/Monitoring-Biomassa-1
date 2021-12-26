@@ -19,7 +19,7 @@ class NavBarFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentNavBarBinding.inflate(inflater, container, false)
 
         setupNavigation()

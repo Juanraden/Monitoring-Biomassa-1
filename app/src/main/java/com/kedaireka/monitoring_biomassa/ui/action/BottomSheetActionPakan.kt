@@ -19,10 +19,12 @@ class BottomSheetActionPakan : BottomSheetAction() {
 
         pakanViewModel.requestDeleteResult.observe(viewLifecycleOwner, { result ->
             when (result) {
-                is NetworkResult.Loading -> {
-
-                }
+                is NetworkResult.Initial -> {}
+                is NetworkResult.Loading -> {}
                 is NetworkResult.Loaded -> {
+                    if (result.message != ""){
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
 
                     if (this.arguments != null) {
 

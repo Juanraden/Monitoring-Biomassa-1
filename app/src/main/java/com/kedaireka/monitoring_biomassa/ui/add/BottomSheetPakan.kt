@@ -34,7 +34,7 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = BottomSheetPakanBinding.inflate(inflater)
 
         return binding.root
@@ -76,9 +76,26 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
     private fun setupObserver() {
         pakanViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {
+                    switchEditButton()
+                }
                 is NetworkResult.Loading -> {
+                    binding.apply {
+                        savePakanBtn.visibility = View.GONE
+
+                        progressLoading.visibility = View.VISIBLE
+                    }
                 }
                 is NetworkResult.Loaded -> {
+                    binding.apply {
+                        savePakanBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
+                    if (result.message != ""){
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
 
                     pakanViewModel.fetchPakan()
 
@@ -87,6 +104,12 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
+                    binding.apply {
+                        savePakanBtn.visibility = View.VISIBLE
+
+                        progressLoading.visibility = View.GONE
+                    }
+
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
@@ -96,9 +119,36 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
 
         pakanViewModel.requestPutUpdateResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {
+                    binding.apply {
+                        saveEditBtn.visibility = View.VISIBLE
+
+                        batalEditBtn.visibility = View.VISIBLE
+
+                        progressEditLoading.visibility = View.GONE
+                    }
+                }
                 is NetworkResult.Loading -> {
+                    binding.apply {
+                        batalEditBtn.visibility = View.GONE
+
+                        saveEditBtn.visibility = View.GONE
+
+                        progressEditLoading.visibility = View.VISIBLE
+                    }
                 }
                 is NetworkResult.Loaded -> {
+                    binding.apply {
+                        saveEditBtn.visibility = View.VISIBLE
+
+                        batalEditBtn.visibility = View.VISIBLE
+
+                        progressEditLoading.visibility = View.GONE
+                    }
+
+                    if (result.message != ""){
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
                     if (this@BottomSheetPakan.arguments != null) {
                         val pakanId = this@BottomSheetPakan.arguments!!.getInt("pakan_id")
 
@@ -113,6 +163,14 @@ class BottomSheetPakan : BottomSheetDialogFragment() {
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
+                    binding.apply {
+                        saveEditBtn.visibility = View.VISIBLE
+
+                        batalEditBtn.visibility = View.VISIBLE
+
+                        progressEditLoading.visibility = View.GONE
+                    }
+
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }

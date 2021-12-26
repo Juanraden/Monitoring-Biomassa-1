@@ -3,6 +3,7 @@ package com.kedaireka.monitoring_biomassa.viewmodel
 import androidx.lifecycle.*
 import com.kedaireka.monitoring_biomassa.data.domain.BiotaDomain
 import com.kedaireka.monitoring_biomassa.data.domain.KerambaDomain
+import com.kedaireka.monitoring_biomassa.data.network.container.KerambaContainer
 import com.kedaireka.monitoring_biomassa.data.network.enums.NetworkResult
 import com.kedaireka.monitoring_biomassa.database.entity.Biota
 import com.kedaireka.monitoring_biomassa.database.entity.Keramba
@@ -54,15 +55,15 @@ class KerambaViewModel @Inject constructor(
     }
 
     fun donePostAddRequest() {
-        _requestPostAddResult.value = NetworkResult.Loading()
+        _requestPostAddResult.value = NetworkResult.Initial()
     }
 
     fun donePutUpdateRequest() {
-        _requestPutUpdateResult.value = NetworkResult.Loading()
+        _requestPutUpdateResult.value = NetworkResult.Initial()
     }
 
     fun doneDeleteRequest() {
-        _requestDeleteResult.value = NetworkResult.Loading()
+        _requestDeleteResult.value = NetworkResult.Initial()
     }
 
     fun loadKerambaData(id: Int): LiveData<KerambaDomain> {
@@ -78,7 +79,7 @@ class KerambaViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.addKeramba(
+                val container: KerambaContainer = repository.addKeramba(
                     KerambaDomain(
                         keramba_id = 0,
                         nama_keramba = nama,
@@ -87,7 +88,7 @@ class KerambaViewModel @Inject constructor(
                     )
                 )
 
-                _requestPostAddResult.value = NetworkResult.Loaded()
+                _requestPostAddResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestPostAddResult.value = NetworkResult.Error(e.message.toString())
             }
@@ -99,9 +100,9 @@ class KerambaViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.deleteKeramba(kerambaId)
+                val container: KerambaContainer = repository.deleteKeramba(kerambaId)
 
-                _requestDeleteResult.value = NetworkResult.Loaded()
+                _requestDeleteResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestDeleteResult.value = NetworkResult.Error(e.message.toString())
             }
@@ -114,7 +115,7 @@ class KerambaViewModel @Inject constructor(
         viewModelScope.launch {
 
             try {
-                repository.updateKeramba(
+                val container: KerambaContainer = repository.updateKeramba(
                     KerambaDomain(
                         keramba_id = id,
                         nama_keramba = nama,
@@ -123,7 +124,7 @@ class KerambaViewModel @Inject constructor(
                     )
                 )
 
-                _requestPutUpdateResult.value = NetworkResult.Loaded()
+                _requestPutUpdateResult.value = NetworkResult.Loaded(container.message)
             } catch (e: Exception) {
                 _requestPutUpdateResult.value = NetworkResult.Error(e.message.toString())
             }

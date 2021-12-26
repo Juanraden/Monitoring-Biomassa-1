@@ -60,6 +60,7 @@ class FeedingFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun setupObserver() {
         feedingViewModel.requestGetResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {}
                 is NetworkResult.Loading -> {
                     if (!binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = true

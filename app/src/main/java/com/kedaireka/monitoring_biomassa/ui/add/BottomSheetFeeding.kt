@@ -60,7 +60,8 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
             val feedingId: Int = this@BottomSheetFeeding.arguments!!.getInt("feeding_id")
 
             if (feedingId > 0) {
-                feedingViewModel.loadFeedingData(feedingId).observe(viewLifecycleOwner, { bind(it) })
+                feedingViewModel.loadFeedingData(feedingId)
+                    .observe(viewLifecycleOwner, { bind(it) })
             }
         }
 
@@ -70,12 +71,27 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
     private fun setupObserver() {
         feedingViewModel.requestPostAddResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {
+                    binding.saveFeedingBtn.visibility = View.VISIBLE
+
+                    binding.progressLoading.visibility = View.GONE
+                }
                 is NetworkResult.Loading -> {
+                    binding.saveFeedingBtn.visibility = View.GONE
+
+                    binding.progressLoading.visibility = View.VISIBLE
                 }
                 is NetworkResult.Loaded -> {
+                    if (result.message != "") {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
 
                     if (feedingViewModel.selectedKerambaId.value != null) {
                         feedingViewModel.fetchFeeding(feedingViewModel.selectedKerambaId.value!!)
+
+                        binding.saveFeedingBtn.visibility = View.VISIBLE
+
+                        binding.progressLoading.visibility = View.GONE
 
                         feedingViewModel.donePostAddRequest()
                     }
@@ -83,6 +99,10 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
                     this.dismiss()
                 }
                 is NetworkResult.Error -> {
+                    binding.saveFeedingBtn.visibility = View.VISIBLE
+
+                    binding.progressLoading.visibility = View.GONE
+
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
@@ -92,11 +112,17 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
 
         feedingViewModel.requestPutUpdateResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {
+                    binding.saveFeedingBtn.visibility = View.VISIBLE
+
+                    binding.progressLoading.visibility = View.GONE
+                }
                 is NetworkResult.Loading -> {
                 }
                 is NetworkResult.Loaded -> {
                     if (this@BottomSheetFeeding.arguments != null) {
-                        val feedingId: Int = this@BottomSheetFeeding.arguments!!.getInt("feeding_id")
+                        val feedingId: Int =
+                            this@BottomSheetFeeding.arguments!!.getInt("feeding_id")
 
                         feedingViewModel.updateLocalFeeding(
                             feedingId,
@@ -125,7 +151,8 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
 
     private fun bind(feedingDomain: FeedingDomain) {
         binding.apply {
-            titleTv.text = convertLongToDateString(feedingDomain.tanggal_feeding, "EEEE dd-MMM-yyyy")
+            titleTv.text =
+                convertLongToDateString(feedingDomain.tanggal_feeding, "EEEE dd-MMM-yyyy")
 
             binding.tanggalFeedingEt.setText(
                 convertLongToDateString(feedingDomain.tanggal_feeding, "EEEE dd-MMM-yyyy"),
@@ -196,7 +223,10 @@ class BottomSheetFeeding : BottomSheetDialogFragment(), AdapterView.OnItemSelect
         binding.apply {
             if (isEntryValid(
                     if (tanggalFeedingEt.text.toString() != "") {
-                        convertStringToDateLong(tanggalFeedingEt.text.toString(), "EEEE dd-MMM-yyyy")
+                        convertStringToDateLong(
+                            tanggalFeedingEt.text.toString(),
+                            "EEEE dd-MMM-yyyy"
+                        )
                     } else {
                         0L
                     }

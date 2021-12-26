@@ -169,7 +169,7 @@ class BiotaRepository @Inject constructor(
         }
     }
 
-    suspend fun addBiota(biota: BiotaDomain) {
+    suspend fun addBiota(biota: BiotaDomain): BiotaContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -208,10 +208,12 @@ class BiotaRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 
-    suspend fun updateBiota(biota: BiotaDomain) {
+    suspend fun updateBiota(biota: BiotaDomain): BiotaContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -252,10 +254,12 @@ class BiotaRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 
-    suspend fun deleteBiota(biotaId: Int) {
+    suspend fun deleteBiota(biotaId: Int): BiotaContainer {
         val userId = sharedPreferences.getString("user_id", null)?.toInt() ?: 0
 
         val token: String = sharedPreferences.getString("token", null) ?: ""
@@ -281,6 +285,8 @@ class BiotaRepository @Inject constructor(
                     throw Exception("HTTP Request Failed")
                 }
             }
+        } else {
+            return response.body()!!
         }
     }
 }
