@@ -49,7 +49,7 @@ class BiotaInfoFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentBiotaInfoBinding.inflate(inflater, container, false)
 
@@ -90,10 +90,10 @@ class BiotaInfoFragment : Fragment() {
 
             tanggalTebarTv.text = convertLongToDateString(biota.tanggal_tebar, "EEEE dd-MMM-yyyy")
 
-            val keramba_id = kerambaViewModel.loadedKerambaId.value
+            val kerambaId = kerambaViewModel.loadedKerambaId.value
 
-            if (keramba_id != null) {
-                editBtn.setOnClickListener { onEditBiota(keramba_id, biota.biota_id) }
+            if (kerambaId != null) {
+                editBtn.setOnClickListener { onEditBiota(kerambaId, biota.biota_id) }
             }
         }
     }
