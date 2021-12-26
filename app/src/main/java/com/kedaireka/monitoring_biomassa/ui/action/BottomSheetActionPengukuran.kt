@@ -42,6 +42,8 @@ class BottomSheetActionPengukuran:BottomSheetAction() {
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+
+                    pengukuranViewModel.doneDeleteRequest()
                 }
             }
         })

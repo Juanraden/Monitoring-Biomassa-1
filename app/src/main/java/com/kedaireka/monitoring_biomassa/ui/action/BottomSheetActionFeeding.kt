@@ -45,6 +45,8 @@ class BottomSheetActionFeeding : BottomSheetAction() {
                     if (result.message != "") {
                         Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                     }
+
+                    feedingViewModel.doneDeleteRequest()
                 }
             }
         })
