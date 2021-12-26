@@ -63,6 +63,7 @@ class AddPakanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         pakanViewModel.requestGetResult.observe(viewLifecycleOwner, { result ->
             when (result) {
+                is NetworkResult.Initial -> {}
                 is NetworkResult.Loading -> {
                     if (!binding.swipeRefresh.isRefreshing) {
                         binding.swipeRefresh.isRefreshing = true
