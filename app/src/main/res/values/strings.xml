@@ -49,9 +49,9 @@
     <string name="jenis_pakan">Jenis Pakan</string>
 
     <!--    Strings related to Summary Fragment-->
-    <string name="tanggal_panen">Tanggal panen: %1$s</string>
-    <string name="jumlah_ekor">Jumlah Tebar: %1$s bibit</string>
-    <string name="bobot_satuan">Bobot satuan: %1$s g</string>
+<!--    <string name="tanggal_panen">Tanggal panen: %1$s</string>-->
+<!--    <string name="jumlah_ekor">%1$s bibit</string>-->
+<!--    <string name="bobot_satuan">%1$s g</string>-->
     <string name="update_keramba">Update Keramba</string>
     <string name="batalkan">batalkan</string>
     <string name="data">Data</string>

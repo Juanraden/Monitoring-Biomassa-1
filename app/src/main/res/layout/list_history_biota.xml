@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/biota_card"
@@ -18,41 +17,80 @@
             android:layout_height="match_parent"
             android:padding="10dp">
 
-            <TextView
-                android:id="@+id/jenis_biota_tv"
-                android:layout_width="wrap_content"
+            <TableLayout
+                android:id="@+id/table_layout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Material.Title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/biota" />
-
-            <TextView
-                android:id="@+id/jumlah_biota_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/jenis_biota_tv"
-                tools:text="@string/jumlah_tebar" />
-
-            <TextView
-                android:id="@+id/ukuran_biota_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/jumlah_biota_tv"
-                tools:text="@string/ukuran_bibit_gram" />
-
-            <TextView
-                android:id="@+id/tanggal_panen_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Material.Body1"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="@string/tanggal_tebar_bibit" />
+                app:layout_constraintTop_toTopOf="parent">
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/jenis_biota_label"
+                        android:layout_marginEnd="@dimen/layout_padding"
+                        android:text="@string/jenis_biota"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                    <TextView
+                        android:id="@+id/jenis_biota_tv"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/jumlah_biota_label"
+                        android:layout_marginEnd="@dimen/layout_padding"
+                        android:text="@string/jumlah_tebar"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/jumlah_biota_tv"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/bobot_biota_label"
+                        android:layout_marginEnd="@dimen/layout_padding"
+                        android:text="@string/bobot_biota_gram"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/bobot_biota_tv"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/tanggal_tebar_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:text="@string/tanggal_tebar_bibit" />
+                    <TextView
+                        android:id="@+id/tanggal_tebar_tv"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/tanggal_panen_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:text="@string/tanggal_panen_biota" />
+                    <TextView
+                        android:id="@+id/tanggal_panen_tv"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                </TableRow>
+            </TableLayout>
 
             <ImageView
                 android:id="@+id/history_img"
