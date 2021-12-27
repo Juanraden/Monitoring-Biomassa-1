@@ -20,7 +20,9 @@ class SettingViewModel @Inject constructor(
 
         viewModelScope.launch {
             kerambaRepository.deleteAllLocalKeramba()
+        }
 
+        viewModelScope.launch {
             pakanRepository.deleteAllLocalPakan()
         }
     }
