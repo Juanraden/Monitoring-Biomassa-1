@@ -30,10 +30,7 @@ class BiotaHistoryListAdapter: ListAdapter<BiotaDomain, BiotaHistoryListAdapter.
             parent,
             false
         )
-
-        val context = parent.context
-
-        return ViewHolder(withDataBinding, context)
+        return ViewHolder(withDataBinding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -41,16 +38,18 @@ class BiotaHistoryListAdapter: ListAdapter<BiotaDomain, BiotaHistoryListAdapter.
         holder.bind(biota)
     }
 
-    inner class ViewHolder(private val binding: ListHistoryBiotaBinding, private val context: Context): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ListHistoryBiotaBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(biotaDomain: BiotaDomain){
             with(binding){
                 jenisBiotaTv.text = biotaDomain.jenis_biota
 
-                jumlahBiotaTv.text = context.getString(R.string.jumlah_ekor, biotaDomain.jumlah_bibit.toString())
+                jumlahBiotaTv.text = biotaDomain.jumlah_bibit.toString()
 
-                ukuranBiotaTv.text = context.getString(R.string.bobot_satuan, biotaDomain.bobot.toString())
+                bobotBiotaTv.text = biotaDomain.bobot.toString()
 
-                tanggalPanenTv.text = context.getString(R.string.tanggal_panen, convertLongToDateString(biotaDomain.tanggal_panen, "EEEE dd-MMM-yyyy"))
+                tanggalPanenTv.text = convertLongToDateString(biotaDomain.tanggal_panen, "EEEE dd-MMM-yyyy")
+
+                tanggalTebarTv.text = convertLongToDateString(biotaDomain.tanggal_tebar, "EEEE dd-MMM-yyyy")
             }
 
             binding.executePendingBindings()
