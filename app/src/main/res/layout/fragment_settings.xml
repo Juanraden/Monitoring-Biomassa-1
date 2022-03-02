@@ -81,6 +81,15 @@
                     android:textAppearance="@android:style/TextAppearance.Material.Body1"
                     android:onClick="@{(view) -> settingsFragment.launchUri(view)}"/>
 
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/mode_gelap_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/tema_gelap"
+                    android:layout_marginBottom="24dp"
+                    android:textAppearance="@android:style/TextAppearance.Material.Body1" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/logout_button"
                     android:layout_marginTop="10dp"
